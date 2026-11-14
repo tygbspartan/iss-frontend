@@ -1,8 +1,17 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography"; /* prose styles for rendered Markdown */
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* The public site's background: black on the left, lightening to #1A1A1A
+     at the middle, then easing back to #0E0E0E on the right. Defined once
+     here. Everything that must match the page behind it uses this — the page
+     itself, the home page's sliding panel, the pinned services heading, and
+     the inside of buttons while their gold border spins (those add `fixed`,
+     so the gradient lines up with the page rather than restarting per element). */
+  --site-gradient: linear-gradient(90deg, #000000 0%, #1a1a1a 49.52%, #0e0e0e 100%);
 }
 
 @theme inline {
@@ -10,6 +19,71 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-montserrat: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* `animate-border-spin`: turns a conic-gradient border by animating its start
+   angle (registered so the browser can interpolate it), instead of rotating an
+   element — the gradient moves smoothly and the thin ring doesn't shimmer. */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@theme {
+  --animate-border-spin: border-spin 3s linear infinite;
+  --animate-soft-bounce: soft-bounce 2.4s ease-in-out infinite;
+
+  /* A slow, gentle rise and fall (the upcoming-events button). */
+  @keyframes soft-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes border-spin {
+    to {
+      --border-angle: 360deg;
+    }
+  }
+}
+
+/* Public site: shared horizontal gutters (design: 120px at desktop width). */
+@utility site-container {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1920px;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 120px;
+  }
+}
+
+/* The public site is always dark — including iOS overscroll and the area
+   behind the page — regardless of the visitor's light/dark preference. */
+body:has(.site-root) {
+  background: #000000;
+  color-scheme: dark;
+}
+
+/* The public site hides the page's scrollbar (the page still scrolls as
+   normal — wheel, trackpad, touch, keyboard). The admin panel keeps its
+   scrollbar. First rule: Firefox and current Chrome/Edge; second: Safari and
+   older Chrome. */
+html:has(.site-root) {
+  scrollbar-width: none;
+}
+html:has(.site-root)::-webkit-scrollbar {
+  display: none;
 }
 
 @media (prefers-color-scheme: dark) {
