@@ -1,22 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
-// The About page's story: a few blocks of text joined by one thick gold line
-// that draws itself down the page as you scroll. When the line reaches a block
-// that block "switches on":
+// The About page's story: a few blocks of text joined by one thick gold line.
+// When the line reaches a block that block "switches on":
 //   • "spotlight": a warm stage spotlight fades in over it from above;
 //   • "bulb": a bulb at the point where the line meets it lights up;
-// and either way its text goes from dim to bright. Scrolling back up retracts
-// the line and switches the blocks off again.
+// and either way its text goes from dim to bright.
 //
 // Desktop (from 1024px): the first block is centred and the rest alternate
-// left and right; the line winds between them through the middle of the page,
-// passing behind the first block. Smaller screens: the blocks are stacked and
-// the line runs straight down their left side.
+// left and right, far apart, with the line winding between them. The story is
+// a pinned stage: it holds still on screen while you scroll, and scrolling
+// moves a camera over it. The camera starts close on the first block; as you
+// scroll on it pulls back (so the line can be seen winding across), travels
+// to the next block, and closes in on it just as the line reaches it and it
+// lights up — and so on to the last. Then the page scrolls on as usual.
 //
-// Visitors who ask for reduced motion get the finished picture: the line fully
-// drawn and every block lit.
+// Smaller screens: the blocks are stacked, the line runs straight down their
+// left side and draws itself as you scroll; no camera.
+//
+// Visitors who ask for reduced motion get the finished picture: no camera,
+// the line fully drawn and every block lit.
 
 export interface StoryChapter {
   label: string; // small gold heading, e.g. "1960 · Voice of Radio"
@@ -29,18 +33,46 @@ interface Point {
   y: number;
 }
 
+interface Box {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
 interface Segment {
   d: string; // SVG path
   length: number;
-  samples: { len: number; y: number; x: number }[]; // along the path, for working out how much to draw
+  samples: { len: number; x: number; y: number }[]; // along the path
 }
 
-// Where along the screen the line's tip sits: this far down the window.
-const TIP_AT = 0.62;
-const EASE = 0.14; // how quickly the drawn line catches up with the scroll position
+// ── Camera timeline (desktop), in screen heights of scrolling ────────────────
+const LEAD_IN = 0.5; // the line draws into the first block
+const HOLD = 0.55; // the camera rests on a block
+const TRAVEL = 1.1; // the camera moves on to the next block
+const ZOOM = 1.6; // how close the camera gets to a block (less if the block wouldn't fit)
+const NAVBAR = 118; // the camera frames blocks in the screen below the navbar
+const FIT = 0.86; // share of that space a framed block (or pair, pulled back) may fill
+
+/** How tall the pinned stage is: one screen, plus the scrolling the camera moves through. */
+const stageHeight = (blocks: number) => `${(1 + LEAD_IN + blocks * HOLD + (blocks - 1) * TRAVEL) * 100}svh`;
+
+// ── Line drawing (small screens) ────────────────────────────────────────────
+const TIP_AT = 0.62; // the line's tip sits this far down the window
+const EASE = 0.14; // how quickly what's drawn (and the camera) catch up with the scroll
+
+// ── Line layout ─────────────────────────────────────────────────────────────
 const SIDE_GAP = 36; // desktop: how far beside a side block the line meets it
 const LABEL_Y = 14; // the meeting point is level with the block's label
 const NARROW_X = 13; // small screens: the line's distance from the left
+
+// Desktop with motion allowed: the pinned camera version.
+const PINNED_QUERY = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
+const subscribePinned = (onChange: () => void) => {
+  const query = window.matchMedia(PINNED_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
 
 const cubic = (a: Point, c1: Point, c2: Point, b: Point, t: number): Point => {
   const u = 1 - t;
@@ -73,7 +105,6 @@ function drawnIn(seg: Segment, tipY: number): number {
   for (let i = 1; i < seg.samples.length; i++) {
     const s = seg.samples[i];
     if (s.y > tipY) {
-      // Part-way between the previous sample and this one.
       const p = seg.samples[i - 1];
       return p.len + ((tipY - p.y) / (s.y - p.y || 1)) * (s.len - p.len);
     }
@@ -94,6 +125,8 @@ function pointAt(seg: Segment, len: number): Point {
   return s[s.length - 1];
 }
 
+const smooth = (t: number) => t * t * (3 - 2 * t);
+
 // Desktop placement of each block: the first centred, then left, right, left…
 const placement = (i: number) =>
   i === 0
@@ -103,29 +136,39 @@ const placement = (i: number) =>
       : "lg:ml-auto lg:max-w-[min(480px,36%)]";
 
 export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const pinned = useSyncExternalStore(subscribePinned, () => window.matchMedia(PINNED_QUERY).matches, () => false);
+  const stageRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLElement | null)[]>([]);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const tipRef = useRef<HTMLDivElement>(null);
-  const [layout, setLayout] = useState<{ width: number; height: number; segments: Segment[]; joints: Point[] } | null>(null);
+  const [layout, setLayout] = useState<{
+    width: number;
+    height: number;
+    segments: Segment[];
+    joints: Point[];
+    blocks: Box[];
+  } | null>(null);
   const [lit, setLit] = useState(0); // how many blocks are switched on
 
   // Measure the blocks and lay the line out between them; again whenever any
-  // of them changes size (fonts loading, window resized).
+  // of them changes size (fonts loading, window resized). Positions are taken
+  // from the layout (offsets), so the camera's zoom doesn't affect them.
   useEffect(() => {
-    const wrap = wrapRef.current;
-    if (!wrap) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
     const measure = () => {
-      const box = wrap.getBoundingClientRect();
       const wide = window.matchMedia("(min-width: 1024px)").matches;
-      const rects = blockRefs.current.map((el) => {
-        const r = el!.getBoundingClientRect();
-        return { left: r.left - box.left, right: r.right - box.left, top: r.top - box.top, bottom: r.bottom - box.top };
+      const blocks: Box[] = blockRefs.current.map((el) => {
+        const list = el!.offsetParent as HTMLElement; // the <ol>
+        const left = list.offsetLeft + el!.offsetLeft;
+        const top = list.offsetTop + el!.offsetTop;
+        return { left, right: left + el!.offsetWidth, top, bottom: top + el!.offsetHeight };
       });
-      const centre = box.width / 2;
+      const centre = canvas.offsetWidth / 2;
 
       // Where the line meets each block.
-      const joints: Point[] = rects.map((r, i) =>
+      const joints: Point[] = blocks.map((r, i) =>
         !wide
           ? { x: NARROW_X, y: r.top + LABEL_Y }
           : i === 0
@@ -135,9 +178,8 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
               : { x: r.left - SIDE_GAP, y: r.top + LABEL_Y },
       );
 
-      const segments: Segment[] = [];
-      // Into the first block, from the top.
-      segments.push(segment({ x: joints[0].x, y: 0 }, joints[0]));
+      // segments[i] ends where the line meets block i.
+      const segments: Segment[] = [segment({ x: joints[0].x, y: 0 }, joints[0])];
       for (let i = 1; i < joints.length; i++) {
         const to = joints[i];
         if (!wide) {
@@ -146,28 +188,28 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
         }
         // Desktop: the line goes behind the first block and comes out below
         // it; from a side block it carries on from where it met it. Then it
-        // sweeps across to the next block in a smooth S. Every curve leaves and
-        // arrives heading straight down, so the line flows through each
-        // meeting point without a corner.
-        const from = i === 1 ? { x: centre, y: rects[0].bottom + 28 } : joints[i - 1];
+        // sweeps across to the next block in a smooth S, leaving and arriving
+        // heading straight down, so it flows through each meeting point.
+        const from = i === 1 ? { x: centre, y: blocks[0].bottom + 28 } : joints[i - 1];
         const drop = (to.y - from.y) * 0.55;
         segments.push(segment(from, to, { x: from.x, y: from.y + drop }, { x: to.x, y: to.y - drop }));
       }
-      setLayout({ width: box.width, height: box.height, segments, joints });
+      setLayout({ width: canvas.offsetWidth, height: canvas.offsetHeight, segments, joints, blocks });
     };
 
     measure();
     const observer = new ResizeObserver(measure);
-    observer.observe(wrap);
+    observer.observe(canvas);
     blockRefs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [pinned]);
 
-  // Draw the line to the scroll position, switching blocks on as it reaches them.
+  // Draw the line (and, on desktop, move the camera) with the scroll.
   useEffect(() => {
-    const wrap = wrapRef.current;
-    if (!layout || !wrap) return;
-    const { segments } = layout;
+    const canvas = canvasRef.current;
+    const stage = stageRef.current;
+    if (!layout || !canvas || !stage) return;
+    const { segments, blocks } = layout;
     const total = segments.reduce((sum, s) => sum + s.length, 0);
     // Total length drawn by the time the line reaches each block.
     const reachAt = segments.map((_, i) => segments.slice(0, i + 1).reduce((sum, s) => sum + s.length, 0));
@@ -192,42 +234,130 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           }
           rest -= seg.length;
         }
-        const showing = drawn > 1 && drawn < total - 1 && point;
-        tip.style.opacity = showing ? "1" : "0";
+        tip.style.opacity = drawn > 1 && drawn < total - 1 && point ? "1" : "0";
         if (point) tip.style.transform = `translate(${point.x}px, ${point.y}px)`;
       }
       setLit(reachAt.filter((at) => drawn >= at - 2).length);
     };
 
+    // Reduced motion: everything drawn and lit, no camera.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      canvas.style.transform = "";
       paint(total);
       return;
     }
 
-    let drawn = 0;
     let frame = 0;
-    const target = () => {
-      const tipY = window.innerHeight * TIP_AT - wrap.getBoundingClientRect().top;
-      let sum = 0;
-      for (const seg of segments) {
-        const part = drawnIn(seg, tipY);
-        sum += part;
-        if (part < seg.length - 0.01) break;
-      }
-      return sum;
+
+    // ── Small screens: the line's tip follows a point on the screen. ──
+    if (!pinned) {
+      canvas.style.transform = "";
+      const target = () => {
+        const tipY = window.innerHeight * TIP_AT - canvas.getBoundingClientRect().top;
+        let sum = 0;
+        for (const seg of segments) {
+          const part = drawnIn(seg, tipY);
+          sum += part;
+          if (part < seg.length - 0.01) break;
+        }
+        return sum;
+      };
+      let drawn = target();
+      paint(drawn);
+      const tick = () => {
+        const goal = target();
+        drawn += (goal - drawn) * EASE;
+        if (Math.abs(goal - drawn) < 0.5) drawn = goal;
+        paint(drawn);
+        frame = drawn === goal ? 0 : requestAnimationFrame(tick);
+      };
+      const wake = () => {
+        if (!frame) frame = requestAnimationFrame(tick);
+      };
+      window.addEventListener("scroll", wake, { passive: true });
+      window.addEventListener("resize", wake);
+      return () => {
+        cancelAnimationFrame(frame);
+        window.removeEventListener("scroll", wake);
+        window.removeEventListener("resize", wake);
+      };
+    }
+
+    // ── Desktop: the pinned stage and its camera. ──
+    // A "shot": the point the camera centres on, and how close it is.
+    const view = () => {
+      const height = window.innerHeight;
+      return { width: stage.clientWidth, height: height - NAVBAR, centreX: stage.clientWidth / 2, centreY: NAVBAR + (height - NAVBAR) / 2, screen: height };
     };
+    const fitScale = (box: Box, v: ReturnType<typeof view>) =>
+      Math.min((v.width * FIT) / (box.right - box.left), (v.height * FIT) / (box.bottom - box.top));
+    const shotOf = (box: Box, v: ReturnType<typeof view>) => ({
+      x: (box.left + box.right) / 2,
+      y: (box.top + box.bottom) / 2,
+      scale: Math.min(ZOOM, fitScale(box, v)),
+    });
+
+    /** Camera and line at `progress` (pixels scrolled into the stage). */
+    const at = (progress: number, v: ReturnType<typeof view>) => {
+      const unit = v.screen;
+      const shots = blocks.map((box) => shotOf(box, v));
+      if (progress < LEAD_IN * unit) return { shot: shots[0], drawn: reachAt[0] * (progress / (LEAD_IN * unit)) };
+      let rest = progress - LEAD_IN * unit;
+      for (let i = 0; i < blocks.length; i++) {
+        if (rest < HOLD * unit || i === blocks.length - 1) return { shot: shots[i], drawn: reachAt[i] };
+        rest -= HOLD * unit;
+        if (rest < TRAVEL * unit) {
+          const t = smooth(rest / (TRAVEL * unit));
+          const from = shots[i];
+          const to = shots[i + 1];
+          // Pulled back halfway: far enough to frame both blocks together.
+          const pair = {
+            left: Math.min(blocks[i].left, blocks[i + 1].left),
+            right: Math.max(blocks[i].right, blocks[i + 1].right),
+            top: Math.min(blocks[i].top, blocks[i + 1].top),
+            bottom: Math.max(blocks[i].bottom, blocks[i + 1].bottom),
+          };
+          const wideShot = Math.min(1, fitScale(pair, v));
+          const direct = Math.exp(Math.log(from.scale) + (Math.log(to.scale) - Math.log(from.scale)) * t);
+          const dip = wideShot / Math.min(from.scale, to.scale);
+          const scale = direct * (1 - (1 - Math.min(1, dip)) * Math.sin(Math.PI * t));
+          return {
+            shot: { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t, scale },
+            drawn: reachAt[i] + (reachAt[i + 1] - reachAt[i]) * t,
+          };
+        }
+        rest -= TRAVEL * unit;
+      }
+      return { shot: shots[shots.length - 1], drawn: total };
+    };
+
+    const place = (progress: number) => {
+      const v = view();
+      const { shot, drawn } = at(progress, v);
+      // Put the shot's centre point in the middle of the view, at its scale.
+      const x = v.centreX - canvas.offsetLeft - shot.x * shot.scale;
+      const y = v.centreY - shot.y * shot.scale;
+      canvas.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${shot.scale.toFixed(4)})`;
+      paint(drawn);
+    };
+
+    const target = () => {
+      const scrolled = -stage.getBoundingClientRect().top;
+      const length = stage.offsetHeight - window.innerHeight;
+      return Math.max(0, Math.min(length, scrolled));
+    };
+    let progress = target();
+    place(progress);
     const tick = () => {
       const goal = target();
-      drawn += (goal - drawn) * EASE;
-      if (Math.abs(goal - drawn) < 0.5) drawn = goal;
-      paint(drawn);
-      frame = drawn === goal ? 0 : requestAnimationFrame(tick);
+      progress += (goal - progress) * EASE;
+      if (Math.abs(goal - progress) < 0.5) progress = goal;
+      place(progress);
+      frame = progress === goal ? 0 : requestAnimationFrame(tick);
     };
     const wake = () => {
       if (!frame) frame = requestAnimationFrame(tick);
     };
-    drawn = target(); // start where the page already is (e.g. after a reload part-way down)
-    paint(drawn);
     window.addEventListener("scroll", wake, { passive: true });
     window.addEventListener("resize", wake);
     return () => {
@@ -235,12 +365,10 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
       window.removeEventListener("scroll", wake);
       window.removeEventListener("resize", wake);
     };
-  }, [layout]);
+  }, [layout, pinned]);
 
-  return (
-    // overflow-x-clip: the spotlights' beams are wider than the blocks, and
-    // mustn't make the page scroll sideways on phones.
-    <div ref={wrapRef} className="relative overflow-x-clip pt-24 pb-10 lg:pt-28 lg:pb-16">
+  const story = (
+    <>
       {/* The line: a faint track showing the whole route, and the gold line drawn over it. */}
       {layout && (
         <svg
@@ -280,11 +408,7 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
       )}
 
       {/* The tip of the line, glowing as it travels. */}
-      <div
-        ref={tipRef}
-        aria-hidden
-        className="pointer-events-none absolute top-0 left-0 size-0 opacity-0 transition-opacity duration-300"
-      >
+      <div ref={tipRef} aria-hidden className="pointer-events-none absolute top-0 left-0 size-0 opacity-0 transition-opacity duration-300">
         <span className="absolute size-3 -translate-1/2 rounded-full bg-[#FFF4E2] shadow-[0_0_10px_4px_rgba(255,226,180,0.9),0_0_28px_10px_rgba(231,158,63,0.5)]" />
       </div>
 
@@ -327,7 +451,8 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
         );
       })}
 
-      <ol className="relative flex flex-col gap-24 pl-10 sm:gap-28 lg:gap-40 lg:pl-0">
+      {/* Desktop: the blocks are far apart, so the camera has a long way to travel between them. */}
+      <ol className="relative flex flex-col gap-24 pl-10 sm:gap-28 lg:gap-[420px] lg:pl-0">
         {chapters.map((chapter, i) => {
           const on = i < lit;
           return (
@@ -368,6 +493,31 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           );
         })}
       </ol>
-    </div>
+    </>
+  );
+
+  // Desktop: a tall section whose screen-sized inner box stays pinned while
+  // the camera moves over the story inside it. Elsewhere: the story in the
+  // page as normal. (The spotlights reach a little past the content, so the
+  // page using this must clip sideways overflow.)
+  return pinned ? (
+    <section ref={stageRef} aria-label="Our story" className="relative" style={{ height: stageHeight(chapters.length) }}>
+      <div className="sticky top-0 h-svh overflow-hidden">
+        <div
+          ref={canvasRef}
+          className={`site-container absolute inset-x-0 top-0 origin-top-left pt-28 pb-16 transition-opacity duration-500 ${
+            layout ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {story}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section ref={stageRef} aria-label="Our story" className="site-container">
+      <div ref={canvasRef} className="relative pt-24 pb-10 lg:pt-28 lg:pb-16">
+        {story}
+      </div>
+    </section>
   );
 }

@@ -9,11 +9,13 @@ import { StageLights } from "./home/HeroEffects";
 // background covers them.
 //
 // Not on the home page: its hero has its own lights, and the content below
-// the hero has a solid background of its own.
+// the hero has a solid background of its own. Not on the About page either:
+// its story lights up block by block (StoryPath), and these would compete.
 //
 // Only the beams are back here. The lamp heads are drawn by the navbar, on top
 // of its frosted glass (which would otherwise blur them) — see Navbar.
-export const showSiteLights = (pathname: string) => pathname !== "/";
+const PAGES_WITHOUT_SITE_LIGHTS = new Set(["/", "/about"]);
+export const showSiteLights = (pathname: string) => !PAGES_WITHOUT_SITE_LIGHTS.has(pathname);
 
 /** Same strength for the beams here and the heads in the navbar: full, as in the hero. */
 export const SITE_LIGHTS_OPACITY = "opacity-100";

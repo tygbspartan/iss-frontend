@@ -52,15 +52,18 @@ export default async function AboutPage() {
   const coreTeam = await getCoreTeam().catch(() => []);
 
   return (
-    <div className="pt-[65px] sm:pt-[81px] lg:pt-[65px]">
+    // overflow-x-clip: the story's spotlights and zoomed blocks reach a little
+    // past the content; this keeps the page from scrolling sideways.
+    <div className="overflow-x-clip pt-[65px] sm:pt-[81px] lg:pt-[65px]">
       <div className="site-container">
         <header className="text-center">
           <h1 className="text-[30px] leading-[1.1] font-medium tracking-[-0.02em] sm:text-5xl lg:text-[60px]">Our Story</h1>
           <p className="mt-4 font-poppins text-xs tracking-[0.2em] text-[#9DA1B1] uppercase sm:mt-5 sm:text-sm">Since 1960</p>
         </header>
-
-        <StoryPath chapters={CHAPTERS} />
       </div>
+
+      {/* Full width: on desktop the story is a pinned, screen-wide stage. */}
+      <StoryPath chapters={CHAPTERS} />
 
       {coreTeam.length > 0 && (
         <section className="site-container pt-6 pb-14 lg:pt-10 lg:pb-20">
