@@ -1,0 +1,322 @@
+{
+  "exportedAt": "2026-11-19T08:30:17.440Z",
+  "services": [
+    {
+      "id": "8af065b2-9df8-4b4c-b947-6dcc454c5877",
+      "title": "Audio Solutions",
+      "slug": "audio-solutions",
+      "description": "Clear, powerful sound for audiences of every size. We deploy DAS Aero line arrays, JBL SRX speakers and stage monitors, wired and wireless in-ear systems and a Waves LV1 digital console — set up, tuned and mixed by experienced engineers for concerts, conferences and celebrations alike.",
+      "image": "/demo/services/1795076598661-e17ebfa2d703154f.png",
+      "features": [
+        "DAS Aero 20A Active Line Array",
+        "JBL SRX835 Full-Range Speakers",
+        "JBL SRX812 Stage Monitors",
+        "In-Ear Monitoring (Wired & Wireless)",
+        "Professional Microphones & Stands",
+        "Waves LV1 Digital Mixing Console",
+        "Digital Stage Boxes"
+      ],
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-11-18T08:15:19.799Z",
+      "updatedAt": "2026-11-19T08:23:19.337Z"
+    },
+    {
+      "id": "f9ae2261-33ee-4d61-88ea-a51b65d70c2e",
+      "title": "Display Solutions",
+      "slug": "display-solutions",
+      "description": "High-impact visuals that hold every eye in the room. From ABSEN LED walls to digital standees and podiums, driven by Resolume media servers and precise projection mapping, we bring presentations, live feeds and brand content to life on any stage or venue.",
+      "image": "/demo/services/1795076599605-cee2651efec530a9.png",
+      "features": [
+        "ABSEN LED Displays",
+        "Digital Standees",
+        "Digital Podium",
+        "Resolume Media Server",
+        "Projection Mapping"
+      ],
+      "sortOrder": 1,
+      "isActive": true,
+      "createdAt": "2026-11-18T08:15:20.064Z",
+      "updatedAt": "2026-11-19T08:23:19.836Z"
+    },
+    {
+      "id": "b714fc91-344f-4642-8c8c-b05f0d76c5ac",
+      "title": "Lighting Solutions",
+      "slug": "lighting-solutions",
+      "description": "Lighting that sets the mood and frames every moment. Our stage and event lighting, intelligent moving heads, timecode-synchronised shows and laser systems are designed and programmed to your event, turning any space into a stage with precise, repeatable cues.",
+      "image": "/demo/services/1795076600034-127a87cca7347ce3.png",
+      "features": [
+        "Stage & Event Lighting",
+        "Intelligent Moving Head Fixtures",
+        "Timecode Lighting",
+        "Laser Systems"
+      ],
+      "sortOrder": 2,
+      "isActive": true,
+      "createdAt": "2026-11-18T08:15:20.283Z",
+      "updatedAt": "2026-11-19T08:23:20.243Z"
+    },
+    {
+      "id": "38ae6813-f5e3-4876-bc8f-b7bcca830814",
+      "title": "Truss & Rigging Systems",
+      "slug": "truss-rigging-systems",
+      "description": "Safe, solid structures for stages, lighting, screens and sound. Our aluminum truss, ground support and roof systems are planned around the load they carry and installed by a trained rigging crew, from the first piece of setup to the final dismantle.",
+      "image": "/demo/services/1795076600404-975c96043171c664.png",
+      "features": [
+        "Aluminum Truss Systems",
+        "Ground Support Structures",
+        "Box Truss with Roof",
+        "Lighting Truss Installation",
+        "LED Screen Support Structures",
+        "Speaker Hanging Systems",
+        "Safety Rigging & Load Management",
+        "Truss Setup & Dismantling"
+      ],
+      "sortOrder": 3,
+      "isActive": true,
+      "createdAt": "2026-11-18T08:15:20.499Z",
+      "updatedAt": "2026-11-19T08:23:20.598Z"
+    },
+    {
+      "id": "f8296ff6-ca2e-43be-8490-8b71d767eaea",
+      "title": "Technical Consultation & Event Planning",
+      "slug": "technical-consultation-event-planning",
+      "description": "Expert technical guidance from the first site visit to show day. We assess your venue, design the audio-visual system, prepare technical drawings and layouts, and coordinate production, so every element of your event is planned, compatible and delivered on schedule.",
+      "image": "/demo/services/1795076600766-6061fa581805305f.png",
+      "features": [
+        "Event Technical Planning",
+        "Audio-Visual System Design",
+        "Production Planning & Coordination",
+        "Venue Site Inspection & Assessment",
+        "Technical Drawings & Layout Planning",
+        "Stage & Venue Design Consultation"
+      ],
+      "sortOrder": 4,
+      "isActive": true,
+      "createdAt": "2026-11-18T08:15:20.722Z",
+      "updatedAt": "2026-11-19T08:23:20.974Z"
+    }
+  ],
+  "departments": [
+    {
+      "id": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
+      "name": "Founders & Partners",
+      "sortOrder": 0,
+      "isCore": true
+    },
+    {
+      "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+      "name": "Management",
+      "sortOrder": 1,
+      "isCore": false
+    },
+    {
+      "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+      "name": "Team Members",
+      "sortOrder": 2,
+      "isCore": false
+    }
+  ],
+  "team": [
+    {
+      "id": "f981988e-dc72-40c6-9bd1-c7383e4dd4bf",
+      "name": "Maya Sterling",
+      "email": "",
+      "link": null,
+      "jobTitle": "Creative Director",
+      "image": "/demo/team/1791107739106-4f60b0c08f27cbd7.jpg",
+      "actualImage": "/demo/team/1792147267191-c75275d6522d83d2.png",
+      "departmentId": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:55:38.876Z",
+      "updatedAt": "2026-10-16T10:41:07.624Z",
+      "department": {
+        "id": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
+        "name": "Founders & Partners",
+        "sortOrder": 0,
+        "isCore": true
+      }
+    },
+    {
+      "id": "7a567df1-9bab-4cf7-a5f7-556bd9c371ca",
+      "name": "Alex Veyron",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "CEO",
+      "image": "/demo/team/1791107702360-4a25d4aeba9bf632.jpg",
+      "actualImage": null,
+      "departmentId": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
+      "sortOrder": 1,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:55:01.808Z",
+      "updatedAt": "2026-10-04T09:55:02.754Z",
+      "department": {
+        "id": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
+        "name": "Founders & Partners",
+        "sortOrder": 0,
+        "isCore": true
+      }
+    },
+    {
+      "id": "4550fc99-24c9-4079-bfc8-29e1fbfddb7d",
+      "name": "Ethan Vale",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "Managing Director",
+      "image": "/demo/team/1791107818410-ed6b802f774c3462.jpg",
+      "actualImage": null,
+      "departmentId": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:56:58.218Z",
+      "updatedAt": "2026-10-04T09:56:58.610Z",
+      "department": {
+        "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+        "name": "Management",
+        "sortOrder": 1,
+        "isCore": false
+      }
+    },
+    {
+      "id": "61dad00e-b71b-4534-ad1d-674008c42fee",
+      "name": "Leo Hartwell",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "Operations Manager",
+      "image": "/demo/team/1791107866061-d818c06d9bae7f50.jpg",
+      "actualImage": null,
+      "departmentId": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:57:45.866Z",
+      "updatedAt": "2026-10-04T09:57:46.223Z",
+      "department": {
+        "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+        "name": "Management",
+        "sortOrder": 1,
+        "isCore": false
+      }
+    },
+    {
+      "id": "9c3acc5c-5476-442f-9175-0be80f0b5a64",
+      "name": "Sophia Arden",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "Operations Manager",
+      "image": "/demo/team/1791107843295-0ed26abd93a93a19.jpg",
+      "actualImage": null,
+      "departmentId": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:57:23.058Z",
+      "updatedAt": "2026-10-04T09:57:23.451Z",
+      "department": {
+        "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+        "name": "Management",
+        "sortOrder": 1,
+        "isCore": false
+      }
+    },
+    {
+      "id": "61e5a474-1f30-4cc7-a01a-dd00775f923d",
+      "name": "Kai Mercer",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "Live Sound Technician",
+      "image": "/demo/team/1791108144998-ed6be6ecbae3bba9.jpg",
+      "actualImage": null,
+      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T10:02:24.450Z",
+      "updatedAt": "2026-10-04T10:07:06.829Z",
+      "department": {
+        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+        "name": "Team Members",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "00e2355d-3664-47ae-88d5-636000fb5465",
+      "name": "Nina Westfall",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "Event Coordinator",
+      "image": "/demo/team/1791107941085-96ae183d1a95e048.jpg",
+      "actualImage": null,
+      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:59:00.886Z",
+      "updatedAt": "2026-10-04T09:59:01.369Z",
+      "department": {
+        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+        "name": "Team Members",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "138b5523-6d78-49a2-9f80-e7fdb3c4f487",
+      "name": "Ryan Everly",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "Audio Technician",
+      "image": "/demo/team/1791107921313-868f39ad8a985a12.jpg",
+      "actualImage": null,
+      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:58:41.119Z",
+      "updatedAt": "2026-10-04T09:58:41.490Z",
+      "department": {
+        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+        "name": "Team Members",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "ecde30b4-d1f8-4685-b6a4-280537f7e437",
+      "name": "Zara Monroe",
+      "email": "",
+      "link": "https://www.linkedin.com/feed/",
+      "jobTitle": "Event Production Lead",
+      "image": "/demo/team/1791107896462-0a154d42238a907e.jpg",
+      "actualImage": null,
+      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-10-04T09:58:16.264Z",
+      "updatedAt": "2026-10-04T09:58:16.608Z",
+      "department": {
+        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+        "name": "Team Members",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "288ee31b-5327-4e22-a0a0-ae8c4f38d057",
+      "name": "Indra Jatra Cultural Night",
+      "eventDate": "2026-12-05",
+      "image": "/demo/events/1793363060493-530d1ca9c9ed6fbe.png",
+      "isActive": true,
+      "createdAt": "2026-10-30T12:24:20.763Z",
+      "updatedAt": "2026-10-30T12:24:20.763Z"
+    },
+    {
+      "id": "94fb4297-1af8-443d-8fbe-a3570f96a992",
+      "name": "Inter-College Sports Finale",
+      "eventDate": "2027-01-16",
+      "image": "/demo/events/1793363060926-e39120db97f5a97d.png",
+      "isActive": true,
+      "createdAt": "2026-10-30T12:24:21.147Z",
+      "updatedAt": "2026-10-30T12:24:21.147Z"
+    }
+  ]
+}
