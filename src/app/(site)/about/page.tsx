@@ -16,31 +16,26 @@ export const metadata: Metadata = pageMetadata({
 });
 
 // The story, in the order the line visits it: the first block centred, then
-// left, right, left, right. Each says how it lights up when the line reaches it.
+// left, right, left, right.
 const CHAPTERS: StoryChapter[] = [
   {
     label: "Who we are",
-    light: "spotlight",
     text: "International Sound Service (ISS) is one of Nepal's established audio-visual and event production companies, delivering comprehensive technical solutions for corporate events, conferences, concerts, exhibitions, government programmes, and special occasions.",
   },
   {
     label: "1960 · Voice of Radio",
-    light: "bulb",
     text: "Our journey began in 1960 with Voice of Radio, a family-operated sound system business established by Mr. Asta Ratna Shakya alongside his brother. What began as a small family venture gradually grew into a legacy built on sound, dedication, and service.",
   },
   {
     label: "1993 · International Sound Service",
-    light: "spotlight",
     text: "In 1993, the next chapter began when Mr. Suresh Ratna Shakya established International Sound Service (ISS), transforming the family's experience into a dedicated professional sound service company. Starting with political gatherings, college programmes, and small-scale events, ISS steadily expanded its services, expertise, and presence in Nepal's event industry.",
   },
   {
     label: "Today · The next generation",
-    light: "bulb",
     text: "Today, ISS continues this legacy under the leadership of the next generation, with Mr. Shibir Shakya and Mr. Samir Shakya actively involved in the company's operations, management, and business development. With more than six decades of heritage and experience, ISS has evolved from a traditional sound system provider into a comprehensive audio-visual and event production partner. By combining advanced technology, skilled professionals, creative thinking, and a commitment to excellence, we continue to deliver seamless and memorable event experiences.",
   },
   {
     label: "Our promise",
-    light: "spotlight",
     text: "As a third-generation family business, our commitment remains the same: bringing people, ideas, and experiences together through the power of sound and innovation.",
   },
 ];

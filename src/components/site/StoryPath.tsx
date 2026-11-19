@@ -3,10 +3,15 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 // The About page's story: a few blocks of text joined by one thick gold line.
-// When the line reaches a block that block "switches on":
-//   • "spotlight": a warm stage spotlight fades in over it from above;
-//   • "bulb": a bulb at the point where the line meets it lights up;
-// and either way its text goes from dim to bright.
+// When the line reaches a block that block "switches on": a bulb lights up
+// where the line meets it, a warm stage spotlight fades in over it from above,
+// and its text goes from dim to bright.
+//
+// After the last block the line returns to the middle of the page and grows
+// into a family tree — a trunk splitting into two, four, then eight — drawn
+// in grey and filling with gold, level by level. Under it, "Powered By
+// Generations" is already written, with room left for a word; once the tree
+// is full, "Three" appears there in gold, letter by letter.
 //
 // Desktop (from 1024px): the first block is centred and the rest alternate
 // left and right, far apart, with the line winding between them. The story is
@@ -14,18 +19,18 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 // moves a camera over it. The camera starts close on the first block; as you
 // scroll on it pulls back (so the line can be seen winding across), travels
 // to the next block, and closes in on it just as the line reaches it and it
-// lights up — and so on to the last. Then the page scrolls on as usual.
+// lights up — and so on, ending on the family tree. Then the page scrolls on.
 //
 // Smaller screens: the blocks are stacked, the line runs straight down their
-// left side and draws itself as you scroll; no camera.
+// left side and draws itself as you scroll, then curves in to the tree; no camera.
 //
 // Visitors who ask for reduced motion get the finished picture: no camera,
-// the line fully drawn and every block lit.
+// the line and tree fully drawn, every block lit and "Three" shown.
+// (The letters still fade in; that's a short fade, not motion.)
 
 export interface StoryChapter {
   label: string; // small gold heading, e.g. "1960 · Voice of Radio"
   text: string;
-  light: "spotlight" | "bulb";
 }
 
 interface Point {
@@ -46,16 +51,25 @@ interface Segment {
   samples: { len: number; x: number; y: number }[]; // along the path
 }
 
+/** One level of the family tree: paths drawn at the same time, each `length` long. */
+interface TreeLevel {
+  paths: string[];
+  length: number;
+}
+
 // ── Camera timeline (desktop), in screen heights of scrolling ────────────────
 const LEAD_IN = 0.5; // the line draws into the first block
 const HOLD = 0.55; // the camera rests on a block
-const TRAVEL = 1.1; // the camera moves on to the next block
+const TRAVEL = 1.1; // the camera moves on to the next block (and finally to the tree)
+const TREE_DRAW = 0.9; // the family tree fills up
+const TREE_HOLD = 1; // "Three" is revealed, and the camera rests on the tree
 const ZOOM = 1.6; // how close the camera gets to a block (less if the block wouldn't fit)
 const NAVBAR = 118; // the camera frames blocks in the screen below the navbar
 const FIT = 0.86; // share of that space a framed block (or pair, pulled back) may fill
 
 /** How tall the pinned stage is: one screen, plus the scrolling the camera moves through. */
-const stageHeight = (blocks: number) => `${(1 + LEAD_IN + blocks * HOLD + (blocks - 1) * TRAVEL) * 100}svh`;
+const stageHeight = (blocks: number) =>
+  `${(1 + LEAD_IN + blocks * HOLD + blocks * TRAVEL + TREE_DRAW + TREE_HOLD) * 100}svh`;
 
 // ── Line drawing (small screens) ────────────────────────────────────────────
 const TIP_AT = 0.62; // the line's tip sits this far down the window
@@ -65,6 +79,12 @@ const EASE = 0.14; // how quickly what's drawn (and the camera) catch up with th
 const SIDE_GAP = 36; // desktop: how far beside a side block the line meets it
 const LABEL_Y = 14; // the meeting point is level with the block's label
 const NARROW_X = 13; // small screens: the line's distance from the left
+
+// ── Family tree: half-widths of each split, and the height of each step ──────
+// (at desktop size; smaller screens use TREE_NARROW of it).
+const TREE_SPLITS = [112, 62, 36]; // trunk → 2, → 4, → 8
+const TREE_STEP = 34;
+const TREE_NARROW = 0.72;
 
 // Desktop with motion allowed: the pinned camera version.
 const PINNED_QUERY = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
@@ -98,6 +118,12 @@ function segment(a: Point, b: Point, c1?: Point, c2?: Point): Segment {
   return { d, length: Math.max(len, 0.01), samples };
 }
 
+/** A smooth S from `from` to `to`, leaving and arriving heading straight down. */
+const sCurve = (from: Point, to: Point) => {
+  const drop = (to.y - from.y) * 0.55;
+  return segment(from, to, { x: from.x, y: from.y + drop }, { x: to.x, y: to.y - drop });
+};
+
 /** How far along a segment the tip is, given the tip's height. */
 function drawnIn(seg: Segment, tipY: number): number {
   if (seg.samples[0].y > tipY) return 0;
@@ -125,6 +151,30 @@ function pointAt(seg: Segment, len: number): Point {
   return s[s.length - 1];
 }
 
+/**
+ * The family tree, its trunk starting at `top`: a short trunk, then three
+ * levels where every branch splits in two — out sideways, then down.
+ */
+function familyTree(top: Point, size: number): TreeLevel[] {
+  const step = TREE_STEP * size;
+  const levels: TreeLevel[] = [{ paths: [`M${top.x},${top.y} L${top.x},${top.y + step}`], length: step }];
+  let tips = [top.x];
+  let y = top.y + step;
+  for (const split of TREE_SPLITS) {
+    const half = split * size;
+    levels.push({
+      paths: tips.flatMap((x) => [-1, 1].map((side) => `M${x},${y} L${x + side * half},${y} L${x + side * half},${y + step}`)),
+      length: half + step,
+    });
+    tips = tips.flatMap((x) => [x - half, x + half]);
+    y += step;
+  }
+  return levels;
+}
+
+const treeHeight = (size: number) => TREE_STEP * size * (TREE_SPLITS.length + 1);
+const treeWidth = (size: number) => 2 * TREE_SPLITS.reduce((sum, split) => sum + split, 0) * size;
+
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
 // Desktop placement of each block: the first centred, then left, right, left…
@@ -135,37 +185,72 @@ const placement = (i: number) =>
       ? "lg:mr-auto lg:max-w-[min(480px,36%)]"
       : "lg:ml-auto lg:max-w-[min(480px,36%)]";
 
+/** A bulb at a point on the line: dark until `on`, then lit with a soft halo. */
+function Bulb({ at, on }: { at: Point; on: boolean }) {
+  return (
+    <div aria-hidden className="pointer-events-none absolute top-0 left-0 size-0" style={{ transform: `translate(${at.x}px, ${at.y}px)` }}>
+      <span
+        className={`absolute size-24 -translate-1/2 rounded-full bg-[radial-gradient(circle,rgba(242,201,135,0.45),rgba(231,158,63,0.12)_45%,transparent_70%)] transition-[opacity,scale] duration-700 ${
+          on ? "scale-100 opacity-100" : "scale-50 opacity-0"
+        }`}
+      />
+      <span
+        className={`absolute size-5 -translate-1/2 rounded-full border transition-[background-color,border-color,box-shadow] duration-500 ${
+          on
+            ? "border-[#FFF4E2] bg-[#FFE7B8] shadow-[0_0_14px_5px_rgba(255,226,180,0.85),0_0_44px_18px_rgba(231,158,63,0.45)]"
+            : "border-white/25 bg-[#1a1a1a]"
+        }`}
+      />
+    </div>
+  );
+}
+
 export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
   const pinned = useSyncExternalStore(subscribePinned, () => window.matchMedia(PINNED_QUERY).matches, () => false);
   const stageRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLElement | null)[]>([]);
+  const finaleRef = useRef<HTMLDivElement>(null);
+  const treeSpaceRef = useRef<HTMLDivElement>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const treeRefs = useRef<(SVGPathElement | null)[][]>([]);
   const tipRef = useRef<HTMLDivElement>(null);
   const [layout, setLayout] = useState<{
     width: number;
     height: number;
-    segments: Segment[];
+    segments: Segment[]; // segments[i] ends at block i; the last one ends at the tree
     joints: Point[];
     blocks: Box[];
+    tree: TreeLevel[];
+    treeTop: number;
+    treeSize: number;
+    finale: Box;
   } | null>(null);
   const [lit, setLit] = useState(0); // how many blocks are switched on
+  const [treeLit, setTreeLit] = useState(false); // the line has reached the top of the tree
+  const [three, setThree] = useState(false); // the tree is full and "Three" is showing
 
   // Measure the blocks and lay the line out between them; again whenever any
   // of them changes size (fonts loading, window resized). Positions are taken
   // from the layout (offsets), so the camera's zoom doesn't affect them.
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const finaleEl = finaleRef.current;
+    const treeSpace = treeSpaceRef.current;
+    if (!canvas || !finaleEl || !treeSpace) return;
     const measure = () => {
       const wide = window.matchMedia("(min-width: 1024px)").matches;
-      const blocks: Box[] = blockRefs.current.map((el) => {
-        const list = el!.offsetParent as HTMLElement; // the <ol>
-        const left = list.offsetLeft + el!.offsetLeft;
-        const top = list.offsetTop + el!.offsetTop;
-        return { left, right: left + el!.offsetWidth, top, bottom: top + el!.offsetHeight };
-      });
+      const boxOf = (el: HTMLElement, parent: HTMLElement | null): Box => {
+        const left = (parent?.offsetLeft ?? 0) + el.offsetLeft;
+        const top = (parent?.offsetTop ?? 0) + el.offsetTop;
+        return { left, right: left + el.offsetWidth, top, bottom: top + el.offsetHeight };
+      };
+      // Blocks sit in the <ol>; the tree's space sits in the finale; both are in the canvas.
+      const blocks = blockRefs.current.map((el) => boxOf(el!, el!.offsetParent as HTMLElement));
+      const finale = boxOf(finaleEl, null);
       const centre = canvas.offsetWidth / 2;
+      const treeSize = wide ? 1 : TREE_NARROW;
+      const treeTop = finale.top + treeSpace.offsetTop;
 
       // Where the line meets each block.
       const joints: Point[] = blocks.map((r, i) =>
@@ -178,40 +263,48 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
               : { x: r.left - SIDE_GAP, y: r.top + LABEL_Y },
       );
 
-      // segments[i] ends where the line meets block i.
       const segments: Segment[] = [segment({ x: joints[0].x, y: 0 }, joints[0])];
       for (let i = 1; i < joints.length; i++) {
-        const to = joints[i];
-        if (!wide) {
-          segments.push(segment(joints[i - 1], to));
-          continue;
-        }
         // Desktop: the line goes behind the first block and comes out below
-        // it; from a side block it carries on from where it met it. Then it
-        // sweeps across to the next block in a smooth S, leaving and arriving
-        // heading straight down, so it flows through each meeting point.
-        const from = i === 1 ? { x: centre, y: blocks[0].bottom + 28 } : joints[i - 1];
-        const drop = (to.y - from.y) * 0.55;
-        segments.push(segment(from, to, { x: from.x, y: from.y + drop }, { x: to.x, y: to.y - drop }));
+        // it; from a side block it carries on from where it met it, sweeping
+        // across to the next in a smooth S. Small screens: straight down.
+        if (!wide) segments.push(segment(joints[i - 1], joints[i]));
+        else segments.push(sCurve(i === 1 ? { x: centre, y: blocks[0].bottom + 28 } : joints[i - 1], joints[i]));
       }
-      setLayout({ width: canvas.offsetWidth, height: canvas.offsetHeight, segments, joints, blocks });
+      // Finally back to the middle, to the top of the tree's trunk.
+      segments.push(sCurve(joints[joints.length - 1], { x: centre, y: treeTop }));
+
+      setLayout({
+        width: canvas.offsetWidth,
+        height: canvas.offsetHeight,
+        segments,
+        joints,
+        blocks,
+        tree: familyTree({ x: centre, y: treeTop }, treeSize),
+        treeTop,
+        treeSize,
+        finale,
+      });
     };
 
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(canvas);
+    observer.observe(finaleEl);
     blockRefs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
   }, [pinned]);
 
-  // Draw the line (and, on desktop, move the camera) with the scroll.
+  // Draw the line and tree (and, on desktop, move the camera) with the scroll.
   useEffect(() => {
     const canvas = canvasRef.current;
     const stage = stageRef.current;
     if (!layout || !canvas || !stage) return;
-    const { segments, blocks } = layout;
-    const total = segments.reduce((sum, s) => sum + s.length, 0);
-    // Total length drawn by the time the line reaches each block.
+    const { segments, blocks, tree } = layout;
+    const lineTotal = segments.reduce((sum, s) => sum + s.length, 0);
+    const treeTotal = tree.reduce((sum, level) => sum + level.length, 0);
+    const total = lineTotal + treeTotal;
+    // Total length drawn by the time the line reaches each block (and the tree).
     const reachAt = segments.map((_, i) => segments.slice(0, i + 1).reduce((sum, s) => sum + s.length, 0));
 
     const paint = (drawn: number) => {
@@ -222,7 +315,15 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
         const path = pathRefs.current[i];
         if (path) path.style.strokeDashoffset = `${seg.length - here}`;
       });
-      // The glowing tip, at the end of what's drawn (hidden when nothing is, or all is).
+      // The tree fills level by level, every branch of a level at once.
+      tree.forEach((level, i) => {
+        const here = Math.max(0, Math.min(level.length, left));
+        left -= level.length;
+        treeRefs.current[i]?.forEach((path) => {
+          if (path) path.style.strokeDashoffset = `${level.length - here}`;
+        });
+      });
+      // The glowing tip, at the end of the line (not in the tree, which has many ends).
       const tip = tipRef.current;
       if (tip) {
         let rest = drawn;
@@ -234,10 +335,12 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           }
           rest -= seg.length;
         }
-        tip.style.opacity = drawn > 1 && drawn < total - 1 && point ? "1" : "0";
+        tip.style.opacity = drawn > 1 && drawn < lineTotal - 1 && point ? "1" : "0";
         if (point) tip.style.transform = `translate(${point.x}px, ${point.y}px)`;
       }
-      setLit(reachAt.filter((at) => drawn >= at - 2).length);
+      setLit(reachAt.slice(0, blocks.length).filter((at) => drawn >= at - 2).length);
+      setTreeLit(drawn >= lineTotal - 2);
+      setThree(drawn >= total - 2);
     };
 
     // Reduced motion: everything drawn and lit, no camera.
@@ -252,15 +355,17 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
     // ── Small screens: the line's tip follows a point on the screen. ──
     if (!pinned) {
       canvas.style.transform = "";
+      const height = treeHeight(layout.treeSize);
       const target = () => {
         const tipY = window.innerHeight * TIP_AT - canvas.getBoundingClientRect().top;
         let sum = 0;
         for (const seg of segments) {
           const part = drawnIn(seg, tipY);
           sum += part;
-          if (part < seg.length - 0.01) break;
+          if (part < seg.length - 0.01) return sum;
         }
-        return sum;
+        // The line is complete: the tree fills as the tip passes down it.
+        return sum + treeTotal * Math.max(0, Math.min(1, (tipY - layout.treeTop) / height));
       };
       let drawn = target();
       paint(drawn);
@@ -284,38 +389,52 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
     }
 
     // ── Desktop: the pinned stage and its camera. ──
-    // A "shot": the point the camera centres on, and how close it is.
+    // The camera's stops: each block, then the tree with its words.
+    const stops = [...blocks, layout.finale];
     const view = () => {
       const height = window.innerHeight;
-      return { width: stage.clientWidth, height: height - NAVBAR, centreX: stage.clientWidth / 2, centreY: NAVBAR + (height - NAVBAR) / 2, screen: height };
+      return {
+        width: stage.clientWidth,
+        height: height - NAVBAR,
+        centreX: stage.clientWidth / 2,
+        centreY: NAVBAR + (height - NAVBAR) / 2,
+        screen: height,
+      };
     };
-    const fitScale = (box: Box, v: ReturnType<typeof view>) =>
+    type View = ReturnType<typeof view>;
+    const fitScale = (box: Box, v: View) =>
       Math.min((v.width * FIT) / (box.right - box.left), (v.height * FIT) / (box.bottom - box.top));
-    const shotOf = (box: Box, v: ReturnType<typeof view>) => ({
+    // A "shot": the point the camera centres on, and how close it is.
+    const shotOf = (box: Box, v: View) => ({
       x: (box.left + box.right) / 2,
       y: (box.top + box.bottom) / 2,
       scale: Math.min(ZOOM, fitScale(box, v)),
     });
 
     /** Camera and line at `progress` (pixels scrolled into the stage). */
-    const at = (progress: number, v: ReturnType<typeof view>) => {
+    const at = (progress: number, v: View) => {
       const unit = v.screen;
-      const shots = blocks.map((box) => shotOf(box, v));
+      const shots = stops.map((box) => shotOf(box, v));
       if (progress < LEAD_IN * unit) return { shot: shots[0], drawn: reachAt[0] * (progress / (LEAD_IN * unit)) };
       let rest = progress - LEAD_IN * unit;
-      for (let i = 0; i < blocks.length; i++) {
-        if (rest < HOLD * unit || i === blocks.length - 1) return { shot: shots[i], drawn: reachAt[i] };
+      for (let i = 0; i < stops.length; i++) {
+        if (i === stops.length - 1) {
+          // On the tree: it fills, then everything rests with "Three" showing.
+          const fill = Math.min(1, rest / (TREE_DRAW * unit));
+          return { shot: shots[i], drawn: lineTotal + treeTotal * smooth(fill) };
+        }
+        if (rest < HOLD * unit) return { shot: shots[i], drawn: reachAt[i] };
         rest -= HOLD * unit;
         if (rest < TRAVEL * unit) {
           const t = smooth(rest / (TRAVEL * unit));
           const from = shots[i];
           const to = shots[i + 1];
-          // Pulled back halfway: far enough to frame both blocks together.
+          // Pulled back halfway: far enough to frame both stops together.
           const pair = {
-            left: Math.min(blocks[i].left, blocks[i + 1].left),
-            right: Math.max(blocks[i].right, blocks[i + 1].right),
-            top: Math.min(blocks[i].top, blocks[i + 1].top),
-            bottom: Math.max(blocks[i].bottom, blocks[i + 1].bottom),
+            left: Math.min(stops[i].left, stops[i + 1].left),
+            right: Math.max(stops[i].right, stops[i + 1].right),
+            top: Math.min(stops[i].top, stops[i + 1].top),
+            bottom: Math.max(stops[i].bottom, stops[i + 1].bottom),
           };
           const wideShot = Math.min(1, fitScale(pair, v));
           const direct = Math.exp(Math.log(from.scale) + (Math.log(to.scale) - Math.log(from.scale)) * t);
@@ -367,9 +486,11 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
     };
   }, [layout, pinned]);
 
+  const treeSize = layout?.treeSize ?? 1;
+
   const story = (
     <>
-      {/* The line: a faint track showing the whole route, and the gold line drawn over it. */}
+      {/* The line and the tree: faint tracks showing the whole route, and gold drawn over them. */}
       {layout && (
         <svg
           aria-hidden
@@ -380,6 +501,12 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           {layout.segments.map((seg, i) => (
             <path key={`track-${i}`} d={seg.d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={4} strokeLinecap="round" />
           ))}
+          {/* The tree's grey outline: there from the start, the same as the line's track. */}
+          {layout.tree.flatMap((level, i) =>
+            level.paths.map((d, j) => (
+              <path key={`tree-track-${i}-${j}`} d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={4} strokeLinejoin="round" />
+            )),
+          )}
           {layout.segments.map((seg, i) => (
             <path
               key={`line-${i}`}
@@ -397,6 +524,25 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
               className="drop-shadow-[0_0_6px_rgba(231,158,63,0.7)]"
             />
           ))}
+          {layout.tree.map((level, i) =>
+            level.paths.map((d, j) => (
+              <path
+                key={`tree-${i}-${j}`}
+                ref={(el) => {
+                  (treeRefs.current[i] ??= [])[j] = el;
+                }}
+                d={d}
+                pathLength={level.length}
+                fill="none"
+                stroke="#E79E3F"
+                strokeWidth={4}
+                strokeLinejoin="round"
+                strokeDasharray={level.length}
+                strokeDashoffset={level.length}
+                className="drop-shadow-[0_0_5px_rgba(231,158,63,0.7)]"
+              />
+            )),
+          )}
           <defs>
             <linearGradient id="story-gold" x1="0" y1="0" x2="0" y2={layout.height} gradientUnits="userSpaceOnUse">
               <stop offset="0" stopColor="#F2C987" />
@@ -412,44 +558,9 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
         <span className="absolute size-3 -translate-1/2 rounded-full bg-[#FFF4E2] shadow-[0_0_10px_4px_rgba(255,226,180,0.9),0_0_28px_10px_rgba(231,158,63,0.5)]" />
       </div>
 
-      {/* Where the line meets each block: a bulb that lights up, or (for the
-          spotlight blocks) a small node that glows. */}
-      {layout?.joints.map((joint, i) => {
-        const on = i < lit;
-        const bulb = chapters[i].light === "bulb";
-        return (
-          <div
-            key={`joint-${i}`}
-            aria-hidden
-            className="pointer-events-none absolute top-0 left-0 size-0"
-            style={{ transform: `translate(${joint.x}px, ${joint.y}px)` }}
-          >
-            {bulb ? (
-              <>
-                {/* Halo, then the bulb itself. */}
-                <span
-                  className={`absolute size-24 -translate-1/2 rounded-full bg-[radial-gradient(circle,rgba(242,201,135,0.45),rgba(231,158,63,0.12)_45%,transparent_70%)] transition-[opacity,scale] duration-700 ${
-                    on ? "scale-100 opacity-100" : "scale-50 opacity-0"
-                  }`}
-                />
-                <span
-                  className={`absolute size-5 -translate-1/2 rounded-full border transition-[background-color,border-color,box-shadow] duration-500 ${
-                    on
-                      ? "border-[#FFF4E2] bg-[#FFE7B8] shadow-[0_0_14px_5px_rgba(255,226,180,0.85),0_0_44px_18px_rgba(231,158,63,0.45)]"
-                      : "border-white/25 bg-[#1a1a1a]"
-                  }`}
-                />
-              </>
-            ) : (
-              <span
-                className={`absolute size-2.5 -translate-1/2 rounded-full transition-[background-color,box-shadow] duration-500 ${
-                  on ? "bg-[#F2C987] shadow-[0_0_10px_4px_rgba(231,158,63,0.6)]" : "bg-white/20"
-                }`}
-              />
-            )}
-          </div>
-        );
-      })}
+      {/* Where the line meets each block, and the top of the tree: a bulb that lights up. */}
+      {layout?.joints.map((joint, i) => <Bulb key={`joint-${i}`} at={joint} on={i < lit} />)}
+      {layout && <Bulb at={{ x: layout.width / 2, y: layout.treeTop }} on={treeLit} />}
 
       {/* Desktop: the blocks are far apart, so the camera has a long way to travel between them. */}
       <ol className="relative flex flex-col gap-24 pl-10 sm:gap-28 lg:gap-[420px] lg:pl-0">
@@ -463,18 +574,16 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
               }}
               className={`relative isolate ${placement(i)}`}
             >
-              {chapter.light === "spotlight" && (
-                // The spotlight: a soft gold beam from above, and a pool of light behind the text.
-                <span
-                  aria-hidden
-                  className={`pointer-events-none absolute inset-0 -z-10 transition-opacity duration-1000 ${on ? "opacity-100" : "opacity-0"}`}
-                >
-                  <span className="absolute -top-56 left-1/2 h-[calc(100%+16rem)] w-[110%] -translate-x-1/2 blur-2xl">
-                    <span className="block size-full bg-[linear-gradient(to_bottom,rgba(231,158,63,0.42),rgba(231,158,63,0.12)_55%,rgba(231,158,63,0)_92%)] [clip-path:polygon(44%_0,56%_0,100%_100%,0_100%)]" />
-                  </span>
-                  <span className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(231,158,63,0.14),transparent_70%)]" />
+              {/* The spotlight: a soft gold beam from above, and a pool of light behind the text. */}
+              <span
+                aria-hidden
+                className={`pointer-events-none absolute inset-0 -z-10 transition-opacity duration-1000 ${on ? "opacity-100" : "opacity-0"}`}
+              >
+                <span className="absolute -top-56 left-1/2 h-[calc(100%+16rem)] w-[110%] -translate-x-1/2 blur-2xl">
+                  <span className="block size-full bg-[linear-gradient(to_bottom,rgba(231,158,63,0.42),rgba(231,158,63,0.12)_55%,rgba(231,158,63,0)_92%)] [clip-path:polygon(44%_0,56%_0,100%_100%,0_100%)]" />
                 </span>
-              )}
+                <span className="absolute -inset-10 bg-[radial-gradient(ellipse_at_center,rgba(231,158,63,0.14),transparent_70%)]" />
+              </span>
               <p
                 className={`font-poppins text-xs tracking-[0.2em] uppercase transition-colors duration-700 sm:text-[13px] ${
                   on ? "text-[#E79E3F]" : "text-[#E79E3F]/35"
@@ -493,6 +602,35 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           );
         })}
       </ol>
+
+      {/* The finale: room for the family tree (drawn in the line's SVG above),
+          and the words under it, "Three" revealed once the tree is full. */}
+      <div ref={finaleRef} className="relative mx-auto mt-28 w-fit text-center lg:mt-[420px]">
+        <div
+          ref={treeSpaceRef}
+          aria-hidden
+          className="mx-auto"
+          style={{ width: treeWidth(treeSize), height: treeHeight(treeSize) }}
+        />
+        <p className="mt-8 text-lg font-medium text-white sm:text-2xl lg:mt-10 lg:text-[28px]">
+          Powered By{" "}
+          <span className="relative inline-block text-[#E79E3F]">
+            {/* Letter by letter: each fades in out of a gold blur, a beat after the last. */}
+            {"Three".split("").map((letter, i) => (
+              <span
+                key={i}
+                className={`inline-block transition-[opacity,filter,translate] duration-700 ease-out ${
+                  three ? "translate-y-0 opacity-100 blur-0 [text-shadow:0_0_14px_rgba(231,158,63,0.8)]" : "translate-y-1 opacity-0 blur-sm"
+                }`}
+                style={{ transitionDelay: three ? `${i * 90}ms` : "0ms" }}
+              >
+                {letter}
+              </span>
+            ))}
+          </span>{" "}
+          Generations
+        </p>
+      </div>
     </>
   );
 
@@ -515,7 +653,7 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
     </section>
   ) : (
     <section ref={stageRef} aria-label="Our story" className="site-container">
-      <div ref={canvasRef} className="relative pt-24 pb-10 lg:pt-28 lg:pb-16">
+      <div ref={canvasRef} className="relative pt-24 pb-16 lg:pt-28 lg:pb-16">
         {story}
       </div>
     </section>
