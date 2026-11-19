@@ -160,9 +160,10 @@ export function Navbar({ services }: { services: NavService[] }) {
   // the screen. An open mobile menu always gets the frosted look, to stay readable.
   const overHero = useSyncExternalStore(subscribeToScroll, isWithinFirstScreen, () => true);
 
-  // Once the footer is behind the bar, the bar steps back: it is clear too, and
-  // everything except the logo fades out and stops responding (the footer has
-  // its own sitemap and contact links). An open mobile menu is left alone.
+  // Once the footer is behind the bar (only on short screens, where the footer
+  // is taller than the space below the bar), the bar steps back: it is clear
+  // too, and everything in it fades out and stops responding — the footer has
+  // its own logo, sitemap and contact links. An open mobile menu is left alone.
   const inFooter = useSyncExternalStore(subscribeToScroll, isFooterAtNavbar, () => false) && !open;
   const clear = ((pathname === "/" && overHero) || inFooter) && !open && !servicesOpen;
   const stepBack = `transition-opacity duration-300 ${inFooter ? "pointer-events-none opacity-0" : "opacity-100"}`;
@@ -199,7 +200,7 @@ export function Navbar({ services }: { services: NavService[] }) {
 
       {/* relative z-10: keeps the logo and buttons above the mobile menu's sheet. */}
       <div className="site-container relative z-10 flex h-20 items-center justify-between gap-6 lg:h-[118px]">
-        <Link href="/" aria-label={`${SITE_NAME} home`} className="shrink-0">
+        <Link href="/" aria-label={`${SITE_NAME} home`} inert={inFooter} className={`shrink-0 ${stepBack}`}>
           <Image src="/logo.png" alt={SITE_NAME} width={145} height={61} priority className="h-11 w-auto lg:h-[54px]" />
         </Link>
 

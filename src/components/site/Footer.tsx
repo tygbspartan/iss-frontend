@@ -9,34 +9,24 @@ const FIBISPACE_URL = "https://fibispace.com";
 
 export function Footer() {
   return (
-    // The footer is at least one screen tall at every size, with its content
-    // centred in it, so at the very bottom of a page the footer fills the screen. The
-    // top padding (150px) keeps "ISS NEPAL" clear of the navbar (118px), which
-    // by then shows only the logo — see `inFooter` in Navbar, which finds this
-    // element by its id.
-    <footer id="site-footer" className="flex min-h-dvh flex-col bg-[#111111] text-neutral-300">
+    // As tall as its content. Navbar finds this element by its id (see
+    // `inFooter` there).
+    <footer id="site-footer" className="bg-[#111111] text-neutral-300">
       {/* Phones and tablets (one column, below 768px): everything is centred.
-          On phones the content splits into three groups ("ISS NEPAL", then Work
-          with us and Sitemap, then Follow us) with equal gaps above, between and
-          below them, starting under the navbar's logo (80px) and ending at the
-          copyright line. Tablets have more space above "ISS NEPAL". From 768px it
-          is two columns, left-aligned. */}
-      <div className="site-container flex flex-1 flex-col justify-evenly gap-8 pt-28 pb-8 text-center sm:justify-center sm:gap-0 sm:pt-36 sm:pb-0 md:pt-32 md:text-left lg:pt-37.5">
-        <div>
-          <p
-            aria-hidden
-            className="text-[clamp(3.5rem,13vw,11rem)] font-bold leading-[0.85] tracking-tight text-[#FFFCF2]"
-          >
-            ISS NEPAL
-          </p>
-
-          <hr className="mt-6 border-white/15 sm:mt-14 lg:mt-16" />
-        </div>
-
-        <div className="contents sm:grid sm:gap-12 sm:py-12 md:grid-cols-2 lg:py-14">
+          From 768px it is two columns, left-aligned: the logo and Work with us
+          on the left, Sitemap and Follow us on the right. */}
+      <div className="site-container grid gap-8 pt-12 pb-8 text-center sm:gap-12 sm:pt-16 sm:pb-12 md:grid-cols-2 md:text-left lg:pt-20 lg:pb-14">
+        <div className="contents">
           {/* Work with us and Sitemap are one group on phones. */}
           <div className="space-y-6 sm:contents sm:space-y-0">
             <section className="md:row-span-2">
+              <Image
+                src="/logo.png"
+                alt={SITE_NAME}
+                width={145}
+                height={61}
+                className="mx-auto mb-8 h-12 w-auto sm:mb-10 md:mx-0 lg:h-[61px]"
+              />
               <h2 className="text-sm font-medium text-neutral-200 sm:text-xl lg:text-[22px]">Work with us</h2>
               <address className="mt-5 space-y-1.5 text-xs not-italic sm:mt-8 sm:text-base">
                 <p>{CONTACT.address}</p>
