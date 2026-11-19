@@ -63,11 +63,7 @@ export function WorkTabs({ groups }: { groups: WorkGroup[] }) {
           <ul className={PROJECT_GRID}>
             {active.projects.map((project) => (
               <li key={project.id}>
-                <ProjectCard
-                  title={project.title}
-                  image={project.image}
-                  href={`/projects?service=${encodeURIComponent(active.slug)}`}
-                />
+                <ProjectCard title={project.title} image={project.image} />
               </li>
             ))}
           </ul>

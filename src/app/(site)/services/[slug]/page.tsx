@@ -106,12 +106,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           <ul className={`mt-8 lg:mt-10 ${PROJECT_GRID}`}>
             {projects.map((project) => (
               <li key={project.id}>
-                <ProjectCard
-                  title={project.title}
-                  image={project.image}
-                  description={project.description}
-                  href={`/projects?service=${encodeURIComponent(service.slug)}`}
-                />
+                <ProjectCard title={project.title} image={project.image} description={project.description} />
               </li>
             ))}
           </ul>
