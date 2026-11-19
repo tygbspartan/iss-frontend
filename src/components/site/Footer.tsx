@@ -43,7 +43,7 @@ export function Footer() {
                 <p>
                   {CONTACT.phones.map((phone, i) => (
                     <Fragment key={phone.tel}>
-                      {i > 0 && " , "}
+                      {i > 0 && " / "}
                       <a href={`tel:${phone.tel}`} className="whitespace-nowrap transition hover:text-white">
                         {phone.label}
                       </a>
@@ -64,7 +64,7 @@ export function Footer() {
             <section className="md:col-start-2">
               <h2 className="text-sm font-medium text-neutral-200 sm:text-xl lg:text-[22px]">Sitemap</h2>
               {/* Phones and small tablets (below 768px, where the footer is
-                  centred): two columns, five links then four, left-aligned
+                  centred): two columns of three links, left-aligned
                   within each column, with the pair centred as one block. */}
               <nav aria-label="Sitemap" className="mx-auto mt-5 grid w-fit grid-cols-2 gap-x-12 text-left text-xs sm:mt-8 sm:gap-x-16 sm:text-base md:hidden">
                 {SITEMAP_NARROW.map((column, i) => (
@@ -77,7 +77,7 @@ export function Footer() {
                   </ul>
                 ))}
               </nav>
-              {/* From 768px: the original three columns of three. */}
+              {/* From 768px: three columns of two. */}
               <nav aria-label="Sitemap" className="mt-8 hidden grid-cols-3 gap-x-6 gap-y-1.5 md:grid">
                 {SITEMAP.map((column, i) => (
                   <ul key={i} className="space-y-1.5">

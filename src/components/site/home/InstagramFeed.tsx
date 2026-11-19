@@ -3,9 +3,8 @@ import { getInstagramFeed, type InstagramPost } from "@/lib/instagram";
 import { SOCIAL_LINKS } from "@/lib/site";
 import { SectionHeader } from "../PageHeader";
 
-// Phones show nine (three by three); from 640px up, the first six.
+// Nine posts, three by three, at every screen size.
 const POST_COUNT = 9;
-const POSTS_ABOVE_PHONE = 6;
 
 // DEVELOPMENT ONLY: stand-in tiles so the section can be seen before the
 // Instagram access token is set up. A production build never shows these.
@@ -28,7 +27,7 @@ const SAMPLE_POSTS: InstagramPost[] = [
 }));
 
 // "On The Feed": the newest posts from the company's Instagram, three across
-// (three rows on phones, two above that), in the same order as on the Instagram profile (so a
+// and three rows down, in the same order as on the Instagram profile (so a
 // picture split across several posts lines up here too). Each tile opens its
 // post on Instagram.
 //
@@ -58,8 +57,8 @@ export async function InstagramFeed() {
       />
 
       <ul className="mx-auto mt-10 grid max-w-[1030px] grid-cols-3 gap-1 lg:mt-14 lg:gap-1.5">
-        {posts.map((post, i) => (
-          <li key={post.id} className={i >= POSTS_ABOVE_PHONE ? "sm:hidden" : undefined}>
+        {posts.map((post) => (
+          <li key={post.id}>
             <a
               href={post.href}
               target="_blank"

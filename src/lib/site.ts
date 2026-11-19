@@ -29,41 +29,34 @@ export const NAV_LINKS = [
 // it, "About" is the link shown as current.
 export const TEAMS_PARENT_HREF = "/about";
 
-// Footer sitemap. The navbar's links come first, in the same order and
-// wording (so the two can't drift apart), followed by the info pages. They
-// are split into columns two ways:
-const SITEMAP_LINKS: { href: string; label: string }[] = [
-  ...NAV_LINKS,
-  { href: "/faq", label: "FAQ" },
-  { href: "/terms", label: "Terms and Services" },
-  { href: "/privacy", label: "Privacy Policy" },
-];
-/** Tablets and up: three columns of three. */
+// Footer sitemap: the navbar's links, in the same order and wording (so the
+// two can't drift apart). They are split into columns two ways:
+const SITEMAP_LINKS: { href: string; label: string }[] = [...NAV_LINKS];
+/** From 768px: three columns of two. */
 export const SITEMAP: { href: string; label: string }[][] = [
-  SITEMAP_LINKS.slice(0, 3),
-  SITEMAP_LINKS.slice(3, 6),
-  SITEMAP_LINKS.slice(6),
+  SITEMAP_LINKS.slice(0, 2),
+  SITEMAP_LINKS.slice(2, 4),
+  SITEMAP_LINKS.slice(4),
 ];
-/** Phones and small tablets: two columns — the first five, then the other four. */
-export const SITEMAP_NARROW: { href: string; label: string }[][] = [SITEMAP_LINKS.slice(0, 5), SITEMAP_LINKS.slice(5)];
+/** Phones and small tablets: two columns of three. */
+export const SITEMAP_NARROW: { href: string; label: string }[][] = [SITEMAP_LINKS.slice(0, 3), SITEMAP_LINKS.slice(3)];
 
 export const CONTACT = {
-  address: "Sankhamul - Balkumari Rd, Lalitpur 44600",
-  // `label` is shown as written; `tel` is the international dial format.
+  address: "Chyasal, Lalitpur, Nepal",
+  // `label` is shown as written (one after another, separated by " / ");
+  // `tel` is the international dial format.
   phones: [
-    { label: "+977 01 5186109", tel: "+97715186109" },
-    { label: "9802063348", tel: "+9779802063348" },
-    { label: "9813028770", tel: "+9779813028770" },
+    { label: "+977 9802375115", tel: "+9779802375115" },
+    { label: "9801025166", tel: "+9779801025166" },
   ],
   email: "soundz.iss@gmail.com",
-  // WhatsApp number: `label` is shown on the navbar button; `number` is the
-  // full international number, digits only, used in the wa.me chat link.
-  whatsapp: { label: "+977 9851025166", number: "9779851025166" },
+  // WhatsApp number (sales): `label` is shown on the navbar button; `number` is
+  // the full international number, digits only, used in the wa.me chat link.
+  whatsapp: { label: "+977 9802375115", number: "9779802375115" },
 };
 
-// ISS BASE on Google Maps, as an embeddable map (no API key needed).
-export const MAP_EMBED_URL =
-  "https://maps.google.com/maps?q=ISS%20BASE,%20Balkumari%20Rd,%20Lalitpur&z=17&output=embed";
+// The office (Chyasal) on Google Maps, as an embeddable map (no API key needed).
+export const MAP_EMBED_URL = "https://maps.google.com/maps?q=Chyasal,%20Lalitpur,%20Nepal&z=16&output=embed";
 
 export const SOCIAL_LINKS = {
   instagram: "https://www.instagram.com/isssoundz/",

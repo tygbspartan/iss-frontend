@@ -1,6 +1,7 @@
 import { CursorFollower } from "@/components/site/CursorFollower";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { SiteLights } from "@/components/site/SiteLights";
 import { getServices } from "@/lib/publicApi";
 
 // Public website shell: dark left-to-right gradient page, navbar, full-width footer.
@@ -10,7 +11,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const services = await getServices().catch(() => []);
 
   return (
-    <div className="site-root flex min-h-dvh flex-1 flex-col bg-[image:var(--site-gradient)] font-montserrat text-white [color-scheme:dark]">
+    // `isolate` keeps the background lights (z -10) above this gradient but
+    // below everything else.
+    <div className="site-root isolate flex min-h-dvh flex-1 flex-col bg-[image:var(--site-gradient)] font-montserrat text-white [color-scheme:dark]">
+      <SiteLights />
       <Navbar services={services.map(({ title, slug, description }) => ({ title, slug, description }))} />
       <main className="flex-1">{children}</main>
       <Footer />

@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: PageProps<"/services/[slug]">
   return pageMetadata({ title: service.title, description, path: `/services/${service.slug}`, image: service.image });
 }
 
-// One service: its name and description, a wide photo, the full write-up
-// (coming soon — placeholder for now), the newest projects done for it, and
-// links to every other service.
+// One service: its name and description, a wide photo, what it includes (the
+// list set in the admin), the newest projects done for it, and links to every
+// other service.
 export default async function ServicePage({ params }: PageProps<"/services/[slug]">) {
   const { slug } = await params;
   const { service, all } = await findService(slug);
@@ -65,7 +65,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      <PageHeader title={service.title} intro={service.description} twoLines />
+      <PageHeader title={service.title} intro={service.description} />
 
       {/* The banner is a wide, short window onto the service's photo, which is
           taller than it: the photo slides up behind the window as you scroll. */}
@@ -75,22 +75,28 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         className="mx-auto mt-10 aspect-[842/300] max-w-[1680px] rounded-2xl border border-white/10 bg-neutral-900 sm:aspect-[842/220] lg:mt-12 lg:aspect-[842/200]"
       />
 
-      {/* PLACEHOLDER — the full write-up for each service (what's included, how
-          it's planned, the equipment) isn't available yet. */}
-      <section
-        aria-label={`More about ${service.title}`}
-        className="mx-auto mt-14 flex max-w-[880px] flex-col items-center rounded-2xl border border-dashed border-white/15 px-6 py-14 text-center lg:mt-20 lg:py-20"
-      >
-        <p className="font-poppins text-[13px] tracking-[0.2em] text-[#E79E3F] uppercase sm:text-sm">Coming soon</p>
-        <h2 className="mt-4 text-[26px] font-medium text-white sm:text-3xl">The full story is on its way</h2>
-        <p className="mt-4 max-w-[560px] font-poppins text-xs leading-[1.61] font-light text-[#9DA1B1] sm:text-lg">
-          We&rsquo;re putting together everything about our {service.title.toLowerCase()} work — what&rsquo;s
-          included, how we plan it and the equipment we bring. In the meantime, ask us anything.
-        </p>
-        <Link href="/contact" className={`mt-8 ${PILL_BUTTON}`}>
-          Talk to us about it
-        </Link>
-      </section>
+      {/* What's included: numbered, two columns from tablet width up (one on
+          phones), then a way to ask about it. Left out if the list is empty. */}
+      {service.features.length > 0 && (
+        <section aria-labelledby="included" className="mt-14 text-center lg:mt-20">
+          <GoldHeading id="included" className={SUBHEADING}>
+            What&rsquo;s Included
+          </GoldHeading>
+          <ul className="mx-auto mt-8 grid max-w-[980px] gap-x-12 text-left sm:grid-cols-2 lg:mt-10">
+            {service.features.map((feature, i) => (
+              <li key={`${i}-${feature}`} className="flex items-baseline gap-4 border-t border-white/10 py-4 sm:py-5">
+                <span className="w-5 shrink-0 font-poppins text-xs text-[#E79E3F] tabular-nums sm:w-6 sm:text-sm">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="text-sm text-white sm:text-lg">{feature}</span>
+              </li>
+            ))}
+          </ul>
+          <Link href="/contact" className={`mt-10 ${PILL_BUTTON}`}>
+            Talk to us about it
+          </Link>
+        </section>
+      )}
 
       {projects.length > 0 && (
         <section aria-labelledby="best-work" className="mt-20 lg:mt-28">

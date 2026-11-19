@@ -21,9 +21,6 @@ const PAGES: { path: string; priority: number; changeFrequency: "daily" | "weekl
   { path: "/contact", priority: 0.8, changeFrequency: "yearly" },
   { path: "/blogs", priority: 0.7, changeFrequency: "weekly" },
   { path: "/teams", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/faq", priority: 0.5, changeFrequency: "monthly" },
-  { path: "/terms", priority: 0.2, changeFrequency: "yearly" },
-  { path: "/privacy", priority: 0.2, changeFrequency: "yearly" },
 ];
 
 const BLOGS_PER_REQUEST = 50; // the most the backend returns in one go

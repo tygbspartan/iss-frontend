@@ -49,6 +49,13 @@ export const servicesConfig: ResourceConfig<Service> = {
     { name: "title", label: "Title", type: "text", required: true },
     slugField,
     { name: "description", label: "Description", type: "textarea", required: true, rows: 5 },
+    {
+      name: "features",
+      label: "What's included",
+      type: "list",
+      placeholder: "e.g. JBL SRX835 Full-Range Speakers",
+      help: "Shown as a list on the service's page. Press Enter to add the next item.",
+    },
     sortOrderField,
     visibleField,
     {

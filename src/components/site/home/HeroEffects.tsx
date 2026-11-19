@@ -266,8 +266,12 @@ const DRIFT = 36; // how far (px) a light slides sideways towards where it's aim
  * together to point at the cursor, and the light drifts a little towards the
  * side it's aiming at — so it reads as a spotlight swivelling to follow you.
  * With no mouse they sway gently, crossing over the middle of the stage.
+ * Also the background of every other page (see SiteLights). There the lamp
+ * heads are drawn separately, inside the navbar (StageLightHeads), so its
+ * frosted glass doesn't blur them: `heads={false}` leaves them out here, and
+ * the lamps' angles are passed to those heads every frame.
  */
-export function StageLights({ className = "" }: { className?: string }) {
+export function StageLights({ className = "", heads = true }: { className?: string; heads?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -311,6 +315,15 @@ export function StageLights({ className = "" }: { className?: string }) {
         // ±DRIFT px at full tilt), like a moving head swinging on its mount.
         pivots[i].style.translate = `${((-angles[i] / MAX_TILT) * DRIFT).toFixed(1)}px 0`;
       });
+      // Heads drawn elsewhere follow the same angles. Looked up each frame, as
+      // the navbar may show or drop them as pages change.
+      if (!heads) {
+        const remote = document.getElementById(STAGE_LIGHT_HEADS_ID);
+        LIGHTS.forEach((_, i) => {
+          remote?.style.setProperty(`--lamp-${i}-rotate`, beams[i].style.rotate);
+          remote?.style.setProperty(`--lamp-${i}-shift`, pivots[i].style.translate);
+        });
+      }
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
@@ -320,7 +333,7 @@ export function StageLights({ className = "" }: { className?: string }) {
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
-  }, []);
+  }, [heads]);
 
   return (
     <div ref={ref} aria-hidden className={`pointer-events-none overflow-hidden ${className}`}>
@@ -345,13 +358,48 @@ export function StageLights({ className = "" }: { className?: string }) {
             <div className="absolute top-0 left-0 h-[115svh] w-[max(34vmin,240px)] -translate-x-1/2 blur-2xl">
               <div className="size-full bg-[linear-gradient(to_bottom,rgba(231,158,63,0.55),rgba(231,158,63,0.16)_40%,rgba(231,158,63,0)_88%)] [clip-path:polygon(45%_0,55%_0,100%_100%,0_100%)]" />
             </div>
-            {/* Bloom: a wide oval haze stretched out along the beam, strongest
-                just in front of the light. */}
-            <span className="absolute top-8 left-0 h-44 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(231,158,63,0.32),rgba(231,158,63,0.1)_45%,rgba(231,158,63,0)_70%)] blur-lg" />
-            {/* Flare: a bright streak shooting out of the lens along the beam. */}
-            <span className="absolute top-0 left-0 h-32 w-5 -translate-x-1/2 rounded-full bg-[linear-gradient(to_bottom,rgba(255,240,214,0.85),rgba(242,201,135,0.35)_35%,rgba(231,158,63,0)_100%)] blur-[6px]" />
-            {/* Lens: an oval seen side-on, across the beam, glowing. */}
-            <span className="absolute top-0 left-0 h-3 w-10 -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[#FFF4E2] shadow-[0_0_12px_5px_rgba(255,226,180,0.8),0_0_30px_12px_rgba(231,158,63,0.45)]" />
+            {heads && <LampHead />}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** The bright part of a light — bloom, flare and lens — around its pivot point. */
+function LampHead() {
+  return (
+    <>
+      {/* Bloom: a wide oval haze stretched out along the beam, strongest
+          just in front of the light. */}
+      <span className="absolute top-8 left-0 h-44 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(231,158,63,0.32),rgba(231,158,63,0.1)_45%,rgba(231,158,63,0)_70%)] blur-lg" />
+      {/* Flare: a bright streak shooting out of the lens along the beam. */}
+      <span className="absolute top-0 left-0 h-32 w-5 -translate-x-1/2 rounded-full bg-[linear-gradient(to_bottom,rgba(255,240,214,0.85),rgba(242,201,135,0.35)_35%,rgba(231,158,63,0)_100%)] blur-[6px]" />
+      {/* Lens: an oval seen side-on, across the beam, glowing. */}
+      <span className="absolute top-0 left-0 h-3 w-10 -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[#FFF4E2] shadow-[0_0_12px_5px_rgba(255,226,180,0.8),0_0_30px_12px_rgba(231,158,63,0.45)]" />
+    </>
+  );
+}
+
+const STAGE_LIGHT_HEADS_ID = "stage-light-heads";
+
+/**
+ * Just the lamp heads of a StageLights drawn with `heads={false}`, placed and
+ * turned by the angles that one passes on (--lamp-N-rotate / --lamp-N-shift).
+ * Positioned like it: `className` should give a box the same width, from the
+ * top of the screen. Only one may be on the page at a time.
+ */
+export function StageLightHeads({ className = "" }: { className?: string }) {
+  return (
+    <div id={STAGE_LIGHT_HEADS_ID} aria-hidden className={`pointer-events-none ${className}`}>
+      {LIGHTS.map((light, i) => (
+        <div
+          key={light.at}
+          style={{ left: `${light.at * 100}%`, translate: `var(--lamp-${i}-shift, 0px 0)` }}
+          className="absolute top-6 size-0"
+        >
+          <div style={{ rotate: `var(--lamp-${i}-rotate, ${light.rest}deg)` }} className="absolute top-0 left-0 size-0 will-change-transform">
+            <LampHead />
           </div>
         </div>
       ))}

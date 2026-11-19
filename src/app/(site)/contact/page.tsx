@@ -2,7 +2,6 @@ import { Fragment } from "react";
 import type { Metadata, Viewport } from "next";
 import { Phone } from "lucide-react";
 import { CONTACT, MAP_EMBED_URL } from "@/lib/site";
-import { getServices } from "@/lib/publicApi";
 import { ContactForm } from "@/components/site/ContactForm";
 import { MusicNoteIcon } from "@/components/site/MusicNoteIcon";
 import { SOCIALS } from "@/components/site/socials";
@@ -24,13 +23,9 @@ export const viewport: Viewport = { maximumScale: 1 };
 // "Call us" and a divider on the left; the form's fields on the right. Row 2:
 // "Easy Connect" on the left; the submit button on the right. The form joins
 // these rows with CSS subgrid (see ContactForm), so the divider always lines up
-// with the bottom line of the "Event Vision" field. On tablets everything is simply stacked; phones get just the pitch and
+// with the bottom line of the "requirements" box. On tablets everything is simply stacked; phones get just the pitch and
 // the form, without "Call us" or "Easy Connect".
-export default async function ContactPage() {
-  // The "Event Type" dropdown lists the services. If the backend is
-  // unreachable the page still renders; the form then can't be submitted.
-  const services = await getServices().catch(() => []);
-
+export default function ContactPage() {
   return (
     <>
     <div className="site-container flex flex-col pt-[65px] pb-14 sm:pt-[81px] lg:pt-[65px] lg:pb-16">
@@ -64,7 +59,7 @@ export default async function ContactPage() {
               <p className="mt-0.5 text-xs text-white sm:text-base">
                 {CONTACT.phones.map((phone, i) => (
                   <Fragment key={phone.tel}>
-                    {i > 0 && " , "}
+                    {i > 0 && " / "}
                     <a href={`tel:${phone.tel}`} className="whitespace-nowrap transition hover:text-[#E79E3F]">
                       {phone.label}
                     </a>
@@ -98,7 +93,6 @@ export default async function ContactPage() {
 
         {/* Right column, both rows. The form sits straight on the page: no card, border or padding. */}
         <ContactForm
-          services={services.map(({ id, title }) => ({ id, title }))}
           className="mt-12 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:grid lg:grid-rows-subgrid"
         />
       </div>
@@ -120,7 +114,7 @@ export default async function ContactPage() {
               puts the colours back to roughly what they were. */}
           <iframe
             src={MAP_EMBED_URL}
-            title="Map showing ISS BASE, Lalitpur"
+            title="Map showing our office in Chyasal, Lalitpur"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             allowFullScreen

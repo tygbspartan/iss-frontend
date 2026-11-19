@@ -58,6 +58,7 @@ export const MOCK_SERVICES: Service[] = SERVICE_LIST.map(([title, slug, descript
   slug,
   description,
   image: photo(i),
+  features: [],
   sortOrder: i,
   isActive: true,
 }));

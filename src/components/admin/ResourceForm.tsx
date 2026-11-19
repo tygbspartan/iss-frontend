@@ -5,6 +5,7 @@ import type { Body } from "@/lib/redux/api";
 import { getErrorMessage, getFieldErrors } from "@/lib/redux/errors";
 import type { FieldConfig, ResourceConfig } from "@/lib/admin/resource";
 import { ImagePicker } from "./ImagePicker";
+import { ListEditor } from "./ListEditor";
 import { MarkdownEditor } from "./MarkdownEditor";
 import { RelationPicker } from "./RelationPicker";
 import { ThumbnailsEditor } from "./ThumbnailsEditor";
@@ -19,7 +20,7 @@ const emptyValues = (fields: FieldConfig[]): Values =>
   Object.fromEntries(
     fields.map((f) => [
       f.name,
-      f.type === "checkbox" ? (f.defaultChecked ?? true) : f.type === "relation" ? [] : "",
+      f.type === "checkbox" ? (f.defaultChecked ?? true) : f.type === "relation" || f.type === "list" ? [] : "",
     ]),
   );
 
@@ -31,6 +32,7 @@ const recordValues = <T extends Record_>(config: ResourceConfig<T>, item: T): Va
       const raw = (item as unknown as Values)[f.name];
       if (f.type === "checkbox") return [f.name, Boolean(raw)];
       if (f.type === "relation") return [f.name, []];
+      if (f.type === "list") return [f.name, Array.isArray(raw) ? raw.map(String) : []];
       return [f.name, raw === null || raw === undefined ? "" : String(raw)];
     }),
   );
@@ -44,6 +46,8 @@ const toBody = (fields: FieldConfig[], values: Values): Body => {
     const v = values[f.name];
     if (f.type === "checkbox" || f.type === "relation") {
       body[f.name] = v;
+    } else if (f.type === "list") {
+      body[f.name] = (v as string[]).map((item) => item.trim()).filter(Boolean);
     } else if (f.type === "number") {
       if (v !== "") body[f.name] = Number(v);
       else if (f.nullable) body[f.name] = null; // cleared → API resets it to its default
@@ -397,7 +401,7 @@ function Field({
   const id = `field-${field.name}`;
   const invalid = !!errors?.length;
   const describedBy = invalid ? `${id}-error` : field.help ? `${id}-help` : undefined;
-  const wide = field.wide || ["textarea", "relation", "markdown"].includes(field.type);
+  const wide = field.wide || ["textarea", "relation", "markdown", "list"].includes(field.type);
 
   if (field.type === "checkbox") {
     return (
@@ -452,6 +456,15 @@ function Field({
           emptyHint={field.emptyHint}
           value={String(value ?? "")}
           onChange={onChange}
+        />
+      ) : field.type === "list" ? (
+        <ListEditor
+          id={id}
+          value={(value as string[]) ?? []}
+          onChange={onChange}
+          placeholder={field.placeholder}
+          invalid={invalid}
+          describedBy={describedBy}
         />
       ) : field.type === "relation" && field.relation ? (
         <RelationPicker

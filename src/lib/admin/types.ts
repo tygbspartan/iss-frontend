@@ -18,6 +18,7 @@ export interface Service extends Timestamps {
   slug: string;
   description: string;
   image: string;
+  features: string[]; // what the service includes, in order (its page's bullet list)
   sortOrder: number;
   isActive: boolean;
   projects?: LinkedItem[];
@@ -107,12 +108,11 @@ export interface UpcomingEvent extends Timestamps {
 export interface ContactInquiry {
   id: string;
   name: string;
+  company: string; // "" on inquiries from before it was asked
   email: string;
   phone: string;
-  serviceId: string | null; // null if the service was deleted later
-  serviceTitle: string; // service name at the time of submission
-  tentativeDays: number;
-  expectedGuests: number;
-  eventVision: string;
+  eventType: string; // "Type of Event" as typed (older inquiries: the service they picked)
+  eventDate: string | null; // "YYYY-MM-DD"; null on inquiries from before it was asked
+  requirements: string;
   createdAt: string;
 }

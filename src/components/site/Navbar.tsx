@@ -8,6 +8,8 @@ import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 import { FaEnvelope, FaWhatsapp } from "react-icons/fa6";
 import { CONTACT, NAV_LINKS, SERVICES_HREF, SITE_NAME, SOCIAL_LINKS, TEAMS_PARENT_HREF } from "@/lib/site";
 import { PILL_BUTTON } from "./pill";
+import { StageLightHeads } from "./home/HeroEffects";
+import { showSiteLights, SITE_LIGHTS_OPACITY } from "./SiteLights";
 
 /** A service as listed in the navbar's Services dropdown. */
 export interface NavService {
@@ -185,6 +187,16 @@ export function Navbar({ services }: { services: NavService[] }) {
           : "bg-black/80 supports-[backdrop-filter]:bg-transparent supports-[backdrop-filter]:backdrop-blur-xl supports-[backdrop-filter]:backdrop-saturate-150"
       }`}
     >
+      {/* The background stage lights' lamp heads (see SiteLights), drawn here so
+          they sit on top of the bar's frosted glass instead of being blurred
+          by it. Under the logo, buttons and the mobile menu's sheet; faded
+          out with the rest of the bar once the footer is behind it. */}
+      {showSiteLights(pathname) && (
+        <StageLightHeads
+          className={`absolute inset-x-0 top-0 transition-opacity duration-300 ${inFooter ? "opacity-0" : SITE_LIGHTS_OPACITY}`}
+        />
+      )}
+
       {/* relative z-10: keeps the logo and buttons above the mobile menu's sheet. */}
       <div className="site-container relative z-10 flex h-20 items-center justify-between gap-6 lg:h-[118px]">
         <Link href="/" aria-label={`${SITE_NAME} home`} className="shrink-0">
@@ -278,7 +290,8 @@ export function Navbar({ services }: { services: NavService[] }) {
                     <span className="mt-2 block text-xl text-white capitalize transition-colors group-hover:text-[#E79E3F]">
                       {service.title}
                     </span>
-                    <span className="mt-2 line-clamp-2 block font-poppins text-sm leading-[1.6] font-light text-[#9DA1B1]">
+                    {/* No "block" here: line-clamp sets its own display, which "block" would override. */}
+                    <span className="mt-2 line-clamp-2 font-poppins text-sm leading-[1.6] font-light text-[#9DA1B1]">
                       {service.description}
                     </span>
                   </Link>

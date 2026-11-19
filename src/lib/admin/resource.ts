@@ -15,7 +15,8 @@ export type FieldType =
   | "slug"
   | "relation"
   | "select"
-  | "markdown";
+  | "markdown"
+  | "list"; // several short lines (sent as a string array, blanks dropped)
 
 export interface FieldConfig {
   name: string; // key sent to the API (matches the backend validator)

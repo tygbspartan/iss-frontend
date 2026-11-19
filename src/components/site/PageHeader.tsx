@@ -2,29 +2,14 @@
 export const PAGE_INTRO =
   "High-fidelity sound, precision logistics, and a crew that treats every show like a flagship. Built for the world’s most demanding stages.";
 
-// `twoLines` cuts the intro off after two lines with "…" — for intros that
-// come from the admin and can be any length (e.g. a service's description).
-export function PageHeader({
-  title,
-  intro = PAGE_INTRO,
-  twoLines = false,
-}: {
-  title: string;
-  intro?: string;
-  twoLines?: boolean;
-}) {
+// The intro is always shown in full (e.g. a service's whole description).
+export function PageHeader({ title, intro = PAGE_INTRO }: { title: string; intro?: string }) {
   return (
     <header className="mx-auto max-w-[760px] text-center">
       <h1 className="text-[30px] leading-[1.1] font-medium tracking-[-0.02em] capitalize sm:text-5xl lg:text-[60px]">
         {title}
       </h1>
-      <p
-        className={`mt-4 font-poppins text-xs leading-[1.61] font-normal text-[#9DA1B1] sm:mt-5 sm:text-lg ${
-          twoLines ? "line-clamp-2" : ""
-        }`}
-      >
-        {intro}
-      </p>
+      <p className="mt-4 font-poppins text-xs leading-[1.61] font-normal text-[#9DA1B1] sm:mt-5 sm:text-lg">{intro}</p>
     </header>
   );
 }

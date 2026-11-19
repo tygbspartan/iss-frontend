@@ -30,9 +30,9 @@ export function Hero() {
 
       <div className="flex [transform:translateY(calc(var(--p)_*_-140px))_scale(calc(1_-_var(--p)_*_0.1))] flex-col items-center [opacity:calc(1_-_var(--p)_*_1.6)] will-change-transform">
         <h1 className="text-center text-[34px] leading-[1.12] font-light text-white sm:text-6xl lg:text-[76px]">
-          Your Event. Our
+          Your Vision, Our
           <br />
-          <span className="text-[#E79E3F]">Playground</span>.
+          <span className="text-[#E79E3F]">Creation</span>.
         </h1>
         <p className="mt-5 max-w-[720px] text-center text-xs text-[#9DA1B1] sm:text-xl lg:mt-6 lg:text-[22px]">
           Strategy, creativity, and digital experiences built to leave a mark.

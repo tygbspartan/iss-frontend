@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ArrowRight, ChevronDown, CircleCheck } from "lucide-react";
+import { ArrowRight, CircleCheck } from "lucide-react";
 import { USE_MOCK_DATA } from "@/lib/mock/flag";
 import { PILL_BUTTON } from "./pill";
 
@@ -23,6 +23,10 @@ const CONTROL =
 // The site's pill button. The form card has no colour of its own, so the
 // button's default hover fill (the page background) is the right one.
 const FORM_BUTTON = PILL_BUTTON;
+
+// Today in Nepal as YYYY-MM-DD: the earliest event date that can be picked
+// (the backend checks the same).
+const todayInNepal = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kathmandu" }).format(new Date());
 
 function Field({
   label,
@@ -65,13 +69,7 @@ function Field({
 // "Contact Us" form. Posts straight to iss-be's public /api/contact, which
 // validates every field (all are required) and rate-limits by visitor.
 // `className` places the form in the page's layout.
-export function ContactForm({
-  services,
-  className = "",
-}: {
-  services: { id: string; title: string }[];
-  className?: string;
-}) {
+export function ContactForm({ className = "" }: { className?: string }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -98,11 +96,7 @@ export function ContactForm({
       const res = await fetch(`${API_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          tentativeDays: Number(data.tentativeDays),
-          expectedGuests: Number(data.expectedGuests),
-        }),
+        body: JSON.stringify(data),
       });
       if (res.ok) {
         form.reset();
@@ -169,6 +163,9 @@ export function ContactForm({
         // first, submit button in the second (see the contact page).
         className={`lg:row-span-2 lg:grid lg:grid-rows-subgrid ${sent ? "hidden lg:invisible" : ""}`}
       >
+        {/* Name and company across the full width; then email and contact
+            number, and event type and date, side by side from tablet width up
+            (stacked on phones); then the requirements box. */}
         <div className="flex flex-col gap-5 sm:gap-6">
           <Field label="Full Name" error={error("name")}>
             {(props) => (
@@ -179,28 +176,44 @@ export function ContactForm({
                 autoComplete="name"
                 required
                 maxLength={150}
+                placeholder="Enter your name"
                 className={`${CONTROL} h-10`}
               />
             )}
           </Field>
 
-          <Field label="Email" error={error("email")}>
+          <Field label="Company / Organization" error={error("company")}>
             {(props) => (
               <input
                 {...props}
-                name="email"
-                type="email"
-                autoComplete="email"
+                name="company"
+                type="text"
+                autoComplete="organization"
                 required
                 maxLength={200}
+                placeholder="Company name"
                 className={`${CONTROL} h-10`}
               />
             )}
           </Field>
 
-          {/* Side by side from tablet width up; stacked on phones. */}
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field label="Phone" error={error("phone")}>
+            <Field label="Email Address" error={error("email")}>
+              {(props) => (
+                <input
+                  {...props}
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  maxLength={200}
+                  placeholder="Your email address"
+                  className={`${CONTROL} h-10`}
+                />
+              )}
+            </Field>
+
+            <Field label="Contact Number" error={error("phone")}>
               {(props) => (
                 <input
                   {...props}
@@ -211,80 +224,52 @@ export function ContactForm({
                   maxLength={30}
                   pattern="[+\d\s\(\)\-]{7,30}"
                   title="Digits, spaces and + ( ) - only"
-                  className={`${CONTROL} h-10`}
-                />
-              )}
-            </Field>
-
-            <Field label="Event Type" error={error("serviceId")}>
-              {(props) => (
-                <div className="relative">
-                  <select
-                    {...props}
-                    name="serviceId"
-                    required
-                    defaultValue=""
-                    className={`${CONTROL} h-10 appearance-none pr-7 invalid:text-neutral-500 [&>option]:bg-[#141414] [&>option]:text-white`}
-                  >
-                    <option value="" disabled>
-                      Select an event type
-                    </option>
-                    {services.map((service) => (
-                      <option key={service.id} value={service.id}>
-                        {service.title}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    className="pointer-events-none absolute top-1/2 right-0.5 size-4 -translate-y-1/2 text-neutral-400"
-                    aria-hidden
-                  />
-                </div>
-              )}
-            </Field>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 sm:gap-5">
-            <Field label="Tentative Days" error={error("tentativeDays")}>
-              {(props) => (
-                <input
-                  {...props}
-                  name="tentativeDays"
-                  type="number"
-                  inputMode="numeric"
-                  required
-                  min={1}
-                  max={365}
-                  step={1}
-                  className={`${CONTROL} h-10`}
-                />
-              )}
-            </Field>
-            <Field label="Expected Guests" error={error("expectedGuests")}>
-              {(props) => (
-                <input
-                  {...props}
-                  name="expectedGuests"
-                  type="number"
-                  inputMode="numeric"
-                  required
-                  min={1}
-                  max={100000}
-                  step={1}
+                  placeholder="+977"
                   className={`${CONTROL} h-10`}
                 />
               )}
             </Field>
           </div>
 
-          <Field label="Your Event Vision" error={error("eventVision")}>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Type of Event" error={error("eventType")}>
+              {(props) => (
+                <input
+                  {...props}
+                  name="eventType"
+                  type="text"
+                  required
+                  maxLength={150}
+                  placeholder="e.g. Corporate event, wedding, concert"
+                  className={`${CONTROL} h-10`}
+                />
+              )}
+            </Field>
+
+            <Field label="Event Date" error={error("eventDate")}>
+              {(props) => (
+                <input
+                  {...props}
+                  name="eventDate"
+                  type="date"
+                  required
+                  min={todayInNepal()}
+                  // Grey until a date is picked, like the placeholders.
+                  className={`${CONTROL} h-10 invalid:text-neutral-500 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60`}
+                />
+              )}
+            </Field>
+          </div>
+
+          <Field label="Tell us about your requirements" error={error("requirements")}>
             {(props) => (
               <textarea
                 {...props}
-                name="eventVision"
+                name="requirements"
                 required
                 maxLength={5000}
                 rows={5}
+                placeholder="Please share your venue, expected audience, sound, LED, lighting, staging or other requirements..."
                 className={`${CONTROL} block resize-y py-2.5 leading-6`}
               />
             )}

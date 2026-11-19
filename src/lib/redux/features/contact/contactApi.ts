@@ -3,18 +3,17 @@ import type { ContactInquiry } from "@/lib/admin/types";
 
 export interface InquiryInput {
   name: string;
+  company: string;
   email: string;
   phone: string;
-  serviceId: string;
-  tentativeDays: number;
-  expectedGuests: number;
-  eventVision: string;
+  eventType: string; // "Type of Event", typed freely
+  eventDate: string; // "YYYY-MM-DD", today or later
+  requirements: string;
   website?: string; // honeypot — render as a hidden field and leave empty
 }
 
 export interface InquiryListArgs extends ListArgs {
-  serviceId?: string;
-  q?: string; // searches name, email, phone
+  q?: string; // searches name, company, email, phone, event type
 }
 
 export const contactApi = api.injectEndpoints({
@@ -28,9 +27,9 @@ export const contactApi = api.injectEndpoints({
     // ── Admin — read only ──
     getInquiries: build.query<ListResult<ContactInquiry>, InquiryListArgs>({
       // undefined params are dropped by fetchBaseQuery, so blank filters vanish.
-      query: ({ page, limit, serviceId, q }) => ({
+      query: ({ page, limit, q }) => ({
         url: "/api/contact",
-        params: { page, limit, serviceId: serviceId || undefined, q: q?.trim() || undefined },
+        params: { page, limit, q: q?.trim() || undefined },
       }),
       transformResponse: toListResult<ContactInquiry>,
       providesTags: ["Inquiry"],
