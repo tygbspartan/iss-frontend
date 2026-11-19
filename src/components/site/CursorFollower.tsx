@@ -15,7 +15,9 @@ import { useEffect, useRef, useState } from "react";
 //     in and melts into it. The border stays plain white until then; the gold
 //     then starts from that spot, sweeps round the border and carries on
 //     spinning — so the spin reads as the follower setting off round the
-//     button. On leaving, it re-forms on the border and returns to the pointer;
+//     button. On leaving, it re-forms on the border and returns to the pointer.
+//     Project cards work the same way: anywhere on the card, it joins the
+//     photo's frame;
 //   • over other links and buttons (nothing to explain) it opens out into a
 //     see-through circle with a very light gold tint around the whole pointer;
 //   • over form fields it disappears, so it doesn't get in the way of typing;
@@ -35,6 +37,16 @@ const FIELD_SELECTOR = "input, textarea, select";
 // Buttons with the spinning border are recognised by the class that gives
 // them that border, so new ones are picked up without marking them.
 const SPIN_SELECTOR = '[class~="hover:animate-border-spin"]';
+// Cards whose border spins while anywhere on the card is hovered (a project
+// card's photo frame): the card is the hover area, the frame the border.
+const GROUP_SPIN_SELECTOR = '[class~="group-hover:animate-border-spin"]';
+const GROUP_SPIN_CARD = `.group:has(${GROUP_SPIN_SELECTOR})`;
+
+/** The element whose spinning border the follower should join, if the pointer is over one. */
+const spinBorderAt = (target: Element | null): HTMLElement | null =>
+  target?.closest<HTMLElement>(SPIN_SELECTOR) ??
+  target?.closest(GROUP_SPIN_CARD)?.querySelector<HTMLElement>(GROUP_SPIN_SELECTOR) ??
+  null;
 
 const EASE = 0.11; // share of the remaining distance covered each frame — lower = longer tail
 const BLEND_EASE = 0.3; // quicker, for going onto a button's border
@@ -180,7 +192,7 @@ export function CursorFollower() {
 
       const target = event.target instanceof Element ? event.target : null;
       const labelled = target?.closest<HTMLElement>("[data-cursor]");
-      const button = labelled ? null : (target?.closest<HTMLElement>(SPIN_SELECTOR) ?? null);
+      const button = labelled ? null : spinBorderAt(target);
 
       if (button) {
         if (joined?.button !== button) {
