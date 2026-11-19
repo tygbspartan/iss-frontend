@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { MissionVision } from "@/components/site/MissionVision";
-import { PageHeader, SectionHeader } from "@/components/site/PageHeader";
-import { PhotoStrip, type StripPhoto } from "@/components/site/PhotoStrip";
-import { ScrollSparkles } from "@/components/site/ScrollSparkles";
+import { SectionHeader } from "@/components/site/PageHeader";
+import { StoryPath, type StoryChapter } from "@/components/site/StoryPath";
 import { TeamDepartments } from "@/components/site/TeamDepartments";
 import { PILL_BUTTON } from "@/components/site/pill";
 import { getCoreTeam } from "@/lib/publicApi";
@@ -13,51 +11,37 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "About Us",
   description:
-    "The story of ISS Nepal: over 25 years of sound, lighting and stage production for concerts, festivals, weddings and corporate events across Nepal.",
+    "International Sound Service (ISS): a third-generation family business delivering audio-visual and event production across Nepal, with a story that began in 1960.",
   path: "/about",
 });
 
-const STORY =
-  "For more than 25 years, ISS Nepal has been the crew behind the sound, the lights and the stage at events across the country — from stadium concerts and street festivals to weddings and corporate nights. We bring high-fidelity sound, precise planning and people who treat every show like a flagship, so that what the audience remembers is the moment, not the equipment.";
-
-// The photo strip: five photos of the same size in an endless, draggable row
-// that climbs from left to right (see PhotoStrip). The page opens with the
-// second photo in the middle of the screen and its neighbours either side.
-const PHOTOS: StripPhoto[] = [
+// The story, in the order the line visits it: the first block centred, then
+// left, right, left, right. Each says how it lights up when the line reaches it.
+const CHAPTERS: StoryChapter[] = [
   {
-    src: "/about/champions.png",
-    alt: "A cricket team in red celebrating a championship win on a stage with fireworks behind them",
-    width: 842,
-    height: 440,
+    label: "Who we are",
+    light: "spotlight",
+    text: "International Sound Service (ISS) is one of Nepal's established audio-visual and event production companies, delivering comprehensive technical solutions for corporate events, conferences, concerts, exhibitions, government programmes, and special occasions.",
   },
   {
-    src: "/about/lakhe-dance.png",
-    alt: "A masked Lakhe dancer performing in a city street in front of a lit stage and sound system",
-    width: 786,
-    height: 464,
+    label: "1960 · Voice of Radio",
+    light: "bulb",
+    text: "Our journey began in 1960 with Voice of Radio, a family-operated sound system business established by Mr. Asta Ratna Shakya alongside his brother. What began as a small family venture gradually grew into a legacy built on sound, dedication, and service.",
   },
   {
-    src: "/about/concert.png",
-    alt: "A singer on a concert stage between two columns of red smoke, with confetti in the air",
-    width: 547,
-    height: 300,
+    label: "1993 · International Sound Service",
+    light: "spotlight",
+    text: "In 1993, the next chapter began when Mr. Suresh Ratna Shakya established International Sound Service (ISS), transforming the family's experience into a dedicated professional sound service company. Starting with political gatherings, college programmes, and small-scale events, ISS steadily expanded its services, expertise, and presence in Nepal's event industry.",
   },
-  // PLACEHOLDER — the home page's hero photo, standing in for a 4th About
-  // photo. Replace with a real one: add the file to public/about/ and update
-  // src, alt, width and height here.
   {
-    src: "/hero-crowd.png",
-    alt: "A performer on a runway stage facing a large night-time crowd",
-    width: 1920,
-    height: 562,
+    label: "Today · The next generation",
+    light: "bulb",
+    text: "Today, ISS continues this legacy under the leadership of the next generation, with Mr. Shibir Shakya and Mr. Samir Shakya actively involved in the company's operations, management, and business development. With more than six decades of heritage and experience, ISS has evolved from a traditional sound system provider into a comprehensive audio-visual and event production partner. By combining advanced technology, skilled professionals, creative thinking, and a commitment to excellence, we continue to deliver seamless and memorable event experiences.",
   },
-  // PLACEHOLDER — a repeat of the Lakhe dance photo, standing in for a 5th
-  // About photo. Replace it the same way.
   {
-    src: "/about/lakhe-dance.png",
-    alt: "A masked Lakhe dancer performing in a city street in front of a lit stage and sound system",
-    width: 786,
-    height: 464,
+    label: "Our promise",
+    light: "spotlight",
+    text: "As a third-generation family business, our commitment remains the same: bringing people, ideas, and experiences together through the power of sound and innovation.",
   },
 ];
 
@@ -68,24 +52,15 @@ export default async function AboutPage() {
   const coreTeam = await getCoreTeam().catch(() => []);
 
   return (
-    // `relative isolate`: lets the sparkle layer sit behind this page's content
-    // but in front of the page background.
-    <div className="relative isolate pt-[65px] sm:pt-[81px] lg:pt-[65px]">
-      {/* Rising sparkles behind the page: strongest at the top, fading as you
-          scroll, and gone by the time the team section comes into view. */}
-      <ScrollSparkles endId="about-team" />
-
+    <div className="pt-[65px] sm:pt-[81px] lg:pt-[65px]">
       <div className="site-container">
-        <PageHeader title="Our Story" intro={STORY} />
+        <header className="text-center">
+          <h1 className="text-[30px] leading-[1.1] font-medium tracking-[-0.02em] sm:text-5xl lg:text-[60px]">Our Story</h1>
+          <p className="mt-4 font-poppins text-xs tracking-[0.2em] text-[#9DA1B1] uppercase sm:mt-5 sm:text-sm">Since 1960</p>
+        </header>
+
+        <StoryPath chapters={CHAPTERS} />
       </div>
-
-      {/* The vertical padding leaves room for the photos at the low (left) and high (right) ends. */}
-      <PhotoStrip photos={PHOTOS} className="mt-10 py-[11vw] lg:mt-6 lg:py-[10vw]" />
-
-      <MissionVision />
-
-      {/* Where the sparkles end. Always here, even if the team section below is left out. */}
-      <div id="about-team" />
 
       {coreTeam.length > 0 && (
         <section className="site-container pt-6 pb-14 lg:pt-10 lg:pb-20">
