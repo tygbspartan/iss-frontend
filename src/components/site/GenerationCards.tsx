@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode, type RefObject } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode, type RefObject } from "react";
 import Image from "next/image";
 
 // The four generation cards that close the About page's story, and the gold
@@ -13,9 +13,12 @@ import Image from "next/image";
 //   • GenerationGrid — phones (and reduced motion): the cards two by two in
 //     the page, each flipping face-up as it scrolls into view.
 //
-// The cards are drawn like playing cards: a big label at the top, the details
-// in the middle, and the label again upside-down at the bottom. Their sizes
-// are in container units (cqw), so the same card works at any width.
+// Each card's back is a gold line drawing of a lit stage (lighting truss,
+// beams, an LED screen showing the ISS logo, speakers and a crowd). Its face
+// has a big label with a gold numeral at the top, the person's name, role,
+// company and generation in the middle, and the label again upside-down at
+// the bottom. Sizes are in container units (cqw), so the same card works at
+// any width.
 
 export interface Generation {
   label: string; // the card's big label, e.g. "1st Gen"
@@ -28,10 +31,10 @@ export interface Generation {
 
 /** Where the deck is in its sequence (desktop). */
 export interface DeckState {
-  show: number; // 0–1: the ribbon (and the cards' layer) fading in
+  show: number; // 0–1: the ribbon's layer showing (it then enters from the edge)
   deal: number; // 0–1: the deck rises in, then spreads into a row
-  flip: number; // 0–cards: how many cards have turned face-up (fractional mid-turn)
-  ribbon: number; // pixels scrolled through this part, which moves the ribbon on
+  flip: number; // 0–flipSpan(cards): how far the cards' turning has got (see flipSpan)
+  ribbon: number; // pixels scrolled since the ribbon started (0 = not started), which move it on
 }
 
 export interface DeckControl {
@@ -83,6 +86,13 @@ const subscribeReducedMotion = (onChange: () => void) => {
   return () => query.removeEventListener("change", onChange);
 };
 
+// The cards turn one after another, overlapping: each starts once the one
+// before it is 70% of the way round. (A turn eases in and out, so that's 64%
+// of the way through its time.)
+const TURN_STAGGER = 0.64;
+/** How long the whole turning takes, in single-card turns (4 cards: about 2.9). */
+export const flipSpan = (cards: number) => TURN_STAGGER * (cards - 1) + 1;
+
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
@@ -117,7 +127,7 @@ function CardFace({ g }: { g: Generation }) {
           <dd className="text-[#C68535]">{g.generation}</dd>
         </div>
       </dl>
-      {/* The label again, upside-down, like the bottom corner of a playing card. */}
+      {/* The label again, upside-down at the bottom. */}
       <div aria-hidden className="rotate-180">
         {corner}
       </div>
@@ -125,35 +135,79 @@ function CardFace({ g }: { g: Generation }) {
   );
 }
 
+// Stage lights along the truss: where each hangs, and where its beam lands on the stage.
+const STAGE_LIGHTS = [
+  { x: 24, aim: 44 },
+  { x: 50, aim: 50 },
+  { x: 76, aim: 56 },
+];
+const CROWD = [12, 19, 26, 33, 40, 47, 54, 61, 68, 75, 82, 89];
+
 function CardBack() {
+  const beam = useId(); // the beams' gradient (each card needs its own id)
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[5cqw] border border-[#E79E3F]/50 bg-[#121212] shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] [backface-visibility:hidden] [transform:rotateY(180deg)]">
-      {/* Gold line art, in the manner of a playing card's back. */}
-      <svg aria-hidden viewBox="0 0 100 142" className="absolute inset-0 size-full" fill="none" stroke="#E79E3F" strokeWidth={0.5} opacity={0.85}>
-        <rect x="5" y="5" width="90" height="132" rx="3" />
-        <rect x="9" y="9" width="82" height="124" rx="2" />
-        <rect x="20" y="28" width="60" height="86" />
-        <path d="M20 28 L50 56 L80 28 M20 114 L50 86 L80 114" />
-        <path d="M26 28 L50 50 L74 28 M26 114 L50 92 L74 114" opacity={0.6} />
-        <path d="M50 44 L72 71 L50 98 L28 71 Z" />
-        <path d="M14 71 L28 71 M72 71 L86 71" />
-        <circle cx="50" cy="71" r="14" />
-        <circle cx="50" cy="18" r="4" />
-        <circle cx="50" cy="124" r="4" />
-        <path d="M9 22 Q20 22 20 9 M91 22 Q80 22 80 9 M9 120 Q20 120 20 133 M91 120 Q80 120 80 133" />
-        {[40, 50, 60, 82, 92, 102].map((y) => (
-          <g key={y}>
-            <circle cx="14" cy={y} r="1" />
-            <circle cx="86" cy={y} r="1" />
+    <div className="absolute inset-0 overflow-hidden rounded-[5cqw] border border-[#E79E3F]/40 bg-[linear-gradient(to_bottom,#0d0d0d,#17130f)] shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)] [backface-visibility:hidden] [transform:rotateY(180deg)]">
+      {/* A lit stage in gold line art: the truss with its lights and their
+          beams, the LED screen (the ISS logo is placed on it below), speaker
+          stacks either side, the stage, and the crowd in front. */}
+      <svg aria-hidden viewBox="0 0 100 142" className="absolute inset-0 size-full" fill="none" stroke="#E79E3F" strokeWidth={0.5}>
+        <defs>
+          <linearGradient id={beam} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#F2C987" stopOpacity={0.55} />
+            <stop offset="1" stopColor="#E79E3F" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <rect x="4" y="4" width="92" height="134" rx="3" opacity={0.4} />
+        {/* Beams, under everything else. */}
+        {STAGE_LIGHTS.map(({ x, aim }) => (
+          <path key={`beam-${x}`} d={`M${x - 1.6} 31 L${x + 1.6} 31 L${aim + 13} 104 L${aim - 13} 104 Z`} fill={`url(#${beam})`} stroke="none" />
+        ))}
+        {/* The truss: two rails with a zigzag between. */}
+        <path d="M8 15 H92 M8 21 H92" />
+        <path d={`M8 21 ${Array.from({ length: 14 }, (_, i) => `L${8 + (i + 0.5) * 6} 15 L${8 + (i + 1) * 6} 21`).join(" ")}`} opacity={0.7} />
+        {/* The lights hanging from it. */}
+        {STAGE_LIGHTS.map(({ x }) => (
+          <g key={`light-${x}`}>
+            <path d={`M${x} 21 V23`} />
+            <rect x={x - 3.5} y="23" width="7" height="6" rx="1.6" fill="#1a1510" />
+            <circle cx={x} cy="30" r="1.6" fill="#FFE7B8" stroke="none" />
           </g>
         ))}
+        {/* The LED screen. */}
+        <rect x="30" y="47" width="40" height="27" rx="1" fill="#14110d" />
+        <path d="M30 50 H70 M30 71 H70" opacity={0.25} />
+        {/* Speaker stacks. */}
+        {[10, 78].map((x) => (
+          <g key={`speakers-${x}`}>
+            <rect x={x} y="64" width="12" height="18" rx="1" fill="#14110d" />
+            <circle cx={x + 6} cy="70" r="3.2" />
+            <circle cx={x + 6} cy="77.5" r="1.8" />
+            <rect x={x} y="84" width="12" height="20" rx="1" fill="#14110d" />
+            <circle cx={x + 6} cy="91" r="4" />
+            <circle cx={x + 6} cy="99" r="2.2" />
+          </g>
+        ))}
+        {/* The stage. */}
+        <path d="M6 104 H94 L88 113 H12 Z" fill="#14110d" />
+        <path d="M12 108.5 H88" opacity={0.35} />
+        {/* The crowd: heads and shoulders, in two rows. */}
+        {CROWD.map((x, i) => {
+          const y = i % 2 ? 127 : 124;
+          return (
+            <g key={`fan-${x}`} opacity={0.75}>
+              <circle cx={x} cy={y} r="2.3" />
+              <path d={`M${x - 4} ${y + 9} Q${x - 4} ${y + 3.5} ${x} ${y + 3.5} Q${x + 4} ${y + 3.5} ${x + 4} ${y + 9}`} />
+            </g>
+          );
+        })}
       </svg>
+      {/* The ISS logo, on the LED screen. */}
       <Image
         src="/logo.png"
         alt=""
         width={145}
         height={61}
-        className="absolute top-1/2 left-1/2 w-[19cqw] -translate-1/2"
+        className="absolute top-[42.6%] left-1/2 w-[30cqw] -translate-1/2"
       />
     </div>
   );
@@ -203,14 +257,14 @@ function Card({
 const RIBBONS = [
   {
     d: "M-400 760 C 120 260, 520 1180, 920 620 S 1520 -160, 1960 300 S 1380 1320, 760 940 S -260 180, 300 -260 S 1260 160, 2000 820 S 900 1400, 200 1160",
-    width: 34,
+    width: 24,
     opacity: 0.95,
     speed: 2.2, // ribbon pixels per pixel scrolled
     drift: 70, // ribbon pixels per second, even when the page is still
   },
   {
     d: "M2000 120 C 1500 620, 1100 -120, 700 380 S 60 1240, -300 760 S 360 -200, 980 120 S 1760 1180, 1100 1300",
-    width: 26,
+    width: 18,
     opacity: 0.55,
     speed: 3,
     drift: 110,
@@ -220,8 +274,11 @@ const VISIBLE = 0.34; // share of each route showing at any time
 
 /**
  * The gold ribbon: thick strokes travelling along long routes, in and out of
- * the picture. `shift()` (read every frame) moves them on with the scroll;
- * they also drift slowly on their own.
+ * the picture. `shift()` (read every frame) is how far the visitor has
+ * scrolled since the ribbon should start: while it's 0 nothing shows; from
+ * then on each stroke enters from the edge of the picture (where its route
+ * begins), moves on with the scroll, and also drifts on its own. Back to 0,
+ * and it's gone again, ready to enter afresh.
  */
 function Ribbon({ shift, className = "" }: { shift: () => number; className?: string }) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -238,17 +295,22 @@ function Ribbon({ shift, className = "" }: { shift: () => number; className?: st
     pathRefs.current.forEach((p, i) => {
       if (p) p.style.strokeDasharray = `${lengths[i] * VISIBLE} ${lengths[i]}`;
     });
+    // `along`: how far each stroke's visible stretch has travelled along its
+    // route. At 0 it sits just before the route's start (off the edge, unseen).
+    const place = (along: number[]) =>
+      pathRefs.current.forEach((p, i) => {
+        if (p) p.style.strokeDashoffset = `${lengths[i] * VISIBLE - (along[i] % (lengths[i] * (1 + VISIBLE)))}`;
+      });
+    let startedAt: number | null = null; // when it started (seconds), for the drift
     const draw = (seconds: number) => {
       const s = shiftRef.current();
-      pathRefs.current.forEach((p, i) => {
-        if (!p) return;
-        const cycle = lengths[i] * (1 + VISIBLE);
-        const along = (s * RIBBONS[i].speed + seconds * RIBBONS[i].drift) % cycle;
-        p.style.strokeDashoffset = `${-along + lengths[i] * VISIBLE}`;
-      });
+      if (s <= 0) startedAt = null;
+      else startedAt ??= seconds;
+      const drifted = startedAt === null ? 0 : seconds - startedAt;
+      place(RIBBONS.map((r) => (s <= 0 ? 0 : s * r.speed + drifted * r.drift)));
     };
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      draw(4); // a still picture
+      place(lengths.map((length) => length * 0.6)); // a still picture, part-way along
       return;
     }
     // Runs only while the ribbon is on screen.
@@ -361,8 +423,8 @@ export function GenerationDeck({
           el.style.height = `${cardH}px`;
           el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${tilt.toFixed(2)}deg)`;
 
-          // The turn: each card in its own stretch of `flip`, first card first.
-          const turned = smooth(clamp01(flip - i));
+          // The turn: first card first, each starting when the one before is 70% open.
+          const turned = smooth(clamp01(flip - i * TURN_STAGGER));
           const flipper = flipRefs.current[i];
           if (flipper) flipper.style.transform = `rotateY(${(180 * (1 - turned)).toFixed(1)}deg)`;
           // Face-up: it starts to float.
@@ -373,7 +435,7 @@ export function GenerationDeck({
         // only then can it be clicked or reached with the keyboard.
         const footer = footerRef.current;
         if (footer) {
-          const shown = clamp01((flip - (count - 0.4)) / 0.4);
+          const shown = clamp01((flip - (flipSpan(count) - 0.4)) / 0.4);
           footer.style.top = `${footerTop.toFixed(1)}px`;
           footer.style.opacity = `${shown}`;
           footer.inert = shown < 0.5;
@@ -470,8 +532,8 @@ export function GenerationGrid({ generations, children }: { generations: Generat
     };
   }, [generations]);
 
-  // The ribbon moves on as the section scrolls past.
-  const shift = () => -(sectionRef.current?.getBoundingClientRect().top ?? 0);
+  // The ribbon starts as the section comes into view, and moves on as it scrolls past.
+  const shift = () => Math.max(0, window.innerHeight * 0.85 - (sectionRef.current?.getBoundingClientRect().top ?? Infinity));
 
   return (
     <div ref={sectionRef} className="relative isolate mt-14 py-10">
