@@ -77,6 +77,7 @@ const ROW_GAP = 0.13; // gap between cards, as a share of a card's width
 // Fanned in the deck, and settled (just off straight) in the row.
 const DECK_TILT = [-7, -2.5, 2.5, 7];
 const ROW_TILT = [-2, 1.5, -1.5, 2];
+const CARD_PERSPECTIVE = 900; // px: how strongly a turning card shows its depth
 
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const reducedMotion = () => window.matchMedia(REDUCED_MOTION).matches;
@@ -86,11 +87,11 @@ const subscribeReducedMotion = (onChange: () => void) => {
   return () => query.removeEventListener("change", onChange);
 };
 
+
 // The cards turn one after another, overlapping: each starts once the one
-// before it is 70% of the way round. (A turn eases in and out, so that's 64%
-// of the way through its time.)
-const TURN_STAGGER = 0.64;
-/** How long the whole turning takes, in single-card turns (4 cards: about 2.9). */
+// before it is 30% of the way over.
+const TURN_STAGGER = 0.3;
+/** How long the whole turning takes, in single-card turns (4 cards: 1.9). */
 export const flipSpan = (cards: number) => TURN_STAGGER * (cards - 1) + 1;
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
@@ -235,7 +236,7 @@ function Card({
   return (
     <div
       ref={floatRef}
-      className={`size-full ${flipped ? "animate-card-float motion-reduce:animate-none" : ""}`}
+      className="size-full animate-card-float motion-reduce:animate-none"
       style={{ ["--float-tilt" as string]: `${tilt}deg`, animationDelay: `${floatDelay}ms` }}
     >
       <div
@@ -252,36 +253,49 @@ function Card({
 
 // ── The ribbon ──────────────────────────────────────────────────────────────
 
-// Long, looping routes across a 1600 × 1000 picture, running off its edges so
-// the ribbon sweeps in and out of view.
-const RIBBONS = [
+interface RibbonRoute {
+  d: string;
+  width: number;
+  opacity: number;
+  speed: number; // ribbon pixels per pixel scrolled
+  drift: number; // ribbon pixels per second, even when the page is still
+}
+
+// Closed loops across a 1600 × 1000 picture, each swinging right across the
+// screen and off its edges before coming round again — so the ribbon can
+// travel round and round without ever reaching an end. (Each is drawn with
+// matching curves at every join, so it runs on smoothly.)
+const RIBBONS: RibbonRoute[] = [
   {
-    d: "M-400 760 C 120 260, 520 1180, 920 620 S 1520 -160, 1960 300 S 1380 1320, 760 940 S -260 180, 300 -260 S 1260 160, 2000 820 S 900 1400, 200 1160",
+    d: "M-200 300 C 300 -100, 900 500, 1300 200 C 1700 -100, 1900 600, 1500 800 C 1100 1000, 700 500, 300 900 C -100 1300, -700 700, -200 300 Z",
     width: 24,
     opacity: 0.95,
-    speed: 2.2, // ribbon pixels per pixel scrolled
-    drift: 70, // ribbon pixels per second, even when the page is still
+    speed: 3,
+    drift: 150,
   },
   {
-    d: "M2000 120 C 1500 620, 1100 -120, 700 380 S 60 1240, -300 760 S 360 -200, 980 120 S 1760 1180, 1100 1300",
+    d: "M1800 200 C 1300 -200, 700 300, 400 100 C 100 -100, -300 400, 200 600 C 700 800, 1000 1200, 1400 900 C 1800 600, 2300 600, 1800 200 Z",
     width: 18,
-    opacity: 0.55,
-    speed: 3,
-    drift: 110,
+    opacity: 0.6,
+    speed: 3.8,
+    drift: 190,
   },
 ];
-const VISIBLE = 0.34; // share of each route showing at any time
+
+const VISIBLE = 0.55; // share of each loop the ribbon covers once it's fully in
 
 /**
- * The gold ribbon: thick strokes travelling along long routes, in and out of
- * the picture. `shift()` (read every frame) is how far the visitor has
- * scrolled since the ribbon should start: while it's 0 nothing shows; from
- * then on each stroke enters from the edge of the picture (where its route
- * begins), moves on with the scroll, and also drifts on its own. Back to 0,
- * and it's gone again, ready to enter afresh.
+ * The gold ribbon: thick strokes travelling round closed loops, in and out of
+ * the picture, without end. `shift()` (read every frame) is how far the
+ * visitor has scrolled since the ribbon should start: while it's 0 nothing
+ * shows; from then on each stroke grows in from where its loop begins (off
+ * the edge), then keeps going round, moving on with the scroll and also
+ * drifting on its own. Back to 0, and it's gone again, ready to enter afresh.
  */
 function Ribbon({ shift, className = "" }: { shift: () => number; className?: string }) {
+  const routes = RIBBONS;
   const svgRef = useRef<SVGSVGElement>(null);
+  const gold = useId();
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const shiftRef = useRef(shift);
   useEffect(() => {
@@ -292,14 +306,17 @@ function Ribbon({ shift, className = "" }: { shift: () => number; className?: st
     const svg = svgRef.current;
     if (!svg) return;
     const lengths = pathRefs.current.map((p) => p?.getTotalLength() ?? 1);
-    pathRefs.current.forEach((p, i) => {
-      if (p) p.style.strokeDasharray = `${lengths[i] * VISIBLE} ${lengths[i]}`;
-    });
-    // `along`: how far each stroke's visible stretch has travelled along its
-    // route. At 0 it sits just before the route's start (off the edge, unseen).
+    // `along`: how far each stroke's head has travelled round its loop. Its
+    // tail follows a fixed distance behind; at first, while it's still
+    // growing in from the loop's start (off the edge), it's only as long as
+    // the head has gone. The loop is closed, so it simply goes round and round.
     const place = (along: number[]) =>
       pathRefs.current.forEach((p, i) => {
-        if (p) p.style.strokeDashoffset = `${lengths[i] * VISIBLE - (along[i] % (lengths[i] * (1 + VISIBLE)))}`;
+        if (!p) return;
+        const length = lengths[i];
+        const dash = Math.min(length * VISIBLE, along[i]);
+        p.style.strokeDasharray = `${dash} ${length - dash}`;
+        p.style.strokeDashoffset = `${dash - (along[i] % length)}`;
       });
     let startedAt: number | null = null; // when it started (seconds), for the drift
     const draw = (seconds: number) => {
@@ -307,7 +324,7 @@ function Ribbon({ shift, className = "" }: { shift: () => number; className?: st
       if (s <= 0) startedAt = null;
       else startedAt ??= seconds;
       const drifted = startedAt === null ? 0 : seconds - startedAt;
-      place(RIBBONS.map((r) => (s <= 0 ? 0 : s * r.speed + drifted * r.drift)));
+      place(routes.map((r) => (s <= 0 ? 0 : s * r.speed + drifted * r.drift)));
     };
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       place(lengths.map((length) => length * 0.6)); // a still picture, part-way along
@@ -328,7 +345,7 @@ function Ribbon({ shift, className = "" }: { shift: () => number; className?: st
       observer.disconnect();
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [routes]);
 
   return (
     <svg
@@ -339,13 +356,13 @@ function Ribbon({ shift, className = "" }: { shift: () => number; className?: st
       className={`pointer-events-none ${className}`}
     >
       <defs>
-        <linearGradient id="ribbon-gold" x1="0" y1="0" x2="1600" y2="1000" gradientUnits="userSpaceOnUse">
+        <linearGradient id={gold} x1="0" y1="0" x2="1600" y2="1000" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#F2C987" />
           <stop offset="0.5" stopColor="#E79E3F" />
           <stop offset="1" stopColor="#C68535" />
         </linearGradient>
       </defs>
-      {RIBBONS.map((r, i) => (
+      {routes.map((r, i) => (
         <path
           key={i}
           ref={(el) => {
@@ -353,10 +370,177 @@ function Ribbon({ shift, className = "" }: { shift: () => number; className?: st
           }}
           d={r.d}
           fill="none"
-          stroke="url(#ribbon-gold)"
+          stroke={`url(#${gold})`}
           strokeWidth={r.width}
           strokeLinecap="round"
           opacity={r.opacity}
+        />
+      ))}
+    </svg>
+  );
+}
+
+// ── Desktop: the ribbon that scrolls with the page ─────────────────────────
+
+// Two endless ribbons drawn down the page, swinging from one side of the
+// screen to the other: each sweep starts off one edge and ends off the other,
+// so they only ever come in from the left or the right.
+const STREAMS = [
+  { side: "left", start: 0.95, drop: 0.72, width: 24, opacity: 0.95 },
+  { side: "right", start: 1.25, drop: 0.9, width: 18, opacity: 0.6 },
+] as const;
+// The ribbon draws itself as the page scrolls: its tip travels along the
+// route this many px per px scrolled, but never further down than this share
+// of the screen — so the tip is always in view, laying the line down.
+const DRAW_PER_PX = 6;
+const TIP_LOWEST = 0.88;
+// The ribbon's curves sway as the page scrolls (and a little on their own):
+const SWAY_PER_PX = 0.006; // radians of sway per pixel scrolled
+const SWAY_PER_SECOND = 0.5; // ...and per second, even when the page is still
+
+/**
+ * One stream's route, in pixels for a screen this size, down to `until`
+ * (a height), and points along it. `phase` sways its curves: the ends of
+ * each sweep stay put, off the edges of the screen, while the bends between
+ * them swing across and back.
+ */
+function streamRoute(width: number, height: number, stream: (typeof STREAMS)[number], phase: number, until: number) {
+  const left = -0.15 * width;
+  const right = 1.15 * width;
+  const drop = stream.drop * height;
+  let x = stream.side === "left" ? left : right;
+  let y = stream.start * height;
+  let d = `M${x.toFixed(1)} ${y.toFixed(1)}`;
+  let length = 0;
+  const samples = [{ length: 0, y }];
+  for (let k = 0; y < until; k++) {
+    const to = x === left ? right : left;
+    const span = to - x;
+    // Every third sweep turns a loop on the way across; the others are S-curves.
+    const loop = k % 3 === 1;
+    const c1 = loop ? { x: x + 1.25 * span, y: y + 0.15 * drop } : { x: x + 0.55 * span, y: y - 0.2 * drop };
+    const c2 = loop ? { x: x - 0.25 * span, y: y + 0.85 * drop } : { x: to - 0.55 * span, y: y + drop + 0.2 * drop };
+    // The sway: each bend swings on its own rhythm.
+    const p = phase + k * 1.7 + (stream.side === "left" ? 0 : 2.3);
+    c1.x += 0.22 * width * Math.sin(p);
+    c1.y += 0.14 * height * Math.cos(p * 0.8);
+    c2.x += 0.22 * width * Math.sin(p + 2.1);
+    c2.y += 0.14 * height * Math.cos(p * 0.8 + 1.4);
+    const end = { x: to, y: y + drop };
+    let prev = { x, y };
+    for (let i = 1; i <= 60; i++) {
+      const t = i / 60;
+      const u = 1 - t;
+      const p = {
+        x: u * u * u * x + 3 * u * u * t * c1.x + 3 * u * t * t * c2.x + t * t * t * end.x,
+        y: u * u * u * y + 3 * u * u * t * c1.y + 3 * u * t * t * c2.y + t * t * t * end.y,
+      };
+      length += Math.hypot(p.x - prev.x, p.y - prev.y);
+      samples.push({ length, y: p.y });
+      prev = p;
+    }
+    d += ` C${c1.x.toFixed(1)} ${c1.y.toFixed(1)} ${c2.x.toFixed(1)} ${c2.y.toFixed(1)} ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
+    x = end.x;
+    y = end.y;
+  }
+  return { d, length, samples };
+}
+
+/** How much of a route is drawn when drawing has reached `limit` (a height): up to the first point below it. */
+function drawnTo(samples: { length: number; y: number }[], limit: number) {
+  for (let i = 1; i < samples.length; i++) {
+    const p = samples[i];
+    if (p.y > limit) {
+      const q = samples[i - 1];
+      return q.length + ((limit - q.y) / (p.y - q.y || 1)) * (p.length - q.length);
+    }
+  }
+  return samples[samples.length - 1].length;
+}
+
+/**
+ * The gold ribbon behind the desktop cards. It's drawn on the page, so it
+ * scrolls up at exactly the page's speed: `shift()` is how far the visitor
+ * has scrolled since it started. As it scrolls its curves sway and snake
+ * across the screen (and keep moving gently when the page is still).
+ * It draws itself as it goes: each ribbon starts at the edge of the screen,
+ * and its tip travels on, laying the line down, as the page scrolls.
+ */
+function ScrollRibbon({ shift, className = "" }: { shift: () => number; className?: string }) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const gold = useId();
+  const shiftRef = useRef(shift);
+  useEffect(() => {
+    shiftRef.current = shift;
+  }, [shift]);
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    let size = { width: 0, height: 0 };
+    const measure = () => {
+      size = { width: svg.clientWidth, height: svg.clientHeight };
+    };
+    const draw = (scrolled: number, seconds: number) => {
+      if (!size.width || !size.height) return;
+      // The page-shaped window onto the ribbon, scrolled down by `scrolled`.
+      svg.setAttribute("viewBox", `0 ${scrolled.toFixed(1)} ${size.width} ${size.height}`);
+      const limit = scrolled + size.height * TIP_LOWEST;
+      const phase = scrolled * SWAY_PER_PX + seconds * SWAY_PER_SECOND;
+      STREAMS.forEach((stream, i) => {
+        const path = pathRefs.current[i];
+        if (!path) return;
+        // Only as much route as can be seen (plus a screen to spare).
+        const route = streamRoute(size.width, size.height, stream, phase, limit + size.height);
+        path.setAttribute("d", route.d);
+        const drawn = scrolled > 0 ? Math.min(scrolled * DRAW_PER_PX, drawnTo(route.samples, limit)) : 0;
+        path.style.strokeDasharray = `${drawn.toFixed(1)} ${route.length.toFixed(1)}`;
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(() => {
+      measure();
+      draw(shiftRef.current(), 0);
+    });
+    observer.observe(svg);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      draw(size.height, 0); // a still picture
+      return () => observer.disconnect();
+    }
+    let frame = 0;
+    const loop = (now: number) => {
+      draw(shiftRef.current(), now / 1000);
+      frame = requestAnimationFrame(loop);
+    };
+    frame = requestAnimationFrame(loop);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <svg ref={svgRef} aria-hidden className={`pointer-events-none ${className}`}>
+      <defs>
+        <linearGradient id={gold} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#F2C987" />
+          <stop offset="0.5" stopColor="#E79E3F" />
+          <stop offset="1" stopColor="#C68535" />
+        </linearGradient>
+      </defs>
+      {STREAMS.map((stream, i) => (
+        <path
+          key={stream.side}
+          ref={(el) => {
+            pathRefs.current[i] = el;
+          }}
+          fill="none"
+          stroke={`url(#${gold})`}
+          strokeWidth={stream.width}
+          strokeLinecap="round"
+          opacity={stream.opacity}
+          style={{ strokeDasharray: "0 1" }}
         />
       ))}
     </svg>
@@ -398,7 +582,6 @@ export function GenerationDeck({
         const ribbonLayer = ribbonLayerRef.current;
         const layer = cardsLayerRef.current;
         if (!ribbonLayer || !layer) return;
-        ribbonLayer.style.opacity = `${show}`;
         layer.style.opacity = `${clamp01(deal / 0.15)}`;
 
         // Card size and place: as large as fits (in a row, under the words).
@@ -408,27 +591,32 @@ export function GenerationDeck({
         const { card, cardH, cardsTop, footerTop } = deckLayout(width, height, count);
         const rowWidth = count * card + (count - 1) * card * ROW_GAP;
 
-        // The deal: rise in from below as a deck (first 30%), then spread out.
-        const rise = smooth(clamp01(deal / 0.3));
-        const spread = smooth(clamp01((deal - 0.3) / 0.7));
+        // The deal: the deck floats up from below the screen (first half),
+        // slowing as it arrives, then spreads out into the row. Meanwhile the
+        // ribbon behind scrolls up at the page's own speed (see ScrollRibbon),
+        // so the cards seem to float up through a page that keeps scrolling.
+        const rise = 1 - (1 - clamp01(deal / 0.5)) ** 3;
+        const below = (1 - rise) * height; // how far below its place the deck still is
+        ribbonLayer.style.opacity = `${show}`;
+        const spread = smooth(clamp01((deal - 0.5) / 0.5));
         generations.forEach((_, i) => {
           const el = placeRefs.current[i];
           if (!el) return;
           const deckX = (width - card) / 2 + (i - (count - 1) / 2) * 5;
           const rowX = (width - rowWidth) / 2 + i * card * (1 + ROW_GAP);
           const x = deckX + (rowX - deckX) * spread;
-          const y = cardsTop + (1 - rise) * height * 0.6;
+          const y = cardsTop + below;
           const tilt = DECK_TILT[i % DECK_TILT.length] + (ROW_TILT[i % ROW_TILT.length] - DECK_TILT[i % DECK_TILT.length]) * spread;
           el.style.width = `${card}px`;
           el.style.height = `${cardH}px`;
           el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${tilt.toFixed(2)}deg)`;
 
-          // The turn: first card first, each starting when the one before is 70% open.
+          // The turn: first card first, each starting when the one before is 30% over.
           const turned = smooth(clamp01(flip - i * TURN_STAGGER));
           const flipper = flipRefs.current[i];
-          if (flipper) flipper.style.transform = `rotateY(${(180 * (1 - turned)).toFixed(1)}deg)`;
-          // Face-up: it starts to float.
-          floatRefs.current[i]?.classList.toggle("animate-card-float", turned >= 1);
+          // Its own perspective, so it turns about its own middle: the near
+          // edge swings out large and the far edge shrinks away.
+          if (flipper) flipper.style.transform = `perspective(${CARD_PERSPECTIVE}px) rotateY(${(180 * (1 - turned)).toFixed(1)}deg)`;
         });
 
         // Under the row, once the last card is nearly face-up: fades in, and
@@ -451,10 +639,10 @@ export function GenerationDeck({
 
   return (
     <>
-      <div ref={ribbonLayerRef} aria-hidden className={`opacity-0 ${ribbonClassName}`}>
-        <Ribbon shift={shift} className="size-full" />
+      <div ref={ribbonLayerRef} aria-hidden className={`overflow-hidden opacity-0 ${ribbonClassName}`}>
+        <ScrollRibbon shift={shift} className="size-full" />
       </div>
-      <div ref={cardsLayerRef} className={`pointer-events-none opacity-0 [perspective:1600px] ${cardsClassName}`}>
+      <div ref={cardsLayerRef} className={`pointer-events-none opacity-0 ${cardsClassName}`}>
         <ul aria-label="Three generations of ISS">
           {generations.map((g, i) => (
             <li
