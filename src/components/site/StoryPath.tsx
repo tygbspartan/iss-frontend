@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { deckLayout, GenerationDeck, GenerationGrid, type DeckControl, type Generation } from "./GenerationCards";
 
 // The About page's story: a few blocks of text joined by one thick gold line.
 // When the line reaches a block that block "switches on": a bulb lights up
@@ -19,10 +20,15 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 // moves a camera over it. The camera starts close on the first block; as you
 // scroll on it pulls back (so the line can be seen winding across), travels
 // to the next block, and closes in on it just as the line reaches it and it
-// lights up — and so on, ending on the family tree. Then the page scrolls on.
+// lights up — and so on, ending on the family tree. Scrolling on, the camera
+// lifts the words to the top of the screen as the tree fades away, a gold
+// ribbon starts sweeping behind, and a deck of cards rises in under the words,
+// deals out into a row and turns face-up one card at a time: one for each
+// generation (see GenerationCards). Then the page scrolls on.
 //
 // Smaller screens: the blocks are stacked, the line runs straight down their
-// left side and draws itself as you scroll, then curves in to the tree; no camera.
+// left side and draws itself as you scroll, then curves in to the tree; no
+// camera. The generation cards follow, two by two, turning as they scroll in.
 //
 // Visitors who ask for reduced motion get the finished picture: no camera,
 // the line and tree fully drawn, every block lit and "Three" shown.
@@ -63,13 +69,18 @@ const HOLD = 0.55; // the camera rests on a block
 const TRAVEL = 1.1; // the camera moves on to the next block (and finally to the tree)
 const TREE_DRAW = 0.9; // the family tree fills up
 const TREE_HOLD = 1; // "Three" is revealed, and the camera rests on the tree
+const RISE = 0.9; // the words move up to the top of the screen; the tree fades away
+const DEAL = 1; // the deck rises in under the words and deals out into a row
+const FLIP_EACH = 0.45; // each card turns face-up, one after another
+const END_HOLD = 0.8; // the cards float, face-up
+const TEXT_ZOOM = 1.15; // how large the words are once at the top
 const ZOOM = 1.6; // how close the camera gets to a block (less if the block wouldn't fit)
 const NAVBAR = 118; // the camera frames blocks in the screen below the navbar
 const FIT = 0.86; // share of that space a framed block (or pair, pulled back) may fill
 
 /** How tall the pinned stage is: one screen, plus the scrolling the camera moves through. */
-const stageHeight = (blocks: number) =>
-  `${(1 + LEAD_IN + blocks * HOLD + blocks * TRAVEL + TREE_DRAW + TREE_HOLD) * 100}svh`;
+const stageHeight = (blocks: number, cards: number) =>
+  `${(1 + LEAD_IN + blocks * HOLD + blocks * TRAVEL + TREE_DRAW + TREE_HOLD + RISE + DEAL + cards * FLIP_EACH + END_HOLD) * 100}svh`;
 
 // ── Line drawing (small screens) ────────────────────────────────────────────
 const TIP_AT = 0.62; // the line's tip sits this far down the window
@@ -205,13 +216,25 @@ function Bulb({ at, on }: { at: Point; on: boolean }) {
   );
 }
 
-export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
+export function StoryPath({
+  chapters,
+  generations,
+  children,
+}: {
+  chapters: StoryChapter[];
+  generations: Generation[];
+  children?: ReactNode; // shown under the generation cards (e.g. a link to the team)
+}) {
   const pinned = useSyncExternalStore(subscribePinned, () => window.matchMedia(PINNED_QUERY).matches, () => false);
   const stageRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLElement | null)[]>([]);
   const finaleRef = useRef<HTMLDivElement>(null);
   const treeSpaceRef = useRef<HTMLDivElement>(null);
+  const wordsRef = useRef<HTMLParagraphElement>(null);
+  // The tree's parts, faded out together once the words move up (desktop).
+  const treeFadeRefs = useRef<(SVGGElement | HTMLDivElement | null)[]>([]);
+  const deckRef = useRef<DeckControl | null>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const treeRefs = useRef<(SVGPathElement | null)[][]>([]);
   const tipRef = useRef<HTMLDivElement>(null);
@@ -225,6 +248,7 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
     treeTop: number;
     treeSize: number;
     finale: Box;
+    words: Box;
   } | null>(null);
   const [lit, setLit] = useState(0); // how many blocks are switched on
   const [treeLit, setTreeLit] = useState(false); // the line has reached the top of the tree
@@ -237,7 +261,8 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
     const canvas = canvasRef.current;
     const finaleEl = finaleRef.current;
     const treeSpace = treeSpaceRef.current;
-    if (!canvas || !finaleEl || !treeSpace) return;
+    const wordsEl = wordsRef.current;
+    if (!canvas || !finaleEl || !treeSpace || !wordsEl) return;
     const measure = () => {
       const wide = window.matchMedia("(min-width: 1024px)").matches;
       const boxOf = (el: HTMLElement, parent: HTMLElement | null): Box => {
@@ -248,6 +273,7 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
       // Blocks sit in the <ol>; the tree's space sits in the finale; both are in the canvas.
       const blocks = blockRefs.current.map((el) => boxOf(el!, el!.offsetParent as HTMLElement));
       const finale = boxOf(finaleEl, null);
+      const words = boxOf(wordsEl, finaleEl);
       const centre = canvas.offsetWidth / 2;
       const treeSize = wide ? 1 : TREE_NARROW;
       const treeTop = finale.top + treeSpace.offsetTop;
@@ -284,6 +310,7 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
         treeTop,
         treeSize,
         finale,
+        words,
       });
     };
 
@@ -411,19 +438,44 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
       scale: Math.min(ZOOM, fitScale(box, v)),
     });
 
-    /** Camera and line at `progress` (pixels scrolled into the stage). */
-    const at = (progress: number, v: View) => {
+    type Shot = { x: number; y: number; scale: number; screenY?: number };
+    const between = (a: Shot, b: Shot, t: number, v: View): Shot => ({
+      x: a.x + (b.x - a.x) * t,
+      y: a.y + (b.y - a.y) * t,
+      scale: Math.exp(Math.log(a.scale) + (Math.log(b.scale) - Math.log(a.scale)) * t),
+      screenY: (a.screenY ?? v.centreY) + ((b.screenY ?? v.centreY) - (a.screenY ?? v.centreY)) * t,
+    });
+    const still = { rise: 0, deal: 0, flip: 0, ribbon: 0 };
+
+    /** Camera, line and cards at `progress` (pixels scrolled into the stage). */
+    const at = (progress: number, v: View): { shot: Shot; drawn: number; rise: number; deal: number; flip: number; ribbon: number } => {
       const unit = v.screen;
       const shots = stops.map((box) => shotOf(box, v));
-      if (progress < LEAD_IN * unit) return { shot: shots[0], drawn: reachAt[0] * (progress / (LEAD_IN * unit)) };
+      if (progress < LEAD_IN * unit) return { ...still, shot: shots[0], drawn: reachAt[0] * (progress / (LEAD_IN * unit)) };
       let rest = progress - LEAD_IN * unit;
       for (let i = 0; i < stops.length; i++) {
         if (i === stops.length - 1) {
           // On the tree: it fills, then everything rests with "Three" showing.
-          const fill = Math.min(1, rest / (TREE_DRAW * unit));
-          return { shot: shots[i], drawn: lineTotal + treeTotal * smooth(fill) };
+          if (rest < (TREE_DRAW + TREE_HOLD) * unit) {
+            const fill = Math.min(1, rest / (TREE_DRAW * unit));
+            return { ...still, shot: shots[i], drawn: lineTotal + treeTotal * smooth(fill) };
+          }
+          // Then the words rise to the top as the tree fades, and the cards follow.
+          rest -= (TREE_DRAW + TREE_HOLD) * unit;
+          const { words } = layout;
+          const wordsShot = { x: (words.left + words.right) / 2, y: (words.top + words.bottom) / 2, scale: TEXT_ZOOM, screenY: deckLayout(v.width, v.screen, generations.length).wordsCentre };
+          const rise = smooth(Math.min(1, rest / (RISE * unit)));
+          const after = rest - RISE * unit;
+          return {
+            shot: between(shots[i], wordsShot, rise, v),
+            drawn: total,
+            rise,
+            deal: Math.max(0, Math.min(1, after / (DEAL * unit))),
+            flip: Math.max(0, Math.min(generations.length, (after - DEAL * unit) / (FLIP_EACH * unit))),
+            ribbon: rest,
+          };
         }
-        if (rest < HOLD * unit) return { shot: shots[i], drawn: reachAt[i] };
+        if (rest < HOLD * unit) return { ...still, shot: shots[i], drawn: reachAt[i] };
         rest -= HOLD * unit;
         if (rest < TRAVEL * unit) {
           const t = smooth(rest / (TRAVEL * unit));
@@ -441,23 +493,29 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           const dip = wideShot / Math.min(from.scale, to.scale);
           const scale = direct * (1 - (1 - Math.min(1, dip)) * Math.sin(Math.PI * t));
           return {
+            ...still,
             shot: { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t, scale },
             drawn: reachAt[i] + (reachAt[i + 1] - reachAt[i]) * t,
           };
         }
         rest -= TRAVEL * unit;
       }
-      return { shot: shots[shots.length - 1], drawn: total };
+      return { ...still, shot: shots[shots.length - 1], drawn: total };
     };
 
     const place = (progress: number) => {
       const v = view();
-      const { shot, drawn } = at(progress, v);
-      // Put the shot's centre point in the middle of the view, at its scale.
+      const { shot, drawn, rise, deal, flip, ribbon } = at(progress, v);
+      // Put the shot's centre point in the middle of the view (or where the
+      // shot says), at its scale.
       const x = v.centreX - canvas.offsetLeft - shot.x * shot.scale;
-      const y = v.centreY - shot.y * shot.scale;
+      const y = (shot.screenY ?? v.centreY) - shot.y * shot.scale;
       canvas.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${shot.scale.toFixed(4)})`;
       paint(drawn);
+      // The tree fades away in the first part of the rise; the deck takes over.
+      const treeOpacity = `${1 - Math.min(1, rise / 0.6)}`;
+      treeFadeRefs.current.forEach((el) => el && (el.style.opacity = treeOpacity));
+      deckRef.current?.update({ show: rise, deal, flip, ribbon });
     };
 
     const target = () => {
@@ -484,7 +542,7 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
       window.removeEventListener("scroll", wake);
       window.removeEventListener("resize", wake);
     };
-  }, [layout, pinned]);
+  }, [layout, pinned, generations.length]);
 
   const treeSize = layout?.treeSize ?? 1;
 
@@ -502,11 +560,17 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
             <path key={`track-${i}`} d={seg.d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={4} strokeLinecap="round" />
           ))}
           {/* The tree's grey outline: there from the start, the same as the line's track. */}
-          {layout.tree.flatMap((level, i) =>
-            level.paths.map((d, j) => (
-              <path key={`tree-track-${i}-${j}`} d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={4} strokeLinejoin="round" />
-            )),
-          )}
+          <g
+            ref={(el) => {
+              treeFadeRefs.current[0] = el;
+            }}
+          >
+            {layout.tree.flatMap((level, i) =>
+              level.paths.map((d, j) => (
+                <path key={`tree-track-${i}-${j}`} d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={4} strokeLinejoin="round" />
+              )),
+            )}
+          </g>
           {layout.segments.map((seg, i) => (
             <path
               key={`line-${i}`}
@@ -524,25 +588,31 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
               className="drop-shadow-[0_0_6px_rgba(231,158,63,0.7)]"
             />
           ))}
-          {layout.tree.map((level, i) =>
-            level.paths.map((d, j) => (
-              <path
-                key={`tree-${i}-${j}`}
-                ref={(el) => {
-                  (treeRefs.current[i] ??= [])[j] = el;
-                }}
-                d={d}
-                pathLength={level.length}
-                fill="none"
-                stroke="#E79E3F"
-                strokeWidth={4}
-                strokeLinejoin="round"
-                strokeDasharray={level.length}
-                strokeDashoffset={level.length}
-                className="drop-shadow-[0_0_5px_rgba(231,158,63,0.7)]"
-              />
-            )),
-          )}
+          <g
+            ref={(el) => {
+              treeFadeRefs.current[1] = el;
+            }}
+          >
+            {layout.tree.map((level, i) =>
+              level.paths.map((d, j) => (
+                <path
+                  key={`tree-${i}-${j}`}
+                  ref={(el) => {
+                    (treeRefs.current[i] ??= [])[j] = el;
+                  }}
+                  d={d}
+                  pathLength={level.length}
+                  fill="none"
+                  stroke="#E79E3F"
+                  strokeWidth={4}
+                  strokeLinejoin="round"
+                  strokeDasharray={level.length}
+                  strokeDashoffset={level.length}
+                  className="drop-shadow-[0_0_5px_rgba(231,158,63,0.7)]"
+                />
+              )),
+            )}
+          </g>
           <defs>
             <linearGradient id="story-gold" x1="0" y1="0" x2="0" y2={layout.height} gradientUnits="userSpaceOnUse">
               <stop offset="0" stopColor="#F2C987" />
@@ -560,7 +630,15 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
 
       {/* Where the line meets each block, and the top of the tree: a bulb that lights up. */}
       {layout?.joints.map((joint, i) => <Bulb key={`joint-${i}`} at={joint} on={i < lit} />)}
-      {layout && <Bulb at={{ x: layout.width / 2, y: layout.treeTop }} on={treeLit} />}
+      {layout && (
+        <div
+          ref={(el) => {
+            treeFadeRefs.current[2] = el;
+          }}
+        >
+          <Bulb at={{ x: layout.width / 2, y: layout.treeTop }} on={treeLit} />
+        </div>
+      )}
 
       {/* Desktop: the blocks are far apart, so the camera has a long way to travel between them. */}
       <ol className="relative flex flex-col gap-24 pl-10 sm:gap-28 lg:gap-[420px] lg:pl-0">
@@ -612,7 +690,7 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           className="mx-auto"
           style={{ width: treeWidth(treeSize), height: treeHeight(treeSize) }}
         />
-        <p className="mt-8 text-lg font-medium text-white sm:text-2xl lg:mt-10 lg:text-[28px]">
+        <p ref={wordsRef} className="mt-8 text-lg font-medium text-white sm:text-2xl lg:mt-10 lg:text-[28px]">
           Powered By{" "}
           <span className="relative inline-block text-[#E79E3F]">
             {/* Letter by letter: each fades in out of a gold blur, a beat after the last. */}
@@ -631,6 +709,9 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
           Generations
         </p>
       </div>
+
+      {/* Phones (and reduced motion): the generation cards follow in the page. */}
+      {!pinned && <GenerationGrid generations={generations}>{children}</GenerationGrid>}
     </>
   );
 
@@ -639,11 +720,20 @@ export function StoryPath({ chapters }: { chapters: StoryChapter[] }) {
   // page as normal. (The spotlights reach a little past the content, so the
   // page using this must clip sideways overflow.)
   return pinned ? (
-    <section ref={stageRef} aria-label="Our story" className="relative" style={{ height: stageHeight(chapters.length) }}>
-      <div className="sticky top-0 h-svh overflow-hidden">
+    <section ref={stageRef} aria-label="Our story" className="relative" style={{ height: stageHeight(chapters.length, generations.length) }}>
+      <div className="sticky top-0 isolate h-svh overflow-hidden">
+        {/* The gold ribbon (behind the story) and the generation cards (in front of it). */}
+        <GenerationDeck
+          generations={generations}
+          controlRef={deckRef}
+          ribbonClassName="absolute inset-0 z-0"
+          cardsClassName="absolute inset-0 z-20"
+        >
+          {children}
+        </GenerationDeck>
         <div
           ref={canvasRef}
-          className={`site-container absolute inset-x-0 top-0 origin-top-left pt-28 pb-16 transition-opacity duration-500 ${
+          className={`site-container absolute inset-x-0 top-0 z-10 origin-top-left pt-28 pb-16 transition-opacity duration-500 ${
             layout ? "opacity-100" : "opacity-0"
           }`}
         >

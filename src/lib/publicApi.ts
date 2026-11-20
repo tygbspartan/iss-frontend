@@ -24,12 +24,6 @@ async function getPublic<T>(path: string): Promise<T> {
  */
 export const getTeam = () => getPublic<TeamMember[]>("/api/team");
 
-/**
- * Only the "core people" — visible members of departments marked
- * "Show on About page" in the admin. Same shape and order as getTeam().
- */
-export const getCoreTeam = () => getPublic<TeamMember[]>("/api/team?core=true");
-
 /** All departments, in display order. */
 export const getDepartments = () => getPublic<Department[]>("/api/departments");
 

@@ -35,6 +35,19 @@
 @theme {
   --animate-border-spin: border-spin 3s linear infinite;
   --animate-soft-bounce: soft-bounce 2.4s ease-in-out infinite;
+  --animate-card-float: card-float 4.2s ease-in-out infinite;
+
+  /* A card hanging in the air: drifts up and down, rocking slightly (the
+     About page's generation cards; each card sets its own --float-tilt). */
+  @keyframes card-float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--float-tilt, 0deg));
+    }
+    50% {
+      transform: translateY(-10px) rotate(calc(var(--float-tilt, 0deg) * -1));
+    }
+  }
 
   /* A slow, gentle rise and fall (the upcoming-events button). */
   @keyframes soft-bounce {

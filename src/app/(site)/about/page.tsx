@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { SectionHeader } from "@/components/site/PageHeader";
+import type { Generation } from "@/components/site/GenerationCards";
 import { StoryPath, type StoryChapter } from "@/components/site/StoryPath";
-import { TeamDepartments } from "@/components/site/TeamDepartments";
 import { PILL_BUTTON } from "@/components/site/pill";
-import { getCoreTeam } from "@/lib/publicApi";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -32,7 +30,7 @@ const CHAPTERS: StoryChapter[] = [
   },
   {
     label: "Today · The next generation",
-    text: "Today, ISS continues this legacy under the leadership of the next generation, with Mr. Shibir Shakya and Mr. Samir Shakya actively involved in the company's operations, management, and business development. With more than six decades of heritage and experience, ISS has evolved from a traditional sound system provider into a comprehensive audio-visual and event production partner. By combining advanced technology, skilled professionals, creative thinking, and a commitment to excellence, we continue to deliver seamless and memorable event experiences.",
+    text: "Today, ISS continues this legacy under the leadership of the next generation, with Mr. Shibir Shakya and Mr. Samir Shakya actively involved in its operations, management, and business development. With over six decades of experience, ISS has evolved from a traditional sound system provider into a comprehensive audio-visual and event production partner, combining advanced technology, skilled professionals, and creative thinking to deliver seamless and memorable event experiences.",
   },
   {
     label: "Our promise",
@@ -40,12 +38,44 @@ const CHAPTERS: StoryChapter[] = [
   },
 ];
 
-export default async function AboutPage() {
-  // The "core" people: members of the departments marked "Show on About page"
-  // in the admin. Everyone else appears only on the Teams page. If the backend
-  // can't be reached, or no department is marked, the section is left out.
-  const coreTeam = await getCoreTeam().catch(() => []);
+// The cards that close the story: one for each of the family's leaders, from
+// the first generation to the third.
+const GENERATIONS: Generation[] = [
+  {
+    label: "1st Gen",
+    numeral: "I",
+    name: "Mr. Asta Ratna Shakya",
+    role: "Founder",
+    organisation: "Voice of Radio",
+    generation: "First Generation",
+  },
+  {
+    label: "2nd Gen",
+    numeral: "II",
+    name: "Mr. Suresh Ratna Shakya",
+    role: "Founder",
+    organisation: "International Sound Service",
+    generation: "Second Generation",
+  },
+  {
+    label: "3rd Gen",
+    numeral: "III",
+    name: "Mr. Shibir Ratna Shakya",
+    role: "Managing Director / Sound Engineer",
+    organisation: "International Sound Service",
+    generation: "Third Generation",
+  },
+  {
+    label: "3rd Gen",
+    numeral: "III",
+    name: "Mr. Samir Ratna Shakya",
+    role: "Managing Director",
+    organisation: "International Sound Service",
+    generation: "Third Generation",
+  },
+];
 
+export default function AboutPage() {
   return (
     // overflow-x-clip: the story's spotlights and zoomed blocks reach a little
     // past the content; this keeps the page from scrolling sideways.
@@ -57,28 +87,18 @@ export default async function AboutPage() {
         </header>
       </div>
 
-      {/* Full width: on desktop the story is a pinned, screen-wide stage. */}
-      <StoryPath chapters={CHAPTERS} />
-
-      {coreTeam.length > 0 && (
-        <section className="site-container pt-6 pb-14 lg:pt-10 lg:pb-20">
-          <SectionHeader
-            label="The People"
-            title="Our Team"
-            intro="The people who lead ISS Nepal and stand behind every show we take on."
-          />
-          <div className="mt-12 lg:mt-16">
-            <TeamDepartments members={coreTeam} level={3} />
-          </div>
-          {/* The Teams page isn't in the navbar: this is the way to it. */}
-          <div className="mt-12 flex justify-center lg:mt-14">
-            <Link href="/teams" className={PILL_BUTTON}>
-              Meet the Team
-              <ArrowRight className="size-4" strokeWidth={2.5} aria-hidden />
-            </Link>
-          </div>
-        </section>
-      )}
+      {/* Full width: on desktop the story is a pinned, screen-wide stage.
+          Under the generation cards: the way to the Teams page (it isn't in
+          the navbar). */}
+      <StoryPath chapters={CHAPTERS} generations={GENERATIONS}>
+        <div className="flex flex-col items-center text-center">
+          <p className="font-poppins text-sm text-[#9DA1B1] sm:text-lg">Want to meet the entire team?</p>
+          <Link href="/teams" className={`mt-4 sm:mt-5 ${PILL_BUTTON}`}>
+            Meet the Team
+            <ArrowRight className="size-4" strokeWidth={2.5} aria-hidden />
+          </Link>
+        </div>
+      </StoryPath>
     </div>
   );
 }
