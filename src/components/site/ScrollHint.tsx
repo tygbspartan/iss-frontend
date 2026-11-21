@@ -78,9 +78,14 @@ export function ScrollHint() {
           />
         </svg>
       </span>
-      {/* Desktops and laptops: a mouse with its wheel scrolling. */}
-      <span className="hidden h-11 w-7 justify-center rounded-full border-2 border-current pt-2 lg:flex">
-        <span className="h-2.5 w-1 animate-scroll-wheel rounded-full bg-[#E79E3F]/90 motion-reduce:animate-none" />
+      {/* Desktops and laptops: a mouse with its wheel scrolling, "SCROLL DOWN" below. */}
+      <span className="hidden flex-col items-center gap-2 lg:flex">
+        <span className="flex h-11 w-7 justify-center rounded-full border-2 border-current pt-2">
+          <span className="h-2.5 w-1 animate-scroll-wheel rounded-full bg-[#E79E3F]/90 motion-reduce:animate-none" />
+        </span>
+        <span className="font-poppins text-[11px] font-bold tracking-[0.14em] uppercase">
+          Scroll down
+        </span>
       </span>
     </div>
   );
