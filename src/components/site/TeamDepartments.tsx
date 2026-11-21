@@ -1,4 +1,6 @@
-import { FaLinkedin } from "react-icons/fa6";
+"use client";
+
+import { useState } from "react";
 import type { TeamMember } from "@/lib/admin/types";
 import { GoldHeading } from "./GoldHeading";
 import { SUBHEADING } from "./PageHeader";
@@ -54,28 +56,42 @@ export function TeamDepartments({ members, level = 2 }: { members: TeamMember[];
   );
 }
 
-// One person: their cartoon image, which turns into their actual photo
-// (slightly zoomed) on hover or keyboard focus, then name and job title. If they have a link (their LinkedIn profile) the whole card opens
-// it in a new tab, the cursor says "Hey, let's connect", and the LinkedIn badge
-// shows in the corner of the photo. Without a link the card isn't clickable
-// and has no badge; the cursor just says "Hey".
+// One person: their cartoon image, then name and job title. With a mouse,
+// hovering cross-fades to their actual photo (slightly zoomed); on touch
+// screens a tap toggles between the two instead. Clicking with a mouse does
+// nothing. The cursor says "Hey".
 function MemberCard({ member, nameAs: Name }: { member: TeamMember; nameAs: "h3" | "h4" }) {
-  const card = (
-    <>
+  const [showPhoto, setShowPhoto] = useState(false);
+  const swaps = Boolean(member.actualImage);
+
+  return (
+    <article
+      data-cursor="Hey"
+      data-photo={showPhoto ? "" : undefined}
+      // Touch and pen only — mouse clicks leave the card alone. A finger that
+      // scrolls the page ends in pointercancel, not pointerup, so scrolling
+      // past a card doesn't flip it.
+      onPointerUp={(e) => {
+        if (swaps && e.pointerType !== "mouse") setShowPhoto((shown) => !shown);
+      }}
+      className={`group select-none ${swaps ? "[@media(hover:none)]:cursor-pointer" : ""}`}
+    >
       <div className="relative aspect-square overflow-hidden rounded-xs bg-neutral-900">
         {/* Plain <img>: photos come from the backend's storage host, which
             next/image would need configured as a remote pattern.
-            The cartoon and the actual photo are stacked; hovering cross-fades
-            to the photo. Both load together (the photo is only transparent),
-            so the swap is instant. Members added before actual photos existed
-            just keep their cartoon. */}
+            The cartoon and the actual photo are stacked and cross-fade. Both
+            load together (the photo is only transparent), so the swap is
+            instant. Members added before actual photos existed just keep their
+            cartoon. `group-hover` only applies on devices that can hover, so
+            touch screens use the tapped state (`data-photo`) alone. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={member.image}
           alt=""
           loading="lazy"
-          className={`absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105 group-focus-visible:scale-105 ${
-            member.actualImage ? "group-hover:opacity-0 group-focus-visible:opacity-0" : ""
+          draggable={false}
+          className={`absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105 group-data-photo:scale-105 ${
+            swaps ? "group-hover:opacity-0 group-data-photo:opacity-0" : ""
           }`}
         />
         {member.actualImage && (
@@ -84,11 +100,9 @@ function MemberCard({ member, nameAs: Name }: { member: TeamMember; nameAs: "h3"
             src={member.actualImage}
             alt=""
             loading="lazy"
-            className="absolute inset-0 size-full object-cover opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100 group-focus-visible:scale-105 group-focus-visible:opacity-100"
+            draggable={false}
+            className="absolute inset-0 size-full object-cover opacity-0 transition duration-500 group-hover:scale-105 group-hover:opacity-100 group-data-photo:scale-105 group-data-photo:opacity-100"
           />
-        )}
-        {member.link && (
-          <FaLinkedin className="absolute right-2 bottom-2 size-5 text-white sm:right-2.5 sm:bottom-2.5 sm:size-7" aria-hidden />
         )}
       </div>
       {/* Phones (two narrow cards across): the name is 14px and the job title
@@ -102,23 +116,6 @@ function MemberCard({ member, nameAs: Name }: { member: TeamMember; nameAs: "h3"
       <p className="mt-0.5 text-xs leading-[1.5] font-normal text-[#9DA1B1] sm:mt-0 sm:text-sm sm:leading-[1.7] 2xl:text-base">
         {member.jobTitle}
       </p>
-    </>
-  );
-
-  return member.link ? (
-    <a
-      href={member.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      data-cursor="Hey, let’s connect"
-      aria-label={`${member.name}, ${member.jobTitle} — connect on LinkedIn`}
-      className="group block rounded-xs outline-offset-4 focus-visible:outline-2 focus-visible:outline-white"
-    >
-      {card}
-    </a>
-  ) : (
-    <article data-cursor="Hey" className="group">
-      {card}
     </article>
   );
 }
