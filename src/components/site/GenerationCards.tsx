@@ -261,9 +261,9 @@ interface RibbonRoute {
   drift: number; // ribbon pixels per second, even when the page is still
 }
 
-// Closed loops across a 1600 × 1000 picture, each swinging right across the
+// A closed loop across a 1600 × 1000 picture, swinging right across the
 // screen and off its edges before coming round again — so the ribbon can
-// travel round and round without ever reaching an end. (Each is drawn with
+// travel round and round without ever reaching an end. (It's drawn with
 // matching curves at every join, so it runs on smoothly.)
 const RIBBONS: RibbonRoute[] = [
   {
@@ -272,13 +272,6 @@ const RIBBONS: RibbonRoute[] = [
     opacity: 0.95,
     speed: 3,
     drift: 150,
-  },
-  {
-    d: "M1800 200 C 1300 -200, 700 300, 400 100 C 100 -100, -300 400, 200 600 C 700 800, 1000 1200, 1400 900 C 1800 600, 2300 600, 1800 200 Z",
-    width: 18,
-    opacity: 0.6,
-    speed: 3.8,
-    drift: 190,
   },
 ];
 
@@ -382,66 +375,67 @@ function Ribbon({ shift, className = "" }: { shift: () => number; className?: st
 
 // ── Desktop: the ribbon that scrolls with the page ─────────────────────────
 
-// Two endless ribbons drawn down the page, swinging from one side of the
-// screen to the other: each sweep starts off one edge and ends off the other,
-// so they only ever come in from the left or the right.
-const STREAMS = [
-  { side: "left", start: 0.95, drop: 0.72, width: 24, opacity: 0.95 },
-  { side: "right", start: 1.25, drop: 0.9, width: 18, opacity: 0.6 },
-] as const;
+// One endless ribbon drawn down the page. It comes in from the left edge,
+// then wanders through the middle of the screen in smooth waves that now and
+// then close into a big round loop.
+const STREAMS = [{ side: "left", start: 0.95, width: 24, opacity: 0.95 }] as const;
+// Its shape (see streamRoute), in shares of the screen's width:
+const STEP = 0.085; // how far down it moves per radian of its wave — one loop per 2π of it, about a screen apart
+const LOOP = 1.65; // how much wider than that step its swing is — over 1 makes a loop; kept well clear of 1, where it would make a sharp point
+const DRIFT = 0.22; // how far the slow left-right wander reaches either side of the middle
 // The ribbon draws itself as the page scrolls: its tip travels along the
 // route this many px per px scrolled, but never further down than this share
 // of the screen — so the tip is always in view, laying the line down.
 const DRAW_PER_PX = 6;
 const TIP_LOWEST = 0.88;
 // The ribbon's curves sway as the page scrolls (and a little on their own):
-const SWAY_PER_PX = 0.006; // radians of sway per pixel scrolled
-const SWAY_PER_SECOND = 0.5; // ...and per second, even when the page is still
+const SWAY_PER_PX = 0.003; // radians of sway per pixel scrolled
+const SWAY_PER_SECOND = 0.3; // ...and per second, even when the page is still
 
 /**
- * One stream's route, in pixels for a screen this size, down to `until`
- * (a height), and points along it. `phase` sways its curves: the ends of
- * each sweep stay put, off the edges of the screen, while the bends between
- * them swing across and back.
+ * The ribbon's route, in pixels for a screen this size, down to `until`
+ * (a height), and points along it.
+ *
+ * It's one smooth curve, a "looping wave" (a prolate trochoid, the path of a
+ * point on a rolling wheel's spoke beyond its rim): as it moves down it swings
+ * from side to side, and where the swing is wider than the step down it closes
+ * into a round loop — every loop is drawn by the same formula, so they're all
+ * smooth and round, about a screen apart with long smooth curves between. Its
+ * swing stays well above the step (never close to it, which would make a
+ * sharp point instead of a loop). A slow wave drifts the whole thing left and
+ * right through the middle of the screen. It starts off the left edge and
+ * curves in. `phase` sways it all gently.
  */
 function streamRoute(width: number, height: number, stream: (typeof STREAMS)[number], phase: number, until: number) {
-  const left = -0.15 * width;
-  const right = 1.15 * width;
-  const drop = stream.drop * height;
-  let x = stream.side === "left" ? left : right;
-  let y = stream.start * height;
-  let d = `M${x.toFixed(1)} ${y.toFixed(1)}`;
+  const step = STEP * width;
+  const top = stream.start * height;
+  const point = (t: number) => {
+    // The swing breathes a little (loops a bit bigger or smaller), never near the step.
+    const swing = step * (LOOP + 0.15 * Math.sin(0.3 * t + phase * 0.3));
+    const turn = t + phase * 0.5;
+    const down = top + step * t - swing * Math.sin(turn);
+    const middle = width * (0.5 + DRIFT * Math.sin(0.23 * t + 1.1 + phase * 0.4));
+    const across = middle + swing * Math.cos(turn);
+    // Coming in: from off the left edge, easing into the curve.
+    const enter = Math.min(1, t / 4);
+    const eased = enter * enter * (3 - 2 * enter);
+    return { x: -0.15 * width + (across + 0.15 * width) * eased, y: down };
+  };
+  let d = "";
   let length = 0;
-  const samples = [{ length: 0, y }];
-  for (let k = 0; y < until; k++) {
-    const to = x === left ? right : left;
-    const span = to - x;
-    // Every third sweep turns a loop on the way across; the others are S-curves.
-    const loop = k % 3 === 1;
-    const c1 = loop ? { x: x + 1.25 * span, y: y + 0.15 * drop } : { x: x + 0.55 * span, y: y - 0.2 * drop };
-    const c2 = loop ? { x: x - 0.25 * span, y: y + 0.85 * drop } : { x: to - 0.55 * span, y: y + drop + 0.2 * drop };
-    // The sway: each bend swings on its own rhythm.
-    const p = phase + k * 1.7 + (stream.side === "left" ? 0 : 2.3);
-    c1.x += 0.22 * width * Math.sin(p);
-    c1.y += 0.14 * height * Math.cos(p * 0.8);
-    c2.x += 0.22 * width * Math.sin(p + 2.1);
-    c2.y += 0.14 * height * Math.cos(p * 0.8 + 1.4);
-    const end = { x: to, y: y + drop };
-    let prev = { x, y };
-    for (let i = 1; i <= 60; i++) {
-      const t = i / 60;
-      const u = 1 - t;
-      const p = {
-        x: u * u * u * x + 3 * u * u * t * c1.x + 3 * u * t * t * c2.x + t * t * t * end.x,
-        y: u * u * u * y + 3 * u * u * t * c1.y + 3 * u * t * t * c2.y + t * t * t * end.y,
-      };
+  const samples: { length: number; y: number }[] = [];
+  let prev: { x: number; y: number } | null = null;
+  for (let t = 0; ; t += 0.05) {
+    const p = point(t);
+    if (prev) {
       length += Math.hypot(p.x - prev.x, p.y - prev.y);
-      samples.push({ length, y: p.y });
-      prev = p;
+      d += ` L${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+    } else {
+      d = `M${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
     }
-    d += ` C${c1.x.toFixed(1)} ${c1.y.toFixed(1)} ${c2.x.toFixed(1)} ${c2.y.toFixed(1)} ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
-    x = end.x;
-    y = end.y;
+    samples.push({ length, y: p.y });
+    prev = p;
+    if (p.y > until) break;
   }
   return { d, length, samples };
 }
@@ -463,8 +457,9 @@ function drawnTo(samples: { length: number; y: number }[], limit: number) {
  * scrolls up at exactly the page's speed: `shift()` is how far the visitor
  * has scrolled since it started. As it scrolls its curves sway and snake
  * across the screen (and keep moving gently when the page is still).
- * It draws itself as it goes: each ribbon starts at the edge of the screen,
- * and its tip travels on, laying the line down, as the page scrolls.
+ * It draws itself as it goes: it starts at the left edge of the screen,
+ * and its tip travels on, wandering through the middle and now and then
+ * round a big loop, laying the line down as the page scrolls.
  */
 function ScrollRibbon({ shift, className = "" }: { shift: () => number; className?: string }) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -539,6 +534,7 @@ function ScrollRibbon({ shift, className = "" }: { shift: () => number; classNam
           stroke={`url(#${gold})`}
           strokeWidth={stream.width}
           strokeLinecap="round"
+          strokeLinejoin="round"
           opacity={stream.opacity}
           style={{ strokeDasharray: "0 1" }}
         />
