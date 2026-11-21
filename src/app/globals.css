@@ -36,6 +36,38 @@
   --animate-border-spin: border-spin 3s linear infinite;
   --animate-soft-bounce: soft-bounce 2.4s ease-in-out infinite;
   --animate-card-float: card-float 4.2s ease-in-out infinite;
+  --animate-roll-up-in: roll-up-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-roll-up-out: roll-up-out 320ms cubic-bezier(0.64, 0, 0.78, 0) both;
+  --animate-roll-down-in: roll-down-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-roll-down-out: roll-down-out 320ms cubic-bezier(0.64, 0, 0.78, 0) both;
+
+  /* Text rolling over to new text (the About story on phones): the old rolls
+     out one way as the new rolls in from the other. "up" when scrolling
+     down the page, "down" when scrolling back. */
+  @keyframes roll-up-in {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+  @keyframes roll-up-out {
+    to {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
+  @keyframes roll-down-in {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
+  @keyframes roll-down-out {
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
 
   /* A card hanging in the air: drifts up and down, rocking slightly (the
      About page's generation cards; each card sets its own --float-tilt). */

@@ -75,9 +75,9 @@ export function deckLayout(width: number, height: number, cards: number) {
 }
 const ROW_GAP = 0.13; // gap between cards, as a share of a card's width
 // Fanned in the deck, and settled (just off straight) in the row.
-const DECK_TILT = [-7, -2.5, 2.5, 7];
+export const DECK_TILT = [-7, -2.5, 2.5, 7];
 const ROW_TILT = [-2, 1.5, -1.5, 2];
-const CARD_PERSPECTIVE = 900; // px: how strongly a turning card shows its depth
+export const CARD_PERSPECTIVE = 900; // px: how strongly a turning card shows its depth
 
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const reducedMotion = () => window.matchMedia(REDUCED_MOTION).matches;
@@ -90,7 +90,7 @@ const subscribeReducedMotion = (onChange: () => void) => {
 
 // The cards turn one after another, overlapping: each starts once the one
 // before it is 30% of the way over.
-const TURN_STAGGER = 0.3;
+export const TURN_STAGGER = 0.3;
 /** How long the whole turning takes, in single-card turns (4 cards: 1.9). */
 export const flipSpan = (cards: number) => TURN_STAGGER * (cards - 1) + 1;
 
@@ -218,7 +218,7 @@ function CardBack() {
  * One card: an outer box sized by its parent (and placed by the deck), a box
  * that floats once the card is face-up, and the card itself, which turns.
  */
-function Card({
+export function Card({
   g,
   flipped,
   flipRef,
@@ -285,7 +285,7 @@ const VISIBLE = 0.55; // share of each loop the ribbon covers once it's fully in
  * the edge), then keeps going round, moving on with the scroll and also
  * drifting on its own. Back to 0, and it's gone again, ready to enter afresh.
  */
-function Ribbon({ shift, className = "" }: { shift: () => number; className?: string }) {
+export function Ribbon({ shift, className = "" }: { shift: () => number; className?: string }) {
   const routes = RIBBONS;
   const svgRef = useRef<SVGSVGElement>(null);
   const gold = useId();

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { MobileStory } from "./MobileStory";
+import { familyTree, treeHeight, treeWidth, TREE_NARROW, type TreeLevel } from "./storyTree";
 import { deckLayout, flipSpan, GenerationDeck, GenerationGrid, type DeckControl, type Generation } from "./GenerationCards";
 
 // The About page's story: a few blocks of text joined by one thick gold line.
@@ -39,6 +41,8 @@ import { deckLayout, flipSpan, GenerationDeck, GenerationGrid, type DeckControl,
 export interface StoryChapter {
   label: string; // small gold heading, e.g. "1960 · Voice of Radio"
   text: string;
+  time: string; // phones: the year (or word) that rolls over, e.g. "1960"
+  title: string; // phones: the heading under it, e.g. "Voice of Radio"
 }
 
 interface Point {
@@ -57,12 +61,6 @@ interface Segment {
   d: string; // SVG path
   length: number;
   samples: { len: number; x: number; y: number }[]; // along the path
-}
-
-/** One level of the family tree: paths drawn at the same time, each `length` long. */
-interface TreeLevel {
-  paths: string[];
-  length: number;
 }
 
 // ── Camera timeline (desktop), in screen heights of scrolling ────────────────
@@ -92,16 +90,17 @@ const EASE = 0.14; // how quickly what's drawn (and the camera) catch up with th
 const SIDE_GAP = 36; // desktop: how far beside a side block the line meets it
 const LABEL_Y = 14; // the meeting point is level with the block's label
 
-// ── Family tree: half-widths of each split, and the height of each step ──────
-// (at desktop size; smaller screens use TREE_NARROW of it).
-const TREE_SPLITS = [112, 62, 36]; // trunk → 2, → 4, → 8
-const TREE_STEP = 34;
-const TREE_NARROW = 0.72;
-
 // Desktop with motion allowed: the pinned camera version.
 const PINNED_QUERY = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
 const subscribePinned = (onChange: () => void) => {
   const query = window.matchMedia(PINNED_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+// Phones and tablets with motion allowed: the one-block-at-a-time version (MobileStory).
+const MOBILE_QUERY = "(max-width: 1023.98px) and (prefers-reduced-motion: no-preference)";
+const subscribeMobile = (onChange: () => void) => {
+  const query = window.matchMedia(MOBILE_QUERY);
   query.addEventListener("change", onChange);
   return () => query.removeEventListener("change", onChange);
 };
@@ -163,30 +162,6 @@ function pointAt(seg: Segment, len: number): Point {
   return s[s.length - 1];
 }
 
-/**
- * The family tree, its trunk starting at `top`: a short trunk, then three
- * levels where every branch splits in two — out sideways, then down.
- */
-function familyTree(top: Point, size: number): TreeLevel[] {
-  const step = TREE_STEP * size;
-  const levels: TreeLevel[] = [{ paths: [`M${top.x},${top.y} L${top.x},${top.y + step}`], length: step }];
-  let tips = [top.x];
-  let y = top.y + step;
-  for (const split of TREE_SPLITS) {
-    const half = split * size;
-    levels.push({
-      paths: tips.flatMap((x) => [-1, 1].map((side) => `M${x},${y} L${x + side * half},${y} L${x + side * half},${y + step}`)),
-      length: half + step,
-    });
-    tips = tips.flatMap((x) => [x - half, x + half]);
-    y += step;
-  }
-  return levels;
-}
-
-const treeHeight = (size: number) => TREE_STEP * size * (TREE_SPLITS.length + 1);
-const treeWidth = (size: number) => 2 * TREE_SPLITS.reduce((sum, split) => sum + split, 0) * size;
-
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
 // Desktop placement of each block: the first centred, then left, right, left…
@@ -227,6 +202,7 @@ export function StoryPath({
   children?: ReactNode; // shown under the generation cards (e.g. a link to the team)
 }) {
   const pinned = useSyncExternalStore(subscribePinned, () => window.matchMedia(PINNED_QUERY).matches, () => false);
+  const mobile = useSyncExternalStore(subscribeMobile, () => window.matchMedia(MOBILE_QUERY).matches, () => false);
   const stageRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLElement | null)[]>([]);
@@ -266,6 +242,8 @@ export function StoryPath({
     const wordsEl = wordsRef.current;
     if (!canvas || !finaleEl || !treeSpace || !wordsEl) return;
     const measure = () => {
+      // Not while the phone version (MobileStory) is showing instead.
+      if (!canvas.isConnected || blockRefs.current.some((el) => !el)) return;
       const wide = window.matchMedia("(min-width: 1024px)").matches;
       const boxOf = (el: HTMLElement, parent: HTMLElement | null): Box => {
         const left = (parent?.offsetLeft ?? 0) + el.offsetLeft;
@@ -323,7 +301,7 @@ export function StoryPath({
     observer.observe(finaleEl);
     blockRefs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
-  }, [pinned]);
+  }, [pinned, mobile]);
 
   // Draw the line and tree (and, on desktop, move the camera) with the scroll.
   useEffect(() => {
@@ -730,8 +708,9 @@ export function StoryPath({
   );
 
   // Desktop: a tall section whose screen-sized inner box stays pinned while
-  // the camera moves over the story inside it. Elsewhere: the story in the
-  // page as normal. (The spotlights reach a little past the content, so the
+  // the camera moves over the story inside it. Phones and tablets: the
+  // one-block-at-a-time version. Reduced motion: the story in the page as
+  // normal. (The spotlights reach a little past the content, so the
   // page using this must clip sideways overflow.)
   return pinned ? (
     <section ref={stageRef} aria-label="Our story" className="relative" style={{ height: stageHeight(chapters.length, generations.length) }}>
@@ -755,6 +734,10 @@ export function StoryPath({
         </div>
       </div>
     </section>
+  ) : mobile ? (
+    <MobileStory chapters={chapters} generations={generations}>
+      {children}
+    </MobileStory>
   ) : (
     <section ref={stageRef} aria-label="Our story" className="site-container">
       <div ref={canvasRef} className="relative pt-24 pb-16 lg:pt-28 lg:pb-16">
