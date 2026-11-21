@@ -219,8 +219,9 @@ function Story({ chapters }: { chapters: StoryChapter[] }) {
           />
         </div>
 
-        {/* Where you are in the story. */}
-        <div className="absolute bottom-10 flex gap-2">
+        {/* Where you are in the story — hidden while the idle scroll hint
+            (ScrollHint) shows in the same spot. */}
+        <div className="absolute bottom-10 flex gap-2 transition-opacity duration-700 in-data-[scroll-hint]:opacity-0">
           {chapters.map((c, i) => (
             <span key={c.label} className={`h-1 rounded-full transition-all duration-500 ${i === active ? "w-6 bg-[#E79E3F]" : "w-2 bg-white/20"}`} />
           ))}

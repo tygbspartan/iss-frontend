@@ -35,6 +35,8 @@
 @theme {
   --animate-border-spin: border-spin 3s linear infinite;
   --animate-soft-bounce: soft-bounce 2.4s ease-in-out infinite;
+  --animate-scroll-wheel: scroll-wheel 1.8s ease-in-out infinite;
+  --animate-chevron-pulse: chevron-pulse 1.6s ease-in-out infinite;
   --animate-card-float: card-float 4.2s ease-in-out infinite;
   --animate-roll-up-in: roll-up-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-roll-up-out: roll-up-out 320ms cubic-bezier(0.64, 0, 0.78, 0) both;
@@ -89,6 +91,29 @@
     }
     50% {
       transform: translateY(-8px);
+    }
+  }
+
+  /* The scroll hint: the mouse wheel slides down and back up; the chevrons
+     brighten one after the other, top to bottom. */
+  @keyframes scroll-wheel {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(9px);
+    }
+  }
+  @keyframes chevron-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(3px);
     }
   }
 
