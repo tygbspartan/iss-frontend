@@ -256,6 +256,9 @@ export const MOCK_INSTAGRAM: InstagramPost[] = [
   "Line arrays flying high.",
   "Champions on stage.",
   "Wedding season is here.",
+  "Sound check before the doors open.",
+  "Moving heads, ready for the drop.",
+  "Thank you, Kathmandu!",
 ].map((caption, i) => ({
   id: `mock-instagram-${i + 1}`,
   image: photo(i),

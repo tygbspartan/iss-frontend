@@ -57,8 +57,8 @@ const formatEventDate = (date: string) =>
 // arrow button appears, widens into a pill with the words "Upcoming Events" and
 // opens into the card (visitors who ask for reduced motion go straight to the
 // card). Closing it leaves the arrow with a count badge, gently bouncing, which
-// plays the same sequence again. On phones the card is a full-width sheet at the
-// bottom, which closes with the cross or by dragging it down. Several events: swipe the picture, or use the
+// plays the same sequence again. On phones the card is a smaller one in the
+// bottom-right corner, which closes with the cross or by dragging it down. Several events: swipe the picture, or use the
 // arrows on it.
 export function UpcomingEvents({ events }: { events: UpcomingEvent[] }) {
   const [stage, setStage] = useState<Stage>("button");
@@ -222,11 +222,13 @@ export function UpcomingEvents({ events }: { events: UpcomingEvent[] }) {
               ? { transition: "none" }
               : undefined
         }
-        className={`fixed inset-x-0 bottom-0 z-30 touch-none rounded-t-3xl border border-white/10 bg-[#141414] px-4 pb-5 shadow-2xl shadow-black/60 transition-[transform,scale,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[400px] sm:origin-bottom-right sm:touch-auto sm:rounded-3xl sm:px-5 sm:pt-4 ${
+        // Phones: a smaller card in the bottom-right corner (not the full width),
+        // which can still be dragged down to close. Larger screens: 400px wide.
+        className={`fixed right-4 bottom-4 z-30 w-[min(290px,calc(100vw-2rem))] origin-bottom-right touch-none rounded-3xl border border-white/10 bg-[#141414] px-3.5 pb-4 shadow-2xl shadow-black/60 transition-[transform,scale,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:right-6 sm:bottom-6 sm:w-[400px] sm:touch-auto sm:px-5 sm:pt-4 ${
           open
             ? "opacity-100 max-sm:[transform:translateY(var(--drag,0px))] sm:scale-100"
             : stage === "closed"
-              ? "pointer-events-none max-sm:[transform:translateY(100%)] sm:scale-0 sm:opacity-0"
+              ? "pointer-events-none max-sm:opacity-0 max-sm:[transform:translateY(calc(100%+1rem))] sm:scale-0 sm:opacity-0"
               : "pointer-events-none opacity-0 max-sm:[transform:translateY(var(--drag,0px))] sm:scale-100"
         }`}
       >

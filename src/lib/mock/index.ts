@@ -45,7 +45,7 @@ export function mockGet(path: string): unknown {
     case "/api/instagram":
       return {
         configured: true,
-        posts: MOCK_INSTAGRAM.slice(0, Number(params.get("limit")) || 6),
+        posts: MOCK_INSTAGRAM.slice(0, Number(params.get("limit")) || 9),
       } satisfies InstagramFeedData;
   }
   throw new Error(`No mock data for GET ${path}`);

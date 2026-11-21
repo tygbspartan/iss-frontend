@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import type { Generation } from "@/components/site/GenerationCards";
 import { StoryPath, type StoryChapter } from "@/components/site/StoryPath";
 import { PILL_BUTTON } from "@/components/site/pill";
+import { ScrollHint } from "@/components/site/ScrollHint";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -96,6 +97,9 @@ export default function AboutPage() {
           <p className="mt-4 font-poppins text-xs tracking-[0.2em] text-[#9DA1B1] uppercase sm:mt-5 sm:text-sm">Since 1960</p>
         </header>
       </div>
+
+      {/* After a few idle seconds: a gentle nudge to keep scrolling. */}
+      <ScrollHint />
 
       {/* Full width: on desktop the story is a pinned, screen-wide stage.
           Under the generation cards: the way to the Teams page (it isn't in
