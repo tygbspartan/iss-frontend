@@ -1,6 +1,5 @@
 import type { Envelope, Paginated } from "@/lib/redux/api";
-import type { Blog, Client, Department, Project, Service, TeamMember, Testimonial, UpcomingEvent } from "@/lib/admin/types";
-import { devSampleProjects } from "@/lib/devSampleProjects";
+import type { Blog, Client, Department, EventType, Project, Service, TeamMember, Testimonial, UpcomingEvent } from "@/lib/admin/types";
 import { mockBlogBySlug, mockGet, USE_MOCK_DATA } from "@/lib/mock";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -36,6 +35,9 @@ export const getBlogs = (page = 1, limit = BLOGS_PER_PAGE) =>
 /** Visible services, in display order. */
 export const getServices = () => getPublic<Service[]>("/api/services");
 
+/** Event types in display order, each with how many visible projects it has. */
+export const getEventTypes = () => getPublic<EventType[]>("/api/event-types");
+
 /** Visible testimonials, in display order. */
 export const getTestimonials = () => getPublic<Testimonial[]>("/api/testimonials");
 
@@ -58,24 +60,15 @@ export async function getBlogBySlug(slug: string): Promise<Blog | null> {
 
 export const PROJECTS_PER_PAGE = 12;
 
-/** One page of visible projects, newest first, optionally only those for one service (by its slug). */
+/** One page of visible projects, newest first, optionally only those for one service and/or event type (by slug). */
 export async function getProjects({
   service,
+  type,
   page = 1,
   limit = PROJECTS_PER_PAGE,
-}: { service?: string; page?: number; limit?: number } = {}): Promise<Paginated<Project>> {
-  const result = await getPublic<Paginated<Project>>(
-    `/api/projects?page=${page}&limit=${limit}${service ? `&service=${encodeURIComponent(service)}` : ""}`,
-  );
-
-  // While developing, and only while the backend has no projects at all,
-  // sample projects stand in so the listing, filter and pagination can be tried.
-  // A production build never takes this branch.
-  if (process.env.NODE_ENV === "development" && result.pagination.total === 0) {
-    const everything = await getPublic<Paginated<Project>>("/api/projects?page=1&limit=1");
-    if (everything.pagination.total === 0) {
-      return devSampleProjects(await getServices(), { service, page, limit });
-    }
-  }
-  return result;
+}: { service?: string; type?: string; page?: number; limit?: number } = {}): Promise<Paginated<Project>> {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (service) params.set("service", service);
+  if (type) params.set("type", type);
+  return getPublic<Paginated<Project>>(`/api/projects?${params}`);
 }

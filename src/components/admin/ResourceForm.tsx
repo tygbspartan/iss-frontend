@@ -62,6 +62,7 @@ const toBody = (fields: FieldConfig[], values: Values): Body => {
 };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^\+?[0-9][0-9 ()-]{5,22}$/; // same rule as the backend
 
 // Client-side checks so obvious gaps are flagged before any request is sent.
 // The backend validates the same rules and stays the source of truth.
@@ -80,6 +81,8 @@ const validate = <T extends Record_>(
       errors[f.name] = [`${f.label} is required`];
     } else if (f.type === "email" && text && !EMAIL_RE.test(text)) {
       errors[f.name] = ["Enter a valid email address"];
+    } else if (f.type === "tel" && text && !PHONE_RE.test(text)) {
+      errors[f.name] = ["Enter a valid phone number"];
     } else if (f.type === "url" && text && !URL.canParse(text)) {
       errors[f.name] = ["Enter a full URL, e.g. https://…"];
     }

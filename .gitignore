@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Raw source material (staff sheet has personal ID numbers) — never commit
+/ISS Event Photos/
+/ISS Team Photos/
+/Iss staffs.xlsx

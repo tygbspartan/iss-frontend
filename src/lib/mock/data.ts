@@ -1,17 +1,17 @@
-import type { Blog, Client, Department, Project, Service, TeamMember, Testimonial, UpcomingEvent } from "@/lib/admin/types";
+import type { Blog, Client, Department, EventType, Project, Service, TeamMember, Testimonial, UpcomingEvent } from "@/lib/admin/types";
 import type { InstagramPost } from "@/lib/instagram";
 import { SOCIAL_LINKS } from "@/lib/site";
 import snapshot from "./snapshot.json";
 
 // Content for demo mode (see ./index.ts).
 //
-// Services, departments, the team and upcoming events are a copy of the real
-// site's content (snapshot.json, photos in public/demo/), so the demo matches
-// what the admin holds. To refresh it after editing them in the admin, export
-// a new snapshot from the backend's public API.
+// Services, departments, the team, projects and upcoming events are a copy of
+// the real site's content (snapshot.json, photos in public/demo/), so the demo
+// matches what the admin holds. To refresh it after editing them in the admin,
+// export a new snapshot from the backend's public API.
 //
-// Projects, blogs, testimonials, clients and Instagram posts are made up for
-// the preview (the admin has none, or only test posts, yet); their photos are
+// Blogs, testimonials, clients and Instagram posts are made up for the
+// preview (the admin has none, or only test posts, yet); their photos are
 // the few already in public/, and portraits and logos are drawn here as SVGs.
 
 const PHOTOS = ["/about/concert.png", "/about/lakhe-dance.png", "/hero-crowd.png", "/about/champions.png"];
@@ -52,51 +52,14 @@ function logo(name: string, style: number): string {
 
 export const MOCK_SERVICES = snapshot.services as Service[];
 
-const serviceLink = (slug: string) => {
-  const service = MOCK_SERVICES.find((s) => s.slug === slug)!;
-  return { id: service.id, title: service.title, slug: service.slug };
-};
-
 // ─── Projects (newest first) ────────────────────────────────────────────────
 
-// The made-up projects, each linked to one or more of the real services.
-const AUDIO = "audio-solutions";
-const DISPLAY = "display-solutions";
-const LIGHTING = "lighting-solutions";
-const TRUSS = "truss-rigging-systems";
-const PLANNING = "technical-consultation-event-planning";
+export const MOCK_PROJECTS = snapshot.projects as Project[];
 
-const PROJECT_LIST: [title: string, description: string, services: string[]][] = [
-  ["Kathmandu Winter Music Festival", "Two nights, three stages and twelve thousand people in Tundikhel, with a full line-array main stage and a lighting rig programmed for every headliner.", [AUDIO, LIGHTING, TRUSS]],
-  ["Himalayan Rock Night", "A forty-metre stage roof, side LED screens and a loud, clean rock mix that carried to the back of the crowd.", [AUDIO, DISPLAY]],
-  ["Royal Garden Wedding", "Warm uplighting across the garden, a dance floor rig for the reception and a quiet, crisp sound system for the vows.", [LIGHTING, PLANNING]],
-  ["Corporate Annual Gala 2026", "Stage, LED wall, presentation sound and live band setup for a thousand guests, delivered in a single afternoon load-in.", [PLANNING, DISPLAY]],
-  ["Lakhe Cultural Evening", "Traditional performances lit with care, with sound tuned for drums, flutes and dialogue in an open courtyard.", [AUDIO, LIGHTING]],
-  ["New Year's Eve Countdown", "A midnight countdown with cold sparks, CO₂ jets and confetti cannons fired on the final beat.", [LIGHTING]],
-  ["College Fest Main Stage", "A full outdoor main stage with roof, line arrays and lighting for a three-day college festival.", [TRUSS, AUDIO]],
-  ["Pokhara Lakeside Concert", "A floating-look stage by the lake, lit for sunset and night, with screens for the crowd at the back.", [TRUSS, DISPLAY, LIGHTING]],
-  ["Product Launch Showcase", "A reveal moment built around an LED wall, haze and a beam show, timed to the second.", [DISPLAY, LIGHTING]],
-  ["Charity Football Final", "Stadium announcements, half-time show sound and a victory moment with confetti and sparks.", [AUDIO, LIGHTING]],
-  ["Jazz Under the Stars", "A small, warm stage with a careful acoustic mix for an evening jazz series.", [AUDIO, LIGHTING]],
-  ["Fashion Week Runway", "A forty-metre runway with even, camera-friendly light and a punchy sound system for the music.", [TRUSS, LIGHTING]],
-  ["Dashain Mela", "Stage, sound and power for a week-long community mela with performances every evening.", [PLANNING, AUDIO]],
-  ["Tech Summit Kathmandu", "Conference sound, breakout rooms, LED screens and recording feeds for a two-day summit.", [PLANNING, DISPLAY]],
-  ["Hip-Hop Block Party", "Heavy subs, a DJ riser and a strobe-and-beam rig for a sold-out street party.", [AUDIO, LIGHTING]],
-  ["Classical Music Recital", "A discreet, natural-sounding setup for a classical recital in a heritage hall.", [AUDIO]],
-  ["Marathon Finish Line", "Start and finish line sound, a timing screen and a stage for the medal ceremony.", [DISPLAY, TRUSS]],
-  ["Film Premiere Night", "A red carpet lit for cameras, a screening sound system and an after-party rig.", [LIGHTING, PLANNING]],
-];
-
-export const MOCK_PROJECTS: Project[] = PROJECT_LIST.map(([title, description, services], i) => ({
-  ...STAMP,
-  id: `mock-project-${i + 1}`,
-  title,
-  slug: `mock-project-${i + 1}`,
-  description,
-  image: photo(i + 1),
-  thumbnails: [],
-  isActive: true,
-  services: services.map(serviceLink),
+/** Event types, each with how many of the projects above it has (like the API). */
+export const MOCK_EVENT_TYPES: EventType[] = (snapshot.eventTypes as EventType[]).map((type) => ({
+  ...type,
+  _count: { projects: MOCK_PROJECTS.filter((project) => project.eventType?.id === type.id).length },
 }));
 
 // ─── Blogs (newest first) ───────────────────────────────────────────────────

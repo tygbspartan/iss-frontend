@@ -13,14 +13,13 @@ import {
 
 export interface WorkGroup {
   id: string;
-  title: string; // the service's name, shown on its tab
+  title: string; // the event type's name, shown on its tab
   slug: string;
   projects: { id: string; title: string; image: string }[];
 }
 
-// One tab per service; picking a tab shows that service's projects. Everything
-// is already loaded, so switching is instant. Each card opens the Projects
-// page filtered to that service.
+// One tab per event type; picking a tab shows that type's projects. Everything
+// is already loaded, so switching is instant.
 export function WorkTabs({ groups }: { groups: WorkGroup[] }) {
   const [activeId, setActiveId] = useState(groups[0]?.id);
   const active = groups.find((group) => group.id === activeId) ?? groups[0];
@@ -32,8 +31,8 @@ export function WorkTabs({ groups }: { groups: WorkGroup[] }) {
           To bring it back (tabs dropping into place one by one when the row
           scrolls into view): uncomment the DropIn import at the top, and swap
           this <div …> and its closing </div> for the two commented lines.
-      <DropIn role="tablist" aria-label="Projects by service" className={`mt-8 lg:mt-10 ${FILTER_ROW}`}> */}
-      <div role="tablist" aria-label="Projects by service" className={`mt-8 lg:mt-10 ${FILTER_ROW}`}>
+      <DropIn role="tablist" aria-label="Projects by type of event" className={`mt-8 lg:mt-10 ${FILTER_ROW}`}> */}
+      <div role="tablist" aria-label="Projects by type of event" className={`mt-8 lg:mt-10 ${FILTER_ROW}`}>
         {groups.map((group) => {
           const selected = group.id === active.id;
           return (

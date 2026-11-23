@@ -1,32 +1,30 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getProjects, getServices } from "@/lib/publicApi";
+import { getEventTypes, getProjects } from "@/lib/publicApi";
 import { SectionHeader } from "../PageHeader";
 import { PILL_BUTTON } from "../pill";
 import { WorkTabs, type WorkGroup } from "./WorkTabs";
 
-const PROJECTS_PER_SERVICE = 6;
+const PROJECTS_PER_TYPE = 6;
 
-// "Our Recent Works": a tab per service, each with that service's newest
-// projects. Services that have no projects yet are left out — unless none
-// have any, in which case every tab is shown with a "coming soon" note.
+// "Our Recent Works": a tab per event type (concerts, conferences, …), each
+// with that type's newest projects. Types with no visible projects yet are
+// left out.
 export async function RecentWorks() {
   let groups: WorkGroup[] = [];
   try {
-    const services = await getServices();
-    const all = await Promise.all(
-      services.map(async (service) => {
-        const { items } = await getProjects({ service: service.slug, limit: PROJECTS_PER_SERVICE });
+    const types = (await getEventTypes()).filter((type) => (type._count?.projects ?? 0) > 0);
+    groups = await Promise.all(
+      types.map(async (type) => {
+        const { items } = await getProjects({ type: type.slug, limit: PROJECTS_PER_TYPE });
         return {
-          id: service.id,
-          title: service.title,
-          slug: service.slug,
+          id: type.id,
+          title: type.name,
+          slug: type.slug,
           projects: items.map(({ id, title, image }) => ({ id, title, image })),
         };
       }),
     );
-    const withProjects = all.filter((group) => group.projects.length > 0);
-    groups = withProjects.length > 0 ? withProjects : all;
   } catch {
     // Backend unreachable: the heading and the link to all work still render.
   }

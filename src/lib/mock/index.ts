@@ -1,6 +1,6 @@
 import type { Paginated } from "@/lib/redux/api";
 import type { InstagramFeedData } from "@/lib/instagram";
-import { MOCK_BLOGS, MOCK_CLIENTS, MOCK_DEPARTMENTS, MOCK_EVENTS, MOCK_INSTAGRAM, MOCK_PROJECTS, MOCK_SERVICES, MOCK_TEAM, MOCK_TESTIMONIALS } from "./data";
+import { MOCK_BLOGS, MOCK_CLIENTS, MOCK_DEPARTMENTS, MOCK_EVENT_TYPES, MOCK_EVENTS, MOCK_INSTAGRAM, MOCK_PROJECTS, MOCK_SERVICES, MOCK_TEAM, MOCK_TESTIMONIALS } from "./data";
 
 export { USE_MOCK_DATA } from "./flag";
 
@@ -25,9 +25,14 @@ export function mockGet(path: string): unknown {
       return MOCK_DEPARTMENTS;
     case "/api/team":
       return params.get("core") === "true" ? MOCK_TEAM.filter((m) => m.department.isCore) : MOCK_TEAM;
+    case "/api/event-types":
+      return MOCK_EVENT_TYPES;
     case "/api/projects": {
       const service = params.get("service");
-      const matching = service ? MOCK_PROJECTS.filter((p) => p.services?.some((s) => s.slug === service)) : MOCK_PROJECTS;
+      const type = params.get("type");
+      const matching = MOCK_PROJECTS.filter(
+        (p) => (!service || p.services?.some((s) => s.slug === service)) && (!type || p.eventType?.slug === type),
+      );
       return paginate(matching, params);
     }
     case "/api/blogs":

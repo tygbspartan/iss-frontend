@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-11-19T08:30:17.440Z",
+  "exportedAt": "2026-11-23T12:38:03.761Z",
   "services": [
     {
       "id": "8af065b2-9df8-4b4c-b947-6dcc454c5877",
@@ -99,202 +99,1414 @@
   ],
   "departments": [
     {
-      "id": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
-      "name": "Founders & Partners",
+      "id": "43656d75-763a-432f-beb1-659807eb4dec",
+      "name": "Founders",
       "sortOrder": 0,
       "isCore": true
     },
     {
-      "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
-      "name": "Management",
+      "id": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+      "name": "Management & Administration",
       "sortOrder": 1,
       "isCore": false
     },
     {
-      "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
-      "name": "Team Members",
+      "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "name": "Audio",
       "sortOrder": 2,
+      "isCore": false
+    },
+    {
+      "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "name": "Lighting",
+      "sortOrder": 3,
+      "isCore": false
+    },
+    {
+      "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "name": "Audio Visual",
+      "sortOrder": 4,
+      "isCore": false
+    },
+    {
+      "id": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+      "name": "Backstage",
+      "sortOrder": 5,
+      "isCore": false
+    },
+    {
+      "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "name": "Logistics & Transport",
+      "sortOrder": 6,
       "isCore": false
     }
   ],
   "team": [
     {
-      "id": "f981988e-dc72-40c6-9bd1-c7383e4dd4bf",
-      "name": "Maya Sterling",
-      "email": "",
+      "id": "ead31ca5-ae66-4dea-9e9c-b73cee801029",
+      "name": "Suresh Ratna Shakya",
       "link": null,
-      "jobTitle": "Creative Director",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
+      "jobTitle": "Chairman",
+      "image": "/demo/team/suresh-ratna-shakya.jpg",
+      "actualImage": "/demo/team/suresh-ratna-shakya.jpg",
+      "departmentId": "43656d75-763a-432f-beb1-659807eb4dec",
       "sortOrder": 0,
       "isActive": true,
-      "createdAt": "2026-10-04T09:55:38.876Z",
-      "updatedAt": "2026-10-16T10:41:07.624Z",
+      "createdAt": "2026-11-23T12:18:52.664Z",
+      "updatedAt": "2026-11-23T12:18:52.664Z",
       "department": {
-        "id": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
-        "name": "Founders & Partners",
+        "id": "43656d75-763a-432f-beb1-659807eb4dec",
+        "name": "Founders",
         "sortOrder": 0,
         "isCore": true
       }
     },
     {
-      "id": "7a567df1-9bab-4cf7-a5f7-556bd9c371ca",
-      "name": "Alex Veyron",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
-      "jobTitle": "CEO",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
+      "id": "c1d35be7-9791-43d7-bd93-d9ef7acd47ad",
+      "name": "Shibir Ratna Shakya",
+      "link": null,
+      "jobTitle": "Managing Director & Sound Engineer",
+      "image": "/demo/team/shibir-ratna-shakya.jpg",
+      "actualImage": "/demo/team/shibir-ratna-shakya.jpg",
+      "departmentId": "43656d75-763a-432f-beb1-659807eb4dec",
       "sortOrder": 1,
       "isActive": true,
-      "createdAt": "2026-10-04T09:55:01.808Z",
-      "updatedAt": "2026-10-04T09:55:02.754Z",
+      "createdAt": "2026-11-23T12:18:53.030Z",
+      "updatedAt": "2026-11-23T12:18:53.030Z",
       "department": {
-        "id": "118b4156-3cbb-459f-9bfe-b37d4b1fb0e9",
-        "name": "Founders & Partners",
+        "id": "43656d75-763a-432f-beb1-659807eb4dec",
+        "name": "Founders",
         "sortOrder": 0,
         "isCore": true
       }
     },
     {
-      "id": "4550fc99-24c9-4079-bfc8-29e1fbfddb7d",
-      "name": "Ethan Vale",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
+      "id": "2281319e-40fd-4bd0-93a2-6bc9c273196f",
+      "name": "Samir Ratna Shakya",
+      "link": null,
       "jobTitle": "Managing Director",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
+      "image": "/demo/team/samir-ratna-shakya.jpg",
+      "actualImage": "/demo/team/samir-ratna-shakya.jpg",
+      "departmentId": "43656d75-763a-432f-beb1-659807eb4dec",
+      "sortOrder": 2,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:53.327Z",
+      "updatedAt": "2026-11-23T12:18:53.327Z",
+      "department": {
+        "id": "43656d75-763a-432f-beb1-659807eb4dec",
+        "name": "Founders",
+        "sortOrder": 0,
+        "isCore": true
+      }
+    },
+    {
+      "id": "f7ad2852-d765-4d31-9aae-ee67b9b65489",
+      "name": "Melina Shakya",
+      "link": null,
+      "jobTitle": "Administrative Head",
+      "image": "/demo/team/melina-shakya.jpg",
+      "actualImage": "/demo/team/melina-shakya.jpg",
+      "departmentId": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
       "sortOrder": 0,
       "isActive": true,
-      "createdAt": "2026-10-04T09:56:58.218Z",
-      "updatedAt": "2026-10-04T09:56:58.610Z",
+      "createdAt": "2026-11-23T12:18:53.705Z",
+      "updatedAt": "2026-11-23T12:18:53.705Z",
       "department": {
-        "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
-        "name": "Management",
+        "id": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+        "name": "Management & Administration",
         "sortOrder": 1,
         "isCore": false
       }
     },
     {
-      "id": "61dad00e-b71b-4534-ad1d-674008c42fee",
-      "name": "Leo Hartwell",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
-      "jobTitle": "Operations Manager",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
-      "sortOrder": 0,
+      "id": "8a1e3e52-f8d3-47d0-b604-83e063092d3e",
+      "name": "Tika Ram Dhakla",
+      "link": null,
+      "jobTitle": "Finance Head",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+      "sortOrder": 1,
       "isActive": true,
-      "createdAt": "2026-10-04T09:57:45.866Z",
-      "updatedAt": "2026-10-04T09:57:46.223Z",
+      "createdAt": "2026-11-23T12:18:54.075Z",
+      "updatedAt": "2026-11-23T12:18:54.075Z",
       "department": {
-        "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
-        "name": "Management",
+        "id": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+        "name": "Management & Administration",
         "sortOrder": 1,
         "isCore": false
       }
     },
     {
-      "id": "9c3acc5c-5476-442f-9175-0be80f0b5a64",
-      "name": "Sophia Arden",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
-      "jobTitle": "Operations Manager",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
-      "sortOrder": 0,
+      "id": "c206d978-3e96-4ce3-9aa2-db477be1b550",
+      "name": "Funji Dolmo Gongba",
+      "link": null,
+      "jobTitle": "Sales & Marketing Manager",
+      "image": "/demo/team/funji-dolmo-gongba.jpg",
+      "actualImage": "/demo/team/funji-dolmo-gongba.jpg",
+      "departmentId": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+      "sortOrder": 2,
       "isActive": true,
-      "createdAt": "2026-10-04T09:57:23.058Z",
-      "updatedAt": "2026-10-04T09:57:23.451Z",
+      "createdAt": "2026-11-23T12:18:54.506Z",
+      "updatedAt": "2026-11-23T12:18:54.506Z",
       "department": {
-        "id": "f3ccac4a-b7fa-4eb5-94a4-d14c68a27cb4",
-        "name": "Management",
+        "id": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+        "name": "Management & Administration",
         "sortOrder": 1,
         "isCore": false
       }
     },
     {
-      "id": "61e5a474-1f30-4cc7-a01a-dd00775f923d",
-      "name": "Kai Mercer",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
-      "jobTitle": "Live Sound Technician",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
-      "sortOrder": 0,
-      "isActive": true,
-      "createdAt": "2026-10-04T10:02:24.450Z",
-      "updatedAt": "2026-10-04T10:07:06.829Z",
-      "department": {
-        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
-        "name": "Team Members",
-        "sortOrder": 2,
-        "isCore": false
-      }
-    },
-    {
-      "id": "00e2355d-3664-47ae-88d5-636000fb5465",
-      "name": "Nina Westfall",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
+      "id": "b89f7acc-8110-4540-b248-1308767005e6",
+      "name": "Mahesh Kumar Karki",
+      "link": null,
       "jobTitle": "Event Coordinator",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+      "image": "/demo/team/mahesh-kumar-karki.jpg",
+      "actualImage": "/demo/team/mahesh-kumar-karki.jpg",
+      "departmentId": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+      "sortOrder": 3,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:54.814Z",
+      "updatedAt": "2026-11-23T12:18:54.814Z",
+      "department": {
+        "id": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+        "name": "Management & Administration",
+        "sortOrder": 1,
+        "isCore": false
+      }
+    },
+    {
+      "id": "e7884bec-20f2-4b48-b5ad-3b4c518d26c9",
+      "name": "Nayana Shakya",
+      "link": null,
+      "jobTitle": "Account Assistant",
+      "image": "/demo/team/nayana-shakya.jpg",
+      "actualImage": "/demo/team/nayana-shakya.jpg",
+      "departmentId": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+      "sortOrder": 4,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:55.301Z",
+      "updatedAt": "2026-11-23T12:18:55.301Z",
+      "department": {
+        "id": "915e4a63-3917-4d19-a5c7-0aedf33d84cf",
+        "name": "Management & Administration",
+        "sortOrder": 1,
+        "isCore": false
+      }
+    },
+    {
+      "id": "674154b3-1fb6-4b29-987d-a239158218af",
+      "name": "Bharat Dangol",
+      "link": null,
+      "jobTitle": "Audio Engineer",
+      "image": "/demo/team/bharat-dangol.jpg",
+      "actualImage": "/demo/team/bharat-dangol.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
       "sortOrder": 0,
       "isActive": true,
-      "createdAt": "2026-10-04T09:59:00.886Z",
-      "updatedAt": "2026-10-04T09:59:01.369Z",
+      "createdAt": "2026-11-23T12:18:55.719Z",
+      "updatedAt": "2026-11-23T12:18:55.719Z",
       "department": {
-        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
-        "name": "Team Members",
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
         "sortOrder": 2,
         "isCore": false
       }
     },
     {
-      "id": "138b5523-6d78-49a2-9f80-e7fdb3c4f487",
-      "name": "Ryan Everly",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
-      "jobTitle": "Audio Technician",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
-      "sortOrder": 0,
+      "id": "80b346c0-310a-4f33-9876-ed22ffa38aae",
+      "name": "Ganga Raj Baskota",
+      "link": null,
+      "jobTitle": "Audio Engineer",
+      "image": "/demo/team/ganga-raj-baskota.jpg",
+      "actualImage": "/demo/team/ganga-raj-baskota.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 1,
       "isActive": true,
-      "createdAt": "2026-10-04T09:58:41.119Z",
-      "updatedAt": "2026-10-04T09:58:41.490Z",
+      "createdAt": "2026-11-23T12:18:56.123Z",
+      "updatedAt": "2026-11-23T12:18:56.123Z",
       "department": {
-        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
-        "name": "Team Members",
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
         "sortOrder": 2,
         "isCore": false
       }
     },
     {
-      "id": "ecde30b4-d1f8-4685-b6a4-280537f7e437",
-      "name": "Zara Monroe",
-      "email": "",
-      "link": "https://www.linkedin.com/feed/",
-      "jobTitle": "Event Production Lead",
-      "image": "/demo/team/member-cartoon.jpg",
-      "actualImage": "/demo/team/member-photo.jpg",
-      "departmentId": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
+      "id": "a4e64607-5a20-47c0-a83b-538f9b02ae7e",
+      "name": "Pujan Bhujel",
+      "link": null,
+      "jobTitle": "Audio Engineer",
+      "image": "/demo/team/pujan-bhujel.jpg",
+      "actualImage": "/demo/team/pujan-bhujel.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 2,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:56.446Z",
+      "updatedAt": "2026-11-23T12:18:56.446Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "5cfe6477-2b23-4517-a8a1-60a3db8e6941",
+      "name": "Sovin Shakya",
+      "link": null,
+      "jobTitle": "Audio Engineer",
+      "image": "/demo/team/sovin-shakya.jpg",
+      "actualImage": "/demo/team/sovin-shakya.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 3,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:56.786Z",
+      "updatedAt": "2026-11-23T12:18:56.786Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "8d173ebb-72fd-4bbd-bc54-ed4cd7a49c5e",
+      "name": "Bal Kumar Sharma",
+      "link": null,
+      "jobTitle": "Audio Supervisor",
+      "image": "/demo/team/bal-kumar-sharma.jpg",
+      "actualImage": "/demo/team/bal-kumar-sharma.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 4,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:57.109Z",
+      "updatedAt": "2026-11-23T12:18:57.109Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "40358a5a-425a-4130-8336-4a6462ceff04",
+      "name": "Lila Raj Bastola",
+      "link": null,
+      "jobTitle": "Audio Supervisor",
+      "image": "/demo/team/lila-raj-bastola.jpg",
+      "actualImage": "/demo/team/lila-raj-bastola.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 5,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:57.439Z",
+      "updatedAt": "2026-11-23T12:18:57.439Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "ff52b1ea-71ba-40db-ad21-1177fbb7f0bf",
+      "name": "Nischal Bhandari",
+      "link": null,
+      "jobTitle": "Audio Supervisor",
+      "image": "/demo/team/nischal-bhandari.jpg",
+      "actualImage": "/demo/team/nischal-bhandari.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 6,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:57.809Z",
+      "updatedAt": "2026-11-23T12:18:57.809Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "44327805-1241-49e5-b89c-5579547cd9d7",
+      "name": "Rukesh Shakya",
+      "link": null,
+      "jobTitle": "Audio Supervisor",
+      "image": "/demo/team/rukesh-shakya.jpg",
+      "actualImage": "/demo/team/rukesh-shakya.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 7,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:58.116Z",
+      "updatedAt": "2026-11-23T12:18:58.116Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "1a79c452-f03d-49d8-9a64-6d4b739c35de",
+      "name": "Saroj Maharjan",
+      "link": null,
+      "jobTitle": "Audio Supervisor",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 8,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:58.426Z",
+      "updatedAt": "2026-11-23T12:18:58.426Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "4dab7da1-4b7a-4874-b6ef-c0f6ee9985cd",
+      "name": "Anish Shahi",
+      "link": null,
+      "jobTitle": "Audio Crew",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 9,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:58.861Z",
+      "updatedAt": "2026-11-23T12:18:58.861Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "4e9ce924-35be-4a54-8387-ee735969e483",
+      "name": "Bam Bahadur Khati",
+      "link": null,
+      "jobTitle": "Audio Crew",
+      "image": "/demo/team/bam-bahadur-khati.jpg",
+      "actualImage": "/demo/team/bam-bahadur-khati.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 10,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:59.254Z",
+      "updatedAt": "2026-11-23T12:18:59.254Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "02c015f0-e97c-417e-9626-2f2b9467713a",
+      "name": "Herendra Man Shakya",
+      "link": null,
+      "jobTitle": "Audio Crew",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 11,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:59.556Z",
+      "updatedAt": "2026-11-23T12:18:59.556Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "9b2f959f-0398-4223-b0e5-cbadee30dc8b",
+      "name": "Maan Bahadur Limbu",
+      "link": null,
+      "jobTitle": "Audio Crew",
+      "image": "/demo/team/maan-bahadur-limbu.jpg",
+      "actualImage": "/demo/team/maan-bahadur-limbu.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 12,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:18:59.878Z",
+      "updatedAt": "2026-11-23T12:18:59.878Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "69a0c865-410c-4610-b226-1f381ae4ed17",
+      "name": "Narayan Sharma",
+      "link": null,
+      "jobTitle": "Audio Crew",
+      "image": "/demo/team/narayan-sharma.jpg",
+      "actualImage": "/demo/team/narayan-sharma.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 13,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:00.192Z",
+      "updatedAt": "2026-11-23T12:19:00.192Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "cfb5a85e-12bd-4277-b8c5-8e7e6701db6f",
+      "name": "Ram Kumar Majhi",
+      "link": null,
+      "jobTitle": "Audio Crew",
+      "image": "/demo/team/ram-kumar-majhi.jpg",
+      "actualImage": "/demo/team/ram-kumar-majhi.jpg",
+      "departmentId": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+      "sortOrder": 14,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:00.545Z",
+      "updatedAt": "2026-11-23T12:19:00.545Z",
+      "department": {
+        "id": "b04d43ce-18d1-4714-b17d-f6cd9e98a34a",
+        "name": "Audio",
+        "sortOrder": 2,
+        "isCore": false
+      }
+    },
+    {
+      "id": "836b517e-f7bb-44dd-9b2d-ac9b83d23f5f",
+      "name": "Kumar Maharjan",
+      "link": null,
+      "jobTitle": "Light Designer",
+      "image": "/demo/team/kumar-maharjan.jpg",
+      "actualImage": "/demo/team/kumar-maharjan.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
       "sortOrder": 0,
       "isActive": true,
-      "createdAt": "2026-10-04T09:58:16.264Z",
-      "updatedAt": "2026-10-04T09:58:16.608Z",
+      "createdAt": "2026-11-23T12:19:00.940Z",
+      "updatedAt": "2026-11-23T12:19:00.940Z",
       "department": {
-        "id": "9d6f1a6e-0079-4aca-86be-2e638c880a80",
-        "name": "Team Members",
-        "sortOrder": 2,
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "dcafc09b-f46b-42e6-9831-5daf777e405b",
+      "name": "Sunil Prajapati",
+      "link": null,
+      "jobTitle": "Light Designer",
+      "image": "/demo/team/sunil-prajapati.jpg",
+      "actualImage": "/demo/team/sunil-prajapati.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 1,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:01.247Z",
+      "updatedAt": "2026-11-23T12:19:01.247Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "77c5927e-08a5-40fd-be81-5510c75069f2",
+      "name": "Suresh Maharjan",
+      "link": null,
+      "jobTitle": "Light Supervisor",
+      "image": "/demo/team/suresh-maharjan.jpg",
+      "actualImage": "/demo/team/suresh-maharjan.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 2,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:01.566Z",
+      "updatedAt": "2026-11-23T12:19:01.566Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "a51ecb7d-be77-4e9d-85f7-2b4e5d9d47aa",
+      "name": "Suresh Sapkota",
+      "link": null,
+      "jobTitle": "Light Supervisor",
+      "image": "/demo/team/suresh-sapkota.jpg",
+      "actualImage": "/demo/team/suresh-sapkota.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 3,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:01.953Z",
+      "updatedAt": "2026-11-23T12:19:01.953Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "ee181e80-0c96-4f5b-8f5f-2f7c7a79a468",
+      "name": "Chandra Bahadur Acchame",
+      "link": null,
+      "jobTitle": "Light Crew",
+      "image": "/demo/team/chandra-bahadur-acchame.jpg",
+      "actualImage": "/demo/team/chandra-bahadur-acchame.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 4,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:02.286Z",
+      "updatedAt": "2026-11-23T12:19:02.286Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "0a37525f-ce36-45e6-baa6-22763101531c",
+      "name": "Dipesh Lama",
+      "link": null,
+      "jobTitle": "Light Crew",
+      "image": "/demo/team/dipesh-lama.jpg",
+      "actualImage": "/demo/team/dipesh-lama.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 5,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:03.039Z",
+      "updatedAt": "2026-11-23T12:19:03.039Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "55302d39-1783-439f-8259-9a2e9df122b1",
+      "name": "Jay Prakash Sharma",
+      "link": null,
+      "jobTitle": "Light Crew",
+      "image": "/demo/team/jay-prakash-sharma.jpg",
+      "actualImage": "/demo/team/jay-prakash-sharma.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 6,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:03.426Z",
+      "updatedAt": "2026-11-23T12:19:03.426Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "016fc38b-daa9-450f-af12-edb65d9c77ff",
+      "name": "Jiten Maharjan",
+      "link": null,
+      "jobTitle": "Light Crew",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 7,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:03.740Z",
+      "updatedAt": "2026-11-23T12:19:03.740Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "9cc6e0a6-c841-4f34-b731-e688698cc5fa",
+      "name": "Shyam Bahadur Majhi",
+      "link": null,
+      "jobTitle": "Light Crew",
+      "image": "/demo/team/shyam-bahadur-majhi.jpg",
+      "actualImage": "/demo/team/shyam-bahadur-majhi.jpg",
+      "departmentId": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+      "sortOrder": 8,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:04.067Z",
+      "updatedAt": "2026-11-23T12:19:04.067Z",
+      "department": {
+        "id": "961b6db1-b4d7-417a-b327-5da2ddfd5fd6",
+        "name": "Lighting",
+        "sortOrder": 3,
+        "isCore": false
+      }
+    },
+    {
+      "id": "dab49c45-28ab-4fd0-a9fc-5df78608a77a",
+      "name": "Milan Nakarmi",
+      "link": null,
+      "jobTitle": "A/V Head & Coordinator",
+      "image": "/demo/team/milan-nakarmi.jpg",
+      "actualImage": "/demo/team/milan-nakarmi.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:04.443Z",
+      "updatedAt": "2026-11-23T12:19:04.443Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "dd377da6-5bee-46a4-bd48-785600c1e147",
+      "name": "Biraj Maharjan",
+      "link": null,
+      "jobTitle": "A/V Head",
+      "image": "/demo/team/biraj-maharjan.jpg",
+      "actualImage": "/demo/team/biraj-maharjan.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 1,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:04.770Z",
+      "updatedAt": "2026-11-23T12:19:04.770Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "58fdeb3a-dc3f-46eb-b5d6-a03227f53b4c",
+      "name": "Ritesh Paudel",
+      "link": null,
+      "jobTitle": "A/V Head",
+      "image": "/demo/team/ritesh-paudel.jpg",
+      "actualImage": "/demo/team/ritesh-paudel.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 2,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:05.511Z",
+      "updatedAt": "2026-11-23T12:19:05.511Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "ed92f9a0-b871-45d2-816d-fb5f8d8003f6",
+      "name": "Sajan Maharjan",
+      "link": null,
+      "jobTitle": "A/V Head",
+      "image": "/demo/team/sajan-maharjan.jpg",
+      "actualImage": "/demo/team/sajan-maharjan.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 3,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:05.897Z",
+      "updatedAt": "2026-11-23T12:19:05.897Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "b1ffd3ae-bbc3-4de2-b171-37ffa0348f54",
+      "name": "Suhan Shakya",
+      "link": null,
+      "jobTitle": "A/V Head",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 4,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:06.196Z",
+      "updatedAt": "2026-11-23T12:19:06.196Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "c17b5887-f95a-478e-b44d-b3c6ff51f907",
+      "name": "Ayush Rawal",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/ayush-rawal.jpg",
+      "actualImage": "/demo/team/ayush-rawal.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 5,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:07.007Z",
+      "updatedAt": "2026-11-23T12:19:07.007Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "4b9497d3-8978-4352-9882-aea39e03d300",
+      "name": "Biplov Rawat",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/biplov-rawat.jpg",
+      "actualImage": "/demo/team/biplov-rawat.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 6,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:07.310Z",
+      "updatedAt": "2026-11-23T12:19:07.310Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "c3763428-307b-4ae3-9253-fab972541f27",
+      "name": "Kumar Shrestha",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/kumar-shrestha.jpg",
+      "actualImage": "/demo/team/kumar-shrestha.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 7,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:07.652Z",
+      "updatedAt": "2026-11-23T12:19:07.652Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "50dc677f-daa2-4700-9c81-43619e7c0f2c",
+      "name": "Mani Ram Karki",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/mani-ram-karki.jpg",
+      "actualImage": "/demo/team/mani-ram-karki.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 8,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:08.744Z",
+      "updatedAt": "2026-11-23T12:19:08.744Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "84fa6716-64cc-4e9a-92d3-9a8ea8e88d64",
+      "name": "Nabin Tamang",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/nabin-tamang.jpg",
+      "actualImage": "/demo/team/nabin-tamang.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 9,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:09.580Z",
+      "updatedAt": "2026-11-23T12:19:09.580Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "ea2625e5-5afa-4cac-9970-1d2fe9ce1896",
+      "name": "Prashant Maharjan",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/prashant-maharjan.jpg",
+      "actualImage": "/demo/team/prashant-maharjan.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 10,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:09.902Z",
+      "updatedAt": "2026-11-23T12:19:09.902Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "970ea0ac-fcfe-497d-9c14-d9d89f37fe40",
+      "name": "Purna Sarki",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/purna-sarki.jpg",
+      "actualImage": "/demo/team/purna-sarki.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 11,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:10.213Z",
+      "updatedAt": "2026-11-23T12:19:10.213Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "cecdbfc9-12e5-446c-99af-598c7ca01524",
+      "name": "Rudra Dip Tamang",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/rudra-dip-tamang.jpg",
+      "actualImage": "/demo/team/rudra-dip-tamang.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 12,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:10.534Z",
+      "updatedAt": "2026-11-23T12:19:10.534Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "60f351ec-332f-45e8-a69b-2c6fd156a59e",
+      "name": "Sanjay Maharjan",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/sanjay-maharjan.jpg",
+      "actualImage": "/demo/team/sanjay-maharjan.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 13,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:11.003Z",
+      "updatedAt": "2026-11-23T12:19:47.312Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "dcfc39ab-f8dc-4211-ab4c-6489a6baf939",
+      "name": "Siddant Shakya",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/siddant-shakya.jpg",
+      "actualImage": "/demo/team/siddant-shakya.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 14,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:11.328Z",
+      "updatedAt": "2026-11-23T12:19:11.328Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "07892467-1856-47a5-ae90-430d61e809d3",
+      "name": "Sunil Shrestha",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/sunil-shrestha.jpg",
+      "actualImage": "/demo/team/sunil-shrestha.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 15,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:11.641Z",
+      "updatedAt": "2026-11-23T12:19:11.641Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "df36c84a-fe51-4b4d-8a02-ca9e3311470b",
+      "name": "Umesh Kumal",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/umesh-kumal.jpg",
+      "actualImage": "/demo/team/umesh-kumal.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 16,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:11.959Z",
+      "updatedAt": "2026-11-23T12:19:11.959Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "caa5db6a-6b92-4ad4-8412-318562402f18",
+      "name": "Yam Prasad Thapalipa",
+      "link": null,
+      "jobTitle": "A/V Crew",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "ff1cdef5-ee81-434a-991a-574619f98003",
+      "sortOrder": 17,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:13.461Z",
+      "updatedAt": "2026-11-23T12:19:13.461Z",
+      "department": {
+        "id": "ff1cdef5-ee81-434a-991a-574619f98003",
+        "name": "Audio Visual",
+        "sortOrder": 4,
+        "isCore": false
+      }
+    },
+    {
+      "id": "c4be6c56-d868-484b-85b2-3d2541d1b390",
+      "name": "Raj Kumar Gurung",
+      "link": null,
+      "jobTitle": "Backstage Coordinator",
+      "image": "/demo/team/raj-kumar-gurung.jpg",
+      "actualImage": "/demo/team/raj-kumar-gurung.jpg",
+      "departmentId": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:13.853Z",
+      "updatedAt": "2026-11-23T12:19:13.853Z",
+      "department": {
+        "id": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+        "name": "Backstage",
+        "sortOrder": 5,
+        "isCore": false
+      }
+    },
+    {
+      "id": "e099e7b5-e6c9-4925-8d7b-57cc0b0b3409",
+      "name": "Ram Bahadur Gurung",
+      "link": null,
+      "jobTitle": "Backstage Crew",
+      "image": "/demo/team/ram-bahadur-gurung.jpg",
+      "actualImage": "/demo/team/ram-bahadur-gurung.jpg",
+      "departmentId": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+      "sortOrder": 1,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:14.183Z",
+      "updatedAt": "2026-11-23T12:19:14.183Z",
+      "department": {
+        "id": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+        "name": "Backstage",
+        "sortOrder": 5,
+        "isCore": false
+      }
+    },
+    {
+      "id": "eab77dcb-5dee-46dc-b465-b7c4040a3d70",
+      "name": "Men Bahadur Gurung",
+      "link": null,
+      "jobTitle": "Backstage Crew",
+      "image": "/demo/team/men-bahadur-gurung.jpg",
+      "actualImage": "/demo/team/men-bahadur-gurung.jpg",
+      "departmentId": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+      "sortOrder": 2,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:14.473Z",
+      "updatedAt": "2026-11-23T12:19:14.473Z",
+      "department": {
+        "id": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+        "name": "Backstage",
+        "sortOrder": 5,
+        "isCore": false
+      }
+    },
+    {
+      "id": "50663bf7-048f-4765-a395-6ec6dae1b9b4",
+      "name": "Kunsan Momjhan",
+      "link": null,
+      "jobTitle": "Backstage Crew",
+      "image": "/demo/team/kunsan-momjhan.jpg",
+      "actualImage": "/demo/team/kunsan-momjhan.jpg",
+      "departmentId": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+      "sortOrder": 3,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:14.779Z",
+      "updatedAt": "2026-11-23T12:19:14.779Z",
+      "department": {
+        "id": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+        "name": "Backstage",
+        "sortOrder": 5,
+        "isCore": false
+      }
+    },
+    {
+      "id": "423f4fed-1a0a-438f-83c2-2419f3d90b51",
+      "name": "Keshav Gurung",
+      "link": null,
+      "jobTitle": "Backstage Crew",
+      "image": "/demo/team/keshav-gurung.jpg",
+      "actualImage": "/demo/team/keshav-gurung.jpg",
+      "departmentId": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+      "sortOrder": 4,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:15.088Z",
+      "updatedAt": "2026-11-23T12:19:15.088Z",
+      "department": {
+        "id": "1c5b4add-4ab4-4fef-a345-9247ab7dcc59",
+        "name": "Backstage",
+        "sortOrder": 5,
+        "isCore": false
+      }
+    },
+    {
+      "id": "8001322a-4baf-4df2-9f29-058b2d203b53",
+      "name": "Ram Prasad Shrestha",
+      "link": null,
+      "jobTitle": "Transport In-charge",
+      "image": "/demo/team/ram-prasad-shrestha.jpg",
+      "actualImage": "/demo/team/ram-prasad-shrestha.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:15.499Z",
+      "updatedAt": "2026-11-23T12:19:15.499Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "4f870de0-da23-4f33-b2dc-1ed6f5bb8060",
+      "name": "Soviman Shakya",
+      "link": null,
+      "jobTitle": "Store In-charge",
+      "image": "/demo/team/soviman-shakya.jpg",
+      "actualImage": "/demo/team/soviman-shakya.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 1,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:15.803Z",
+      "updatedAt": "2026-11-23T12:19:15.803Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "8e4b8c29-04ba-4c60-940b-78d29f300995",
+      "name": "Success Shrestha",
+      "link": null,
+      "jobTitle": "Store Assistant",
+      "image": "/demo/team/success-shrestha.jpg",
+      "actualImage": "/demo/team/success-shrestha.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 2,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:16.100Z",
+      "updatedAt": "2026-11-23T12:19:16.100Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "088f6e7b-203a-4f95-9417-18e853e0683a",
+      "name": "Abishekh Majhi",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/abishekh-majhi.jpg",
+      "actualImage": "/demo/team/abishekh-majhi.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 3,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:16.402Z",
+      "updatedAt": "2026-11-23T12:19:16.402Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "45a45d94-71e2-470e-b8cd-967a0af632c7",
+      "name": "Bibash Kunwar",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/bibash-kunwar.jpg",
+      "actualImage": "/demo/team/bibash-kunwar.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 4,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:16.713Z",
+      "updatedAt": "2026-11-23T12:19:16.713Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "d8b63a37-39b1-45c4-8dd2-1fbf6b96a0f2",
+      "name": "Dhiraj Tamang",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/dhiraj-tamang.jpg",
+      "actualImage": "/demo/team/dhiraj-tamang.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 5,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:17.018Z",
+      "updatedAt": "2026-11-23T12:19:17.018Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "5dff4918-e2c2-4fe4-a196-7ef807153e1f",
+      "name": "Lok Bahadur Tamang",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/lok-bahadur-tamang.jpg",
+      "actualImage": "/demo/team/lok-bahadur-tamang.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 6,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:17.336Z",
+      "updatedAt": "2026-11-23T12:19:17.336Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "e84da1c9-6462-41b7-ab51-61bd4e0c1f65",
+      "name": "Mann Bahadur Pulami",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/mann-bahadur-pulami.jpg",
+      "actualImage": "/demo/team/mann-bahadur-pulami.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 7,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:17.651Z",
+      "updatedAt": "2026-11-23T12:19:17.651Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "80685d9c-6b24-410b-bcac-f682d0785806",
+      "name": "Pawan Pariyar",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/pawan-pariyar.jpg",
+      "actualImage": "/demo/team/pawan-pariyar.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 8,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:17.944Z",
+      "updatedAt": "2026-11-23T12:19:17.944Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "855aa537-2b77-4a57-a6b3-12c431e437e4",
+      "name": "Pushta Bahadur Ale Magar",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/pushta-bahadur-ale-magar.jpg",
+      "actualImage": "/demo/team/pushta-bahadur-ale-magar.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 9,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:18.265Z",
+      "updatedAt": "2026-11-23T12:19:18.265Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "8f16cbc4-aa7e-4369-9ae7-2482c5282f6a",
+      "name": "Rohit Khadgi",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/rohit-khadgi.jpg",
+      "actualImage": "/demo/team/rohit-khadgi.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 10,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:18.571Z",
+      "updatedAt": "2026-11-23T12:19:18.571Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "98e2c677-59b0-4fda-8595-8773b62856bf",
+      "name": "Rudra Bahadur Tamang",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/rudra-bahadur-tamang.jpg",
+      "actualImage": "/demo/team/rudra-bahadur-tamang.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 11,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:18.886Z",
+      "updatedAt": "2026-11-23T12:19:18.886Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "4b194a80-21f9-499d-a5b9-80c5f9ecb255",
+      "name": "Sugam Gurung",
+      "link": null,
+      "jobTitle": "Logistics Assistant",
+      "image": "/demo/team/sugam-gurung.jpg",
+      "actualImage": "/demo/team/sugam-gurung.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 12,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:19.306Z",
+      "updatedAt": "2026-11-23T12:19:19.306Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "1a5be858-4e3d-4e8c-8202-1b8a3c6bd642",
+      "name": "Saurav Bajracharya",
+      "link": null,
+      "jobTitle": "Supporter",
+      "image": "/demo/team/no-photo.jpg",
+      "actualImage": "/demo/team/no-photo.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 13,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:19.805Z",
+      "updatedAt": "2026-11-23T12:19:19.805Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "b2258fb3-ce52-472b-922d-dbd4dbd9e76d",
+      "name": "Ramesh Thami",
+      "link": null,
+      "jobTitle": "Driver",
+      "image": "/demo/team/ramesh-thami.jpg",
+      "actualImage": "/demo/team/ramesh-thami.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 14,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:20.174Z",
+      "updatedAt": "2026-11-23T12:19:20.174Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "ed1fcd8e-b84e-40d5-982c-f50912eae103",
+      "name": "Saroj Khatri",
+      "link": null,
+      "jobTitle": "Driver",
+      "image": "/demo/team/saroj-khatri.jpg",
+      "actualImage": "/demo/team/saroj-khatri.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 15,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:20.556Z",
+      "updatedAt": "2026-11-23T12:19:20.556Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
+        "isCore": false
+      }
+    },
+    {
+      "id": "2d099558-ad95-4ca8-b193-b13841ce155a",
+      "name": "Sudip Rai",
+      "link": null,
+      "jobTitle": "Driver",
+      "image": "/demo/team/sudip-rai.jpg",
+      "actualImage": "/demo/team/sudip-rai.jpg",
+      "departmentId": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+      "sortOrder": 16,
+      "isActive": true,
+      "createdAt": "2026-11-23T12:19:20.874Z",
+      "updatedAt": "2026-11-23T12:19:20.874Z",
+      "department": {
+        "id": "7b027fb3-bda9-4ceb-8cfb-ba3b64eda86f",
+        "name": "Logistics & Transport",
+        "sortOrder": 6,
         "isCore": false
       }
     }
@@ -317,6 +1529,562 @@
       "isActive": true,
       "createdAt": "2026-10-30T12:24:21.147Z",
       "updatedAt": "2026-10-30T12:24:21.147Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "db8861f8-785a-4247-bde5-4cfbbc2758d6",
+      "title": "Miss Nepal 2026",
+      "slug": "miss-nepal-2026",
+      "description": "Event production for Miss Nepal 2026.",
+      "image": "/demo/projects/miss-nepal-2026.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "bbf0c154-96d6-43db-834e-99b1e470d05b",
+      "createdAt": "2026-11-23T11:47:40.402Z",
+      "updatedAt": "2026-11-23T12:29:06.492Z",
+      "services": [],
+      "eventType": {
+        "id": "bbf0c154-96d6-43db-834e-99b1e470d05b",
+        "name": "Award Shows",
+        "slug": "award-shows"
+      }
+    },
+    {
+      "id": "0d2757f7-c013-4117-a037-9771e42a4867",
+      "title": "Sonu Nigam Setup",
+      "slug": "sonu-nigam-setup",
+      "description": "Event production for Sonu Nigam Setup.",
+      "image": "/demo/projects/sonu-nigam-setup.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "84de3488-e975-4cdd-8402-efb9cadcd957",
+      "createdAt": "2026-11-23T11:47:39.402Z",
+      "updatedAt": "2026-11-23T12:29:06.629Z",
+      "services": [],
+      "eventType": {
+        "id": "84de3488-e975-4cdd-8402-efb9cadcd957",
+        "name": "Concerts",
+        "slug": "concerts"
+      }
+    },
+    {
+      "id": "1e5fe52c-34ac-4716-8100-9227450a0602",
+      "title": "Sushant KC Concert",
+      "slug": "sushant-kc-concert",
+      "description": "Event production for Sushant KC Concert.",
+      "image": "/demo/projects/sushant-kc-concert.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "84de3488-e975-4cdd-8402-efb9cadcd957",
+      "createdAt": "2026-11-23T11:47:38.402Z",
+      "updatedAt": "2026-11-23T12:29:06.704Z",
+      "services": [],
+      "eventType": {
+        "id": "84de3488-e975-4cdd-8402-efb9cadcd957",
+        "name": "Concerts",
+        "slug": "concerts"
+      }
+    },
+    {
+      "id": "b223412c-b9a9-4ff0-8e34-b709b51ca465",
+      "title": "Nepathya Concert",
+      "slug": "nepathya-concert",
+      "description": "Event production for Nepathya Concert.",
+      "image": "/demo/projects/nepathya-concert.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "84de3488-e975-4cdd-8402-efb9cadcd957",
+      "createdAt": "2026-11-23T11:47:37.402Z",
+      "updatedAt": "2026-11-23T12:29:06.779Z",
+      "services": [],
+      "eventType": {
+        "id": "84de3488-e975-4cdd-8402-efb9cadcd957",
+        "name": "Concerts",
+        "slug": "concerts"
+      }
+    },
+    {
+      "id": "c2b00bf8-501b-43b1-9e94-d0398736251d",
+      "title": "Kantipur National Music Award",
+      "slug": "kantipur-national-music-award",
+      "description": "Event production for Kantipur National Music Award.",
+      "image": "/demo/projects/kantipur-national-music-award.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "bbf0c154-96d6-43db-834e-99b1e470d05b",
+      "createdAt": "2026-11-23T11:47:36.402Z",
+      "updatedAt": "2026-11-23T12:29:06.853Z",
+      "services": [],
+      "eventType": {
+        "id": "bbf0c154-96d6-43db-834e-99b1e470d05b",
+        "name": "Award Shows",
+        "slug": "award-shows"
+      }
+    },
+    {
+      "id": "4f260ad1-2e57-4ffe-80ef-a3e5efc8520a",
+      "title": "NPL Auction",
+      "slug": "npl-auction",
+      "description": "Event production for NPL Auction.",
+      "image": "/demo/projects/npl-auction.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "012caf7b-cad0-4736-bdd8-7c2c9eca9bb7",
+      "createdAt": "2026-11-23T11:47:35.402Z",
+      "updatedAt": "2026-11-23T12:29:06.928Z",
+      "services": [],
+      "eventType": {
+        "id": "012caf7b-cad0-4736-bdd8-7c2c9eca9bb7",
+        "name": "Sports Events",
+        "slug": "sports-events"
+      }
+    },
+    {
+      "id": "10ec5bd7-f943-476d-b745-5d2955db92ee",
+      "title": "Group Picture of Nepal Tour of Nepathya",
+      "slug": "group-picture-of-nepal-tour-of-nepathya",
+      "description": "Event production for Group Picture of Nepal Tour of Nepathya.",
+      "image": "/demo/projects/group-picture-of-nepal-tour-of-nepathya.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "84de3488-e975-4cdd-8402-efb9cadcd957",
+      "createdAt": "2026-11-23T11:47:34.402Z",
+      "updatedAt": "2026-11-23T12:29:07.005Z",
+      "services": [],
+      "eventType": {
+        "id": "84de3488-e975-4cdd-8402-efb9cadcd957",
+        "name": "Concerts",
+        "slug": "concerts"
+      }
+    },
+    {
+      "id": "3dc68869-a838-496f-8a72-863547e2e82e",
+      "title": "ISS Group Photo at Miss Nepal 2026",
+      "slug": "iss-group-photo-at-miss-nepal-2026",
+      "description": "Event production for ISS Group Photo at Miss Nepal 2026.",
+      "image": "/demo/projects/iss-group-photo-at-miss-nepal-2026.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "bbf0c154-96d6-43db-834e-99b1e470d05b",
+      "createdAt": "2026-11-23T11:47:33.402Z",
+      "updatedAt": "2026-11-23T12:29:07.080Z",
+      "services": [],
+      "eventType": {
+        "id": "bbf0c154-96d6-43db-834e-99b1e470d05b",
+        "name": "Award Shows",
+        "slug": "award-shows"
+      }
+    },
+    {
+      "id": "8102b783-5f15-4496-b38e-66e313b66bb2",
+      "title": "19th Asian Forum of Insurance Regulators Annual Meeting and Conference 2024",
+      "slug": "19th-asian-forum-of-insurance-regulators-annual-meeting-and-conference-2024",
+      "description": "Event production for 19th Asian Forum of Insurance Regulators Annual Meeting and Conference 2024.",
+      "image": "/demo/projects/19th-asian-forum-of-insurance-regulators-annual-meeting-and-conference-2024.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:32.402Z",
+      "updatedAt": "2026-11-23T12:37:34.484Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "c145651a-83d8-41ce-8a55-e380def1ac80",
+      "title": "Ace Institute Graduation",
+      "slug": "ace-institute-graduation",
+      "description": "Event production for Ace Institute Graduation.",
+      "image": "/demo/projects/ace-institute-graduation.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "8cd3935f-02cd-4def-bcec-b6a9d8e2fde0",
+      "createdAt": "2026-11-23T11:47:31.402Z",
+      "updatedAt": "2026-11-23T12:29:07.243Z",
+      "services": [],
+      "eventType": {
+        "id": "8cd3935f-02cd-4def-bcec-b6a9d8e2fde0",
+        "name": "Academic Events",
+        "slug": "academic-events"
+      }
+    },
+    {
+      "id": "d758c6f9-9bc0-4ba8-84d7-9b4e5773fd97",
+      "title": "Citytech",
+      "slug": "citytech",
+      "description": "Event production for Citytech.",
+      "image": "/demo/projects/citytech.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:30.402Z",
+      "updatedAt": "2026-11-23T12:29:07.316Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "faf8b357-776f-463d-afa8-8622011aa4fb",
+      "title": "Denza Product Launch",
+      "slug": "denza-product-launch",
+      "description": "Event production for Denza Product Launch.",
+      "image": "/demo/projects/denza-product-launch.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "4662e566-d953-4833-8f90-72d601af8c9b",
+      "createdAt": "2026-11-23T11:47:29.402Z",
+      "updatedAt": "2026-11-23T12:29:07.389Z",
+      "services": [],
+      "eventType": {
+        "id": "4662e566-d953-4833-8f90-72d601af8c9b",
+        "name": "Product Launches & Activations",
+        "slug": "product-launches-activations"
+      }
+    },
+    {
+      "id": "ece3ae73-65ca-49a7-8f9f-d0da6c6c9d63",
+      "title": "Digital Standees at Qniverse",
+      "slug": "digital-standees-at-qniverse",
+      "description": "Event production for Digital Standees at Qniverse.",
+      "image": "/demo/projects/digital-standees-at-qniverse.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "4662e566-d953-4833-8f90-72d601af8c9b",
+      "createdAt": "2026-11-23T11:47:28.402Z",
+      "updatedAt": "2026-11-23T12:29:07.465Z",
+      "services": [],
+      "eventType": {
+        "id": "4662e566-d953-4833-8f90-72d601af8c9b",
+        "name": "Product Launches & Activations",
+        "slug": "product-launches-activations"
+      }
+    },
+    {
+      "id": "985f8a4a-fb29-4a9e-8e46-d4d2bf5c5173",
+      "title": "Doms",
+      "slug": "doms",
+      "description": "Event production for Doms.",
+      "image": "/demo/projects/doms.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "4662e566-d953-4833-8f90-72d601af8c9b",
+      "createdAt": "2026-11-23T11:47:27.402Z",
+      "updatedAt": "2026-11-23T12:29:07.541Z",
+      "services": [],
+      "eventType": {
+        "id": "4662e566-d953-4833-8f90-72d601af8c9b",
+        "name": "Product Launches & Activations",
+        "slug": "product-launches-activations"
+      }
+    },
+    {
+      "id": "6f0cc65f-16a1-426a-a4bf-ab2ad451452d",
+      "title": "Indrive",
+      "slug": "indrive",
+      "description": "Event production for Indrive.",
+      "image": "/demo/projects/indrive.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "4662e566-d953-4833-8f90-72d601af8c9b",
+      "createdAt": "2026-11-23T11:47:26.402Z",
+      "updatedAt": "2026-11-23T12:29:07.617Z",
+      "services": [],
+      "eventType": {
+        "id": "4662e566-d953-4833-8f90-72d601af8c9b",
+        "name": "Product Launches & Activations",
+        "slug": "product-launches-activations"
+      }
+    },
+    {
+      "id": "8ca61a19-501a-4132-b6ca-23063d5f039f",
+      "title": "Islington Master Stroke",
+      "slug": "islington-master-stroke",
+      "description": "Event production for Islington Master Stroke.",
+      "image": "/demo/projects/islington-master-stroke.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "8cd3935f-02cd-4def-bcec-b6a9d8e2fde0",
+      "createdAt": "2026-11-23T11:47:25.402Z",
+      "updatedAt": "2026-11-23T12:29:07.692Z",
+      "services": [],
+      "eventType": {
+        "id": "8cd3935f-02cd-4def-bcec-b6a9d8e2fde0",
+        "name": "Academic Events",
+        "slug": "academic-events"
+      }
+    },
+    {
+      "id": "6fbc13fc-c63d-411f-a90f-1cdf3864fba7",
+      "title": "Lalupate Hydropower",
+      "slug": "lalupate-hydropower",
+      "description": "Event production for Lalupate Hydropower.",
+      "image": "/demo/projects/lalupate-hydropower.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:24.402Z",
+      "updatedAt": "2026-11-23T12:29:07.787Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "9f4eeaa9-5649-4238-bdf7-b28edce26142",
+      "title": "Mapei Premier Club",
+      "slug": "mapei-premier-club",
+      "description": "Event production for Mapei Premier Club.",
+      "image": "/demo/projects/mapei-premier-club.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:23.402Z",
+      "updatedAt": "2026-11-23T12:29:07.862Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "9caa8308-7754-4bbb-87d7-5f604b9e2bfc",
+      "title": "Nepal Foreign Trade Association",
+      "slug": "nepal-foreign-trade-association",
+      "description": "Event production for Nepal Foreign Trade Association.",
+      "image": "/demo/projects/nepal-foreign-trade-association.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:22.402Z",
+      "updatedAt": "2026-11-23T12:37:35.039Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "8feb33c1-0b55-4f92-9205-12e382d788f7",
+      "title": "New Year, SD Events",
+      "slug": "new-year-sd-events",
+      "description": "Event production for New Year, SD Events.",
+      "image": "/demo/projects/new-year-sd-events.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "2b413850-92a3-496f-be32-2e59c797f936",
+      "createdAt": "2026-11-23T11:47:21.402Z",
+      "updatedAt": "2026-11-23T12:29:08.014Z",
+      "services": [],
+      "eventType": {
+        "id": "2b413850-92a3-496f-be32-2e59c797f936",
+        "name": "Festivals & Celebrations",
+        "slug": "festivals-celebrations"
+      }
+    },
+    {
+      "id": "15d08802-75fd-42dd-a927-e1f577616e70",
+      "title": "NSCCM",
+      "slug": "nsccm",
+      "description": "Event production for NSCCM.",
+      "image": "/demo/projects/nsccm.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:20.402Z",
+      "updatedAt": "2026-11-23T12:37:35.446Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "d4438437-598c-425b-9e8f-0eda68e33813",
+      "title": "SAARC Chamber of Commerce & Industry",
+      "slug": "saarc-chamber-of-commerce-industry",
+      "description": "Event production for SAARC Chamber of Commerce & Industry.",
+      "image": "/demo/projects/saarc-chamber-of-commerce-industry.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:19.402Z",
+      "updatedAt": "2026-11-23T12:37:35.856Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "781505a3-a394-411d-85da-ab75a7c461ce",
+      "title": "SCAEF Nepal Governance of Climate Shock",
+      "slug": "scaef-nepal-governance-of-climate-shock",
+      "description": "Event production for SCAEF Nepal Governance of Climate Shock.",
+      "image": "/demo/projects/scaef-nepal-governance-of-climate-shock.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:18.402Z",
+      "updatedAt": "2026-11-23T12:37:36.266Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "bcde1d92-96a9-405f-83c1-7b59a77b0c85",
+      "title": "Setopati",
+      "slug": "setopati",
+      "description": "Event production for Setopati.",
+      "image": "/demo/projects/setopati.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:17.402Z",
+      "updatedAt": "2026-11-23T12:37:36.679Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "7d04fcb4-d6ae-4f12-b68f-cda25a502721",
+      "title": "Uber",
+      "slug": "uber",
+      "description": "Event production for Uber.",
+      "image": "/demo/projects/uber.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "4662e566-d953-4833-8f90-72d601af8c9b",
+      "createdAt": "2026-11-23T11:47:16.402Z",
+      "updatedAt": "2026-11-23T12:29:08.386Z",
+      "services": [],
+      "eventType": {
+        "id": "4662e566-d953-4833-8f90-72d601af8c9b",
+        "name": "Product Launches & Activations",
+        "slug": "product-launches-activations"
+      }
+    },
+    {
+      "id": "3a28c104-79a9-4112-8bbd-d1599f481725",
+      "title": "UCSI University Convocation",
+      "slug": "ucsi-university-convocation",
+      "description": "Event production for UCSI University Convocation.",
+      "image": "/demo/projects/ucsi-university-convocation.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "8cd3935f-02cd-4def-bcec-b6a9d8e2fde0",
+      "createdAt": "2026-11-23T11:47:15.402Z",
+      "updatedAt": "2026-11-23T12:29:08.461Z",
+      "services": [],
+      "eventType": {
+        "id": "8cd3935f-02cd-4def-bcec-b6a9d8e2fde0",
+        "name": "Academic Events",
+        "slug": "academic-events"
+      }
+    },
+    {
+      "id": "d33991e4-f41b-457a-92d8-b79be8064b87",
+      "title": "USSEC",
+      "slug": "ussec",
+      "description": "Event production for USSEC.",
+      "image": "/demo/projects/ussec.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "createdAt": "2026-11-23T11:47:14.402Z",
+      "updatedAt": "2026-11-23T12:37:37.094Z",
+      "services": [],
+      "eventType": {
+        "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+        "name": "Corporate Events",
+        "slug": "corporate-events"
+      }
+    },
+    {
+      "id": "21f4ef05-5d98-40b2-be51-f5160b31e2cf",
+      "title": "UTT Air Asia",
+      "slug": "utt-air-asia",
+      "description": "Event production for UTT Air Asia.",
+      "image": "/demo/projects/utt-air-asia.jpg",
+      "thumbnails": [],
+      "isActive": true,
+      "eventTypeId": "4662e566-d953-4833-8f90-72d601af8c9b",
+      "createdAt": "2026-11-23T11:47:13.402Z",
+      "updatedAt": "2026-11-23T12:29:08.611Z",
+      "services": [],
+      "eventType": {
+        "id": "4662e566-d953-4833-8f90-72d601af8c9b",
+        "name": "Product Launches & Activations",
+        "slug": "product-launches-activations"
+      }
+    }
+  ],
+  "eventTypes": [
+    {
+      "id": "84de3488-e975-4cdd-8402-efb9cadcd957",
+      "name": "Concerts",
+      "slug": "concerts",
+      "sortOrder": 0
+    },
+    {
+      "id": "bbf0c154-96d6-43db-834e-99b1e470d05b",
+      "name": "Award Shows",
+      "slug": "award-shows",
+      "sortOrder": 1
+    },
+    {
+      "id": "e07d8f42-bc9a-4813-bb50-2d30160227af",
+      "name": "Weddings",
+      "slug": "weddings",
+      "sortOrder": 2
+    },
+    {
+      "id": "2b413850-92a3-496f-be32-2e59c797f936",
+      "name": "Festivals & Celebrations",
+      "slug": "festivals-celebrations",
+      "sortOrder": 3
+    },
+    {
+      "id": "e11eb515-2ea6-46b7-8c62-7ef78fc19c42",
+      "name": "Corporate Events",
+      "slug": "corporate-events",
+      "sortOrder": 4
+    },
+    {
+      "id": "4662e566-d953-4833-8f90-72d601af8c9b",
+      "name": "Product Launches & Activations",
+      "slug": "product-launches-activations",
+      "sortOrder": 5
+    },
+    {
+      "id": "8cd3935f-02cd-4def-bcec-b6a9d8e2fde0",
+      "name": "Academic Events",
+      "slug": "academic-events",
+      "sortOrder": 6
+    },
+    {
+      "id": "012caf7b-cad0-4736-bdd8-7c2c9eca9bb7",
+      "name": "Sports Events",
+      "slug": "sports-events",
+      "sortOrder": 7
     }
   ]
 }

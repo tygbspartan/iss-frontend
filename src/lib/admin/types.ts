@@ -34,6 +34,18 @@ export interface Project extends Timestamps {
   thumbnails: string[];
   isActive: boolean;
   services?: LinkedItem[];
+  eventTypeId?: string | null;
+  eventType?: { id: string; name: string; slug: string } | null;
+}
+
+// A kind of event (Concerts & Live Music, Conferences & Summits, …) that groups
+// projects — separate from services. The Projects page filters by it.
+export interface EventType {
+  id: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  _count?: { projects: number }; // public: visible projects; admin: all
 }
 
 // A group of team members. Members of a department with isCore are the
@@ -49,8 +61,8 @@ export interface Department {
 export interface TeamMember extends Timestamps {
   id: string;
   name: string;
-  email: string;
-  link: string | null; // the only optional field
+  phone?: string | null; // admin only — the public API leaves it out
+  link: string | null;
   jobTitle: string;
   departmentId: string;
   department: Department;

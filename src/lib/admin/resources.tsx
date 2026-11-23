@@ -3,6 +3,7 @@ import type { Blog, Client, Project, Service, TeamMember, Testimonial, UpcomingE
 import { formatDate, truncate } from "./format";
 import * as services from "@/lib/redux/features/services/servicesApi";
 import * as projects from "@/lib/redux/features/projects/projectsApi";
+import * as eventTypes from "@/lib/redux/features/eventTypes/eventTypesApi";
 import * as team from "@/lib/redux/features/team/teamApi";
 import * as departments from "@/lib/redux/features/departments/departmentsApi";
 import * as blogs from "@/lib/redux/features/blogs/blogsApi";
@@ -87,7 +88,7 @@ export const projectsConfig: ResourceConfig<Project> = {
   },
   title: "Projects",
   singular: "Project",
-  description: "Recent works — each can belong to several services.",
+  description: "Recent works — each has an event type (the website's filters) and can be linked to services.",
   paginated: true,
   imageLabel: "Cover image",
   fields: [
@@ -96,19 +97,29 @@ export const projectsConfig: ResourceConfig<Project> = {
     { name: "description", label: "Description", type: "textarea", required: true, rows: 5 },
     visibleField,
     {
+      name: "eventTypeId",
+      label: "Event type",
+      type: "select",
+      nullable: true,
+      placeholder: "No event type",
+      help: "Groups it on the website's Projects page.",
+      relation: { useOptions: eventTypes.useGetEventTypeOptionsQuery },
+      emptyHint: "No event types yet — add one in the Event types box on this page first.",
+    },
+    {
       name: "serviceIds",
-      label: "Services",
+      label: "Services (optional)",
       type: "relation",
-      required: true,
-      help: "Pick at least one.",
+      help: "It shows on these services' pages.",
       relation: { useOptions: services.useGetServiceOptionsQuery },
     },
   ],
   columns: [
+    { label: "Event type", render: (p) => p.eventType?.name ?? "—", className: "hidden md:table-cell" },
     {
       label: "Services",
       render: (p) => truncate(p.services?.map((s) => s.title).join(", "), 40) || "—",
-      className: "hidden md:table-cell",
+      className: "hidden lg:table-cell",
     },
     { label: "Gallery", render: (p) => p.thumbnails.length, className: "hidden sm:table-cell" },
     { label: "Created", render: (p) => formatDate(p.createdAt), className: "hidden lg:table-cell" },
@@ -152,7 +163,14 @@ export const teamConfig: ResourceConfig<TeamMember> = {
       relation: { useOptions: departments.useGetDepartmentOptionsQuery },
       emptyHint: "No departments yet — add one in the Departments box on this page first.",
     },
-    { name: "email", label: "Email", type: "email", required: true },
+    {
+      name: "phone",
+      label: "Phone (optional)",
+      type: "tel",
+      nullable: true,
+      placeholder: "+977 98XXXXXXXX",
+      help: "Only visible here in the admin — never shown on the website.",
+    },
     {
       name: "link",
       label: "Link (optional)",
@@ -166,7 +184,7 @@ export const teamConfig: ResourceConfig<TeamMember> = {
   ],
   columns: [
     { label: "Department", render: (m) => m.department.name, className: "hidden md:table-cell" },
-    { label: "Email", render: (m) => m.email, className: "hidden lg:table-cell" },
+    { label: "Phone", render: (m) => m.phone || "—", className: "hidden lg:table-cell" },
     {
       label: "Actual photo",
       render: (m) => (m.actualImage ? "Added" : <span className="text-amber-700 dark:text-amber-400">Missing</span>),

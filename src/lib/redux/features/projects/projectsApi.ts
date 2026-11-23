@@ -15,7 +15,8 @@ import {
 import type { Project } from "@/lib/admin/types";
 
 // Writes to projects also refresh services (see servicesApi).
-const INVALIDATES = ["Project", "Service"] as const;
+// Event types count their projects, so project writes refresh them too.
+const INVALIDATES = ["Project", "Service", "EventType"] as const;
 
 export interface PublicProjectArgs {
   page?: number;

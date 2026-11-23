@@ -8,6 +8,7 @@ export type FieldType =
   | "text"
   | "textarea"
   | "email"
+  | "tel"
   | "url"
   | "date"
   | "number"
