@@ -98,8 +98,8 @@ export default function ContactPage() {
       </div>
     </div>
 
-    {/* "Give us a visit": the map on the left, with the right third kept empty
-        for now (2:1). On phones the map takes the full width. */}
+    {/* "Give us a visit": the map across the full width of the page, at a
+        fixed height — 240px on phones, 300px on tablets, 350px on desktops. */}
     <section aria-labelledby="visit-heading" className="site-container pb-14 lg:pb-20">
       <h2
         id="visit-heading"
@@ -107,8 +107,8 @@ export default function ContactPage() {
       >
         Give us a visit
       </h2>
-      <div className="mt-8 grid gap-3 sm:grid-cols-[2fr_1fr] lg:mt-12">
-        <div className="aspect-4/3 overflow-hidden rounded-md border border-white/10 bg-neutral-900 sm:aspect-5/2">
+      <div className="mt-8 lg:mt-12">
+        <div className="h-60 overflow-hidden rounded-md border border-white/10 bg-neutral-900 sm:h-75 lg:h-[350px]">
           {/* Google's embed has no dark mode, so the filter makes one: invert
               turns the light map dark with light labels, and the hue rotation
               puts the colours back to roughly what they were. */}
@@ -121,8 +121,6 @@ export default function ContactPage() {
             className="size-full border-0 [filter:invert(0.9)_hue-rotate(180deg)_grayscale(0.4)_contrast(0.95)]"
           />
         </div>
-        {/* Deliberately empty. */}
-        <div aria-hidden className="hidden sm:block" />
       </div>
     </section>
     </>

@@ -55,8 +55,9 @@ export const CONTACT = {
   whatsapp: { label: "+977 9802375115", number: "9779802375115" },
 };
 
-// The office (Chyasal) on Google Maps, as an embeddable map (no API key needed).
-export const MAP_EMBED_URL = "https://maps.google.com/maps?q=Chyasal,%20Lalitpur,%20Nepal&z=16&output=embed";
+// ISS BASE in Chyasal, Lalitpur (Google Maps place "ISS BASE"), pinned by its
+// exact coordinates, as an embeddable map (no API key needed).
+export const MAP_EMBED_URL = "https://maps.google.com/maps?q=27.6754864,85.3359834&z=17&output=embed";
 
 export const SOCIAL_LINKS = {
   instagram: "https://www.instagram.com/isssoundz/",
