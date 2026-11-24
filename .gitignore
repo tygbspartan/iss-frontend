@@ -44,4 +44,5 @@ next-env.d.ts
 # Raw source material (staff sheet has personal ID numbers) — never commit
 /ISS Event Photos/
 /ISS Team Photos/
+/ISS Team Cartoonified/
 /Iss staffs.xlsx
